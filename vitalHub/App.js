@@ -34,7 +34,7 @@ export default function App() {
     <NavigationContainer>
 
       <Stack.Navigator
-        initialRouteName="SelectClinic"
+        initialRouteName="Splash"
         screenOptions={{headerShown:false}}
       >
 
