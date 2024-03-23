@@ -26,7 +26,7 @@ export default function Login({
   async function Login(){
     
     // chamar a api de login 
-    const reponse = await api.post('http://192.168.21.124:4466/api/Login',{
+    const reponse = await api.post('/Login',{
       email:email,
       senha:senha
     })
