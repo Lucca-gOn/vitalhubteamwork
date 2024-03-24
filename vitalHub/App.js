@@ -12,6 +12,10 @@ import Home from "./src/screens/Home";
 
 import SelectClinic from "./src/screens/SelectClinic";
 import MedicalRecord from "./src/screens/MedicalRecord";
+import SelectMedic from "./src/screens/SelectMedic";
+import SelectDate from "./src/screens/SelectDate";
+import Profile from "./src/screens/Profile";
+import ConsultationAddress from "./src/screens/ConsultationAddress";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +38,7 @@ export default function App() {
     <NavigationContainer>
 
       <Stack.Navigator
-        initialRouteName="Splash"
+        initialRouteName="Home"
         screenOptions={{headerShown:false}}
       >
 
@@ -47,6 +51,10 @@ export default function App() {
         <Stack.Screen name='Home' component={Home}/>
         <Stack.Screen name='MedicalRecord' component={MedicalRecord}/>
         <Stack.Screen name='SelectClinic' component={SelectClinic}/>
+        <Stack.Screen name='SelectMedic' component={SelectMedic}/>
+        <Stack.Screen name='SelectDate' component={SelectDate}/>
+        <Stack.Screen name='Profile' component={Profile}/>
+        <Stack.Screen name='ConsultationAddress' component={ConsultationAddress}/>
 
       </Stack.Navigator>
       
