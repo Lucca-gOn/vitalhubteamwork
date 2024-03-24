@@ -1,14 +1,14 @@
 import styled from "styled-components/native";
 
 
-export const InputGreen = styled.TextInput.attrs({
+export const InputGreen = styled.TextInput.attrs((props)=>({
   placeholderTextColor: '#34898F',
-  autoCapitalize: "none",
+  autoCapitalize: props.autoCapitalize !== undefined ? props.autoCapitalize : "none",
   autoCorrect: false,
   clearButtonMode: "while-editing",
   cursorColor: '#34898F',
   enablesReturnKeyAutomatically: true,
-})`
+}))`
   padding:16px;
   width:100%;
   
@@ -20,6 +20,17 @@ export const InputGreen = styled.TextInput.attrs({
   color: #34898F;
 
 `
+
+export const InputGray = styled(InputGreen).attrs({
+  placeholderTextColor: '#ACACAC',
+  cursorColor: '#000',
+})`
+  border:none;
+  background-color:#f5f3f3;
+  font-family: 'MontserratAlternates_500Medium';
+  color: #000;
+`
+
 
 export const InputGreenMultiLine = styled(InputGreen).attrs({
   multiline:true,
