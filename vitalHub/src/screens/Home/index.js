@@ -6,7 +6,7 @@ import { CalendarListWeek } from "../../components/Calendars";
 import { ButtonNotSelect, ButtonSelect } from "../../components/Buttons";
 import { useState } from "react";
 import CardAppointment from "../../components/CardAppointment";
-import { ModalCancel, ModalMedicalRecord, ModalScheduleAppointment } from "../../components/Modals";
+import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment } from "../../components/Modals";
 import { Stethoscope } from "../../components/Stethoscope";
 
 export default function Home(
@@ -93,10 +93,13 @@ export default function Home(
         showModalMedicalRecord={showModalMedicalRecord}
       />
 
+      {/* Modal Agendar Consulta */}
       <ModalScheduleAppointment
         setShowModalScheduleAppointment={setShowModalScheduleAppointment}
         showModalScheduleAppointment={showModalScheduleAppointment}
       />
+
+      <ModalDataConsult />
 
     </Container>
 
