@@ -6,6 +6,10 @@ export const ButtonBlueStyle = styled.TouchableOpacity`
   background-color: #496BBA;
   padding:12px;
 `
+export const ButtonGrayStyle = styled(ButtonBlueStyle)`
+  background-color: #ACABB7;
+  width:50%;
+`
 
 export const ButtonGoogleStyle = styled(ButtonBlueStyle)`
   background-color: #FAFAFA;
@@ -88,3 +92,15 @@ export const ButtonClinic = styled(ButtonBlueStyle)`
 					border: none;
 			  `}
 `;
+
+
+export const ButtonGreenStyle = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content:center;
+  align-items: center;
+  gap:10px;
+  width:55%;
+  border-radius:5px;
+  background: #49B3BA;
+  padding:10px;
+`
