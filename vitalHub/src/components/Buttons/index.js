@@ -1,6 +1,7 @@
-import { TextButtonBlue, TextButtonGoogle, TextNotSelect, TextSelect, TextSelectGreen } from "../Texts/style"
-import { ButtonBlueStyle, ButtonGoogleStyle, ButtonNotSelectStyle, ButtonSelectGreenStyle, ButtonSelectStyle } from "./style"
+import { TextButtonBlue, TextButtonGoogle, TextNotSelect, TextSelect, TextSelectGreen, TextWhiteMontBold } from "../Texts/style"
+import { ButtonBlueStyle, ButtonGoogleStyle, ButtonGrayStyle, ButtonGreenStyle, ButtonNotSelectStyle, ButtonSelectGreenStyle, ButtonSelectStyle } from "./style"
 import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const ButtonDefault = ({
   onPress,
@@ -12,6 +13,17 @@ export const ButtonDefault = ({
         <TextButtonBlue>{textButton}</TextButtonBlue>
       </ButtonBlueStyle>
     </>
+  )
+}
+
+export const ButtonGray = ({
+  onPress,
+  textButton = '',
+}) => {
+  return (
+  <ButtonGrayStyle onPress={onPress}>
+    <TextButtonBlue>{textButton}</TextButtonBlue>
+  </ButtonGrayStyle>
   )
 }
 
@@ -50,5 +62,17 @@ export const ButtonSelectGreen = ({
     <ButtonSelectGreenStyle selectStatus={selectStatus} onPress={onPress}>
       <TextSelectGreen selectStatus={selectStatus}>{texto}</TextSelectGreen>
     </ButtonSelectGreenStyle>
+  )
+}
+
+export const ButtonGreen = ({
+
+}) =>
+{
+  return(
+    <ButtonGreenStyle>
+      <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />
+      <TextWhiteMontBold>Enviar</TextWhiteMontBold>
+    </ButtonGreenStyle>
   )
 }
