@@ -1,6 +1,6 @@
 import { KeyboardAvoidingView, Modal, Platform, Text, View } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../Conatainer"
-import { Description, TextLabel, TextLabelBlack, TextQuickSandRegular, Title } from "../Texts/style"
+import { Description, DescriptionBlack, TextData, TextLabel, TextLabelBlack, TextQuickSandRegular, Title } from "../Texts/style"
 import { ButtonDefault, ButtonSelectGreen } from "../Buttons"
 import { LinkUnderlineDefault } from "../Links"
 import * as Notifications from 'expo-notifications'
@@ -224,5 +224,127 @@ export const ModalScheduleAppointment = ({
       </KeyboardAwareScrollView>
     </Modal>
 
+  )
+}
+
+export const SummaryMedicalAgenda = ({  
+  data,  
+}) => {
+
+  return (
+
+    <Modal
+      transparent={true}
+      visible={true}
+      statusBarTranslucent={true}
+      onRequestClose={() => setShowModalCancel(false)}
+    >
+      <Container
+        $justContent="center"
+        $bgColor="rgba(0,0,0,0.3)"
+      >
+        <ContainerMargin
+          $width="90%"          
+          $borderRadius={10}
+          $bgColor="#FFF"
+        //$pd="28px 30px"
+        >
+          <ContainerMargin $mt={30} $mb={16}>
+            <Title>
+              Agendar consulta
+            </Title>
+          </ContainerMargin>
+          <ContainerMargin $width="80%" $mb={30}>
+            <DescriptionBlack>
+              Consulte os dados selecionados para a sua consulta
+            </DescriptionBlack>
+          </ContainerMargin>
+          
+          <ContainerMargin $alingItens="flex-start" $gap={20} >
+            <ContainerMargin $alingItens="flex-start" $gap={8}>
+              <TextLabel>Data da consulta</TextLabel>
+              <TextData>1 de Novembro de 2023</TextData>
+            </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={8}>
+              <TextLabel>Médico(a) da consulta</TextLabel>
+              <TextData>Dra Alessandra</TextData>
+              <TextData>Demartologa, Esteticista</TextData>
+            </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={8}>
+              <TextLabel>Local da consulta</TextLabel>
+              <TextData>São Paulo, SP</TextData>
+            </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={8}>
+              <TextLabel>Tipo da consulta</TextLabel>
+              <TextData>Rotina</TextData>
+            </ContainerMargin>
+          </ContainerMargin>
+
+
+          <ContainerMargin $mt={30} $gap={30} $width="80%">
+            <ButtonDefault textButton="Confirmar" />
+
+            <LinkUnderlineDefault>
+              Cancelar
+            </LinkUnderlineDefault>
+          </ContainerMargin>
+
+        </ContainerMargin>
+      </Container>
+    </Modal>
+
+  )
+}
+
+export const ModalDataConsult = ({
+  navigation,  
+}) => {
+
+  return (
+    <Modal
+      transparent={true}
+      visible={false}
+      statusBarTranslucent={true}
+      // onRequestClose={() => { setShowModalMedicalRecord(false) }}
+    >
+      <Container
+        $justContent="center"
+        $bgColor="rgba(0,0,0,0.3)"
+      >
+        <ContainerMargin
+          $width="90%"
+          $borderRadius={10}
+          $bgColor="#FFF"
+        >
+          <ContainerMargin $mt={30}>
+            <ImageUser source={require('../../assets/images/NotImage.svg')} $width="90%" $height="181px" />
+          </ContainerMargin>
+          <ContainerMargin $mt={20} $width="100%">
+            <Title>
+              Dr Claudio
+            </Title>
+          </ContainerMargin>
+          <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
+            <TextQuickSandRegular>
+              Clinico Geral
+            </TextQuickSandRegular>
+            <TextQuickSandRegular>
+              CRM-123456
+            </TextQuickSandRegular>
+          </ContainerMargin>
+
+          <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
+            <ButtonDefault textButton="Ver local da consulta"  />
+
+            <LinkUnderlineDefault onPress={() => {
+              setShowModalMedicalRecord(false)
+            }}>
+              Cancelar
+            </LinkUnderlineDefault>
+          </ContainerMargin>
+
+        </ContainerMargin>
+      </Container>
+    </Modal>
   )
 }
