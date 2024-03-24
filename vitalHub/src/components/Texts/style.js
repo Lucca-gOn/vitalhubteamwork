@@ -12,8 +12,21 @@ export const Description = styled.Text`
   color: #5F5C6B;
   text-align: center;
 `
+export const Description2 = styled(Description)`
+  color: #4e4b59;
+`
+
+export  const DescriptionBlack = styled(Description)`
+  color: #000;
+`
 
 export const TitleHeader = styled(Description)`
+  font-size: 14px;
+  color: #4E4B59;
+`
+
+export const TextData = styled.Text`
+  font-family: 'Quicksand_500Medium';
   font-size: 14px;
   color: #4E4B59;
 `
@@ -76,6 +89,13 @@ export const TextCancelAppointment = styled.Text`
   padding-top: 4px;
   padding-bottom: 4px;
 `
+
+export const TextInformation = styled.Text`
+  font-family:'MontserratAlternates_500Medium';
+  font-size:14px;
+  color:  #4E4B59;
+`
+
 export const TextPontuarioAppointment = styled(TextCancelAppointment)`
   color: #344F8F;
 `
@@ -92,6 +112,10 @@ export const TextGrayDark = styled.Text`
   font-family:'MontserratAlternates_600SemiBold';
   font-size: 14px;
   color: #4E4B59;
+`
+
+export const TextWhiteMontBold = styled(TextGrayDark)`
+  color:#FFFFFF;
 `
 
 export const TextNameUserWhite = styled(TextGrayDark)`
