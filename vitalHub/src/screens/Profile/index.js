@@ -29,7 +29,10 @@ export default function Profile({
   const Logout = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      navigation.replace('Login');
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}]
+      });
     } catch (error) {
       console.error("Erro ao realizar logout:", error);
     }
