@@ -7,6 +7,7 @@ import { LinkBlueLigth, LinkGray } from "../../components/Links";
 import { TextGrayDark, Title } from "../../components/Texts/style";
 import { useState } from "react";
 import api from '../../service/Service';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // const DataMedico = [
 //   { id: 1, nome: 'Allan Rodrigues dos Santos', email: 'allan@allan.com', senha: 'admin', image: 'https://github.com/AllanR1991.png', typeUser: 'admin' , idade: 12, crm: 'CRM/SP 123456', funcao: ['Demartologia', 'Esteticista'], dataNascimento: '13/08/1991', cpf:12345678912, endereco: 'Rua Oswaldo Stuchi, 120', cep: '09791770', cidade:'Moema', estado: 'sp' },
@@ -26,16 +27,20 @@ export default function Login({
   async function Login(){
     
     // chamar a api de login 
-    const reponse = await api.post('/Login',{
+    const response = await api.post('/Login',{
       email:email,
       senha:senha
     })
+
+    await AsyncStorage.setItem('token', JSON.stringify(response.data))
+
     .then(res=>{
       console.log(res)
       navigation.navigate('Home')
   })
     .catch(error=> console.log(error))
   }
+
   const [email, setEmail] = useState('');
   const [senha,setSenha] = useState('');
   return (
