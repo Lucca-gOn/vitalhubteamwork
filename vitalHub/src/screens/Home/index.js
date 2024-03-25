@@ -41,7 +41,7 @@ export default function Home(
     <Container $bgColor="#fbfbfb">
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header />
+      <Header navigation={navigation} />
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek />
