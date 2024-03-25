@@ -96,6 +96,7 @@ export default function Home(
       <ModalScheduleAppointment
         setShowModalScheduleAppointment={setShowModalScheduleAppointment}
         showModalScheduleAppointment={showModalScheduleAppointment}
+        navigation={navigation}
       />
 
       <ModalDataConsult />
