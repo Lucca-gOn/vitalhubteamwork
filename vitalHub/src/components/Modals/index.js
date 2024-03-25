@@ -1,5 +1,5 @@
-import { KeyboardAvoidingView, Modal, Platform, Text, View } from "react-native"
-import { Container, ContainerMargin, ContainerScrollView } from "../Conatainer"
+import { Modal, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Container, ContainerMargin } from "../Conatainer"
 import { Description, DescriptionBlack, TextData, TextLabel, TextLabelBlack, TextQuickSandRegular, Title } from "../Texts/style"
 import { ButtonDefault, ButtonSelectGreen } from "../Buttons"
 import { LinkUnderlineDefault } from "../Links"
@@ -7,7 +7,13 @@ import * as Notifications from 'expo-notifications'
 import { ImageUser } from "../Images/style"
 import { InputGreen } from "../Inputs/styled"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { AutoFocus, Camera, CameraType, FlashMode } from 'expo-camera';
+import { useEffect, useRef, useState } from 'react';
+import * as MediaLibary from 'expo-media-library';
 
+import { FontAwesome } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons';
+import { Image } from "expo-image"
 
 Notifications.requestPermissionsAsync();
 
@@ -159,7 +165,8 @@ export const ModalMedicalRecord = ({
 
 export const ModalScheduleAppointment = ({
   setShowModalScheduleAppointment,
-  showModalScheduleAppointment
+  showModalScheduleAppointment,
+  navigation
 }) => {
   return (
     <Modal
@@ -208,13 +215,16 @@ export const ModalScheduleAppointment = ({
               <InputGreen placeholder="Informe a localização"></InputGreen>
             </ContainerMargin>
 
-            
+
 
             <ContainerMargin $mt={143} $mb={35} $gap={30} $width="80%">
-              <ButtonDefault textButton="Inserir prontuário" />
+              <ButtonDefault textButton="Continuar" onPress={() => {
+                navigation.navigate('SelectClinic')
+                setShowModalScheduleAppointment(false)
+              }} />
 
               <LinkUnderlineDefault
-                onPress={()=> setShowModalScheduleAppointment(false)}
+                onPress={() => setShowModalScheduleAppointment(false)}
               >
                 Cancelar
               </LinkUnderlineDefault>
@@ -227,24 +237,27 @@ export const ModalScheduleAppointment = ({
   )
 }
 
-export const SummaryMedicalAgenda = ({  
-  data,  
+export const SummaryMedicalAgenda = ({
+  data,
+  setShowSummaryMedicalAgenda,
+  showSummaryMedicalAgenda,
+  navigation
 }) => {
 
   return (
 
     <Modal
       transparent={true}
-      visible={true}
+      visible={showSummaryMedicalAgenda}
       statusBarTranslucent={true}
-      onRequestClose={() => setShowModalCancel(false)}
+      onRequestClose={() => setShowSummaryMedicalAgenda(false)}
     >
       <Container
         $justContent="center"
         $bgColor="rgba(0,0,0,0.3)"
       >
         <ContainerMargin
-          $width="90%"          
+          $width="90%"
           $borderRadius={10}
           $bgColor="#FFF"
         //$pd="28px 30px"
@@ -259,7 +272,7 @@ export const SummaryMedicalAgenda = ({
               Consulte os dados selecionados para a sua consulta
             </DescriptionBlack>
           </ContainerMargin>
-          
+
           <ContainerMargin $alingItens="flex-start" $gap={20} >
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Data da consulta</TextLabel>
@@ -281,10 +294,22 @@ export const SummaryMedicalAgenda = ({
           </ContainerMargin>
 
 
-          <ContainerMargin $mt={30} $gap={30} $width="80%">
-            <ButtonDefault textButton="Confirmar" />
+          <ContainerMargin $mt={30} $mb={30} $gap={30} $width="90%">
+            <ButtonDefault textButton="Confirmar" onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' }]
+              })
+              setShowSummaryMedicalAgenda(false)
+            }} />
 
-            <LinkUnderlineDefault>
+            <LinkUnderlineDefault onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' }]
+              })
+              setShowSummaryMedicalAgenda(false)
+            }}>
               Cancelar
             </LinkUnderlineDefault>
           </ContainerMargin>
@@ -297,7 +322,7 @@ export const SummaryMedicalAgenda = ({
 }
 
 export const ModalDataConsult = ({
-  navigation,  
+  navigation,
 }) => {
 
   return (
@@ -305,7 +330,7 @@ export const ModalDataConsult = ({
       transparent={true}
       visible={false}
       statusBarTranslucent={true}
-      // onRequestClose={() => { setShowModalMedicalRecord(false) }}
+    // onRequestClose={() => { setShowModalMedicalRecord(false) }}
     >
       <Container
         $justContent="center"
@@ -315,6 +340,7 @@ export const ModalDataConsult = ({
           $width="90%"
           $borderRadius={10}
           $bgColor="#FFF"
+
         >
           <ContainerMargin $mt={30}>
             <ImageUser source={require('../../assets/images/NotImage.svg')} $width="90%" $height="181px" />
@@ -334,7 +360,7 @@ export const ModalDataConsult = ({
           </ContainerMargin>
 
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
-            <ButtonDefault textButton="Ver local da consulta"  />
+            <ButtonDefault textButton="Ver local da consulta" />
 
             <LinkUnderlineDefault onPress={() => {
               setShowModalMedicalRecord(false)
@@ -348,3 +374,190 @@ export const ModalDataConsult = ({
     </Modal>
   )
 }
+
+export const ModalCamera = ({
+  showModalCamera,
+  setShowModalCamera,
+  navigation
+}) => {
+
+  const cameraRef = useRef(null);
+
+
+  const [photoCam, setPhotoCam] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+
+  const [tipoCamera, setTipoCamera] = useState(Camera.Constants.Type.front);
+
+  const clearPhoto = () => {
+    setPhotoCam(null);
+    setOpenModal(false);
+  }
+
+  async function capturePhoto() {
+    if (cameraRef) {
+      const photo = await cameraRef.current.takePictureAsync();
+      setPhotoCam(photo.uri);
+
+      setOpenModal(true);
+    }
+  }
+
+  async function savePhoto() {
+    if (photoCam) {
+      await MediaLibary.createAssetAsync(photoCam)
+        .then(() => {
+          alert('Sucesso', 'Foto Salva na Galeria');
+        })
+        .catch(error => {
+          alert("Erro ao salvar foto. Detalhe : ", error);
+        })
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+      const { status: mediaStatus } = await MediaLibary.requestPermissionsAsync();
+    })
+  })
+
+  return (
+    <Modal
+      transparent={true}
+      visible={showModalCamera}
+      statusBarTranslucent={true}
+      onRequestClose={() => { setShowModalCamera(false) }}
+    >
+      <Container
+        $justContent="center"
+        $bgColor="rgba(0,0,0,0.3)"
+      >
+        <ContainerMargin
+          $height="90%"
+          $width="90%"
+          $borderRadius={10}
+          $bgColor="#FFF"
+        >
+          {/* <View style={stylesCamera.container}> */}
+          <Camera
+            ref={cameraRef}
+            ratio={'16:9'}
+            type={tipoCamera}
+            style={stylesCamera.camera}
+            flashMode={FlashMode.auto}
+            autoFocus={AutoFocus.on}
+          >
+
+          </Camera>
+          <ContainerMargin $fd="row">
+
+            <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
+              <FontAwesome name='camera' size={23} color={'#FFF'} />
+            </TouchableOpacity>
+            <TouchableOpacity style={stylesCamera.btnSwitch} onPress={() => { setTipoCamera(tipoCamera === CameraType.front ? CameraType.back : CameraType.front) }}>
+              <MaterialIcons name="cameraswitch" size={24} color="#FFF" />
+            </TouchableOpacity>
+          </ContainerMargin>
+
+
+          <Modal animationType='slide' transparent={true} visible={openModal} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
+            <Container $justContent="center"
+              $bgColor="rgba(0,0,0,0.3)">
+              <View style={{ alignItems: 'center', justifyContent: 'center', padding: 30, backgroundColor: '#FFF', width: '90%', borderRadius: 10 }}>
+                <Image style={{ width: '100%', height: 500, borderRadius: 10, }} source={{ uri: photoCam }} />
+                <View style={{ margin: 15, flexDirection: 'row' }}>
+                  <TouchableOpacity style={stylesCamera.btnCancel} onPress={() => clearPhoto()}>
+                    <FontAwesome name='trash' size={35} color={'#FF0000'} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
+                    savePhoto()
+                    navigation.navigate(                      
+                      "MedicalRecord", { fotoCam: { photoCam } }
+                    )
+                    setOpenModal(false)
+                    setShowModalCamera(false)
+                  }}>
+                    <FontAwesome name='save' size={35} color={'#121212'} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Container>
+          </Modal>
+          {/* </View> */}
+
+
+        </ContainerMargin>
+      </Container>
+    </Modal >
+  )
+}
+
+
+const stylesCamera = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ff5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  camera: {
+    // flex: 1,
+    height: '70%',
+    width: '100%',
+
+
+  },
+  viewFlip: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center'
+  },
+  btnFlip: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    padding: 15
+  },
+  txtFlip: {
+    fontSize: 20,
+    color: '#FFF',
+  },
+  btnCaptura: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 15,
+    backgroundColor: '#121212',
+
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  btnSwitch: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 15,
+    backgroundColor: '#121212',
+
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  btnCancel: {
+    padding: 20,
+    borderRadius: 15,
+
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  btnUpload: {
+    padding: 20,
+    borderRadius: 15,
+
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+
+
+});
