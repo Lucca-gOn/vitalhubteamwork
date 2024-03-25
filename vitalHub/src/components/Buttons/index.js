@@ -66,11 +66,11 @@ export const ButtonSelectGreen = ({
 }
 
 export const ButtonGreen = ({
-
+  onPress
 }) =>
 {
   return(
-    <ButtonGreenStyle>
+    <ButtonGreenStyle onPress={onPress}>
       <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />
       <TextWhiteMontBold>Enviar</TextWhiteMontBold>
     </ButtonGreenStyle>
