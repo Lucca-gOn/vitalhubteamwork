@@ -4,4 +4,4 @@ SELECT TOP (1000) [ID]
 
   INSERT INTO [VitalHub_G09M].[dbo].[TiposUsuario] ([ID], [TipoUsuario])
 VALUES (NEWID(), 'Paciente'),
-       (NEWID(), 'Médico');
+       (NEWID(), 'Medico');

@@ -1,7 +1,6 @@
 import { FlatList, StatusBar, View } from "react-native";
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer";
 import { Header } from "../../components/Header";
-
 import { CalendarListWeek } from "../../components/Calendars";
 import { ButtonNotSelect, ButtonSelect } from "../../components/Buttons";
 import { useState } from "react";
@@ -41,7 +40,7 @@ export default function Home(
     <Container $bgColor="#fbfbfb">
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header />
+      <Header navigation={navigation} />
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek />

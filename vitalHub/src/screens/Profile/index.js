@@ -9,6 +9,7 @@ import { LinkUnderlineDefault } from "../../components/Links"
 import { Stethoscope } from "../../components/Stethoscope"
 import { userDecodeToken } from '../../utils/Auth';
 import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function Profile({
   navigation,
@@ -24,6 +25,15 @@ export default function Profile({
   useEffect(() => {
     profileLoad();
   }, [])
+
+  const Logout = async () => {
+    try {
+      await AsyncStorage.removeItem('token');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error("Erro ao realizar logout:", error);
+    }
+  };
   return (
     <Container>
 
@@ -38,7 +48,7 @@ export default function Profile({
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>
-            Nome do Paciente
+            {profile.name}
           </Title>
         </ContainerMargin>
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
@@ -101,7 +111,7 @@ export default function Profile({
 
           <ButtonDefault textButton="Editar" />
 
-          <ButtonGray textButton="Sair do app" />
+          <ButtonGray textButton="Sair do app" onPress={Logout}/>
         </ContainerMargin>
       </ContainerScrollView>
 
