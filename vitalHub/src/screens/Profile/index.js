@@ -7,10 +7,27 @@ import { InputGray, InputGreen, InputGreenMultiLine } from "../../components/Inp
 import { ButtonDefault, ButtonGray } from "../../components/Buttons"
 import { LinkUnderlineDefault } from "../../components/Links"
 import { Stethoscope } from "../../components/Stethoscope"
+import { useEffect, useState } from "react"
+import {userDecodeToken} from '../../utils/Auth'
 
 export default function Profile({
   navigation,
 }) {
+
+  const [profile , setProfile] = useState({})
+
+  async function profileLoad(){
+    const token = await userDecodeToken();  
+    if(token){
+      console.log(token)
+      setProfile(token)
+    }  
+  }
+  useEffect(()=>{
+    profileLoad();
+  },[])
+
+  //console.log(profile)
   return (
     <Container>
 
@@ -25,12 +42,12 @@ export default function Profile({
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>
-            Nome do Paciente
+            {profile.name}
           </Title>
         </ContainerMargin>
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
           <Description2>
-            email@email.com
+            {profile.email}
           </Description2>
 
         </ContainerMargin>
