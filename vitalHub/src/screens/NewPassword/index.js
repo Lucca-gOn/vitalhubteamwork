@@ -17,7 +17,12 @@ export default function NewPassword({
       <StatusBar translucent={true} barStyle="dark-content" backgroundColor={'transparent'} currentHeight />
 
       <ContainerMargin $mb={25} $mt={20}>
-        <ButtonIcon onPress={() => navigation.replace('Login')}>
+        <ButtonIcon onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
+        }}>
           <IconX />
         </ButtonIcon>
         <BrandLogoBlue />
