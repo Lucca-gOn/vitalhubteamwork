@@ -36,7 +36,7 @@ export default function Login({
 
     .then(res=>{
       console.log(res)
-      navigation.navigate('Home')
+      navigation.navigate('Main')
   })
     .catch(error=> console.log(error))
   }
