@@ -1,21 +1,28 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode"; //serviço para decodificar o token
-import { decode, encode} from 'base-64';
+//biblioteca para decodificar a chave (token)  npm i jwt-decode
+import { jwtDecode } from "jwt-decode";
+//oferece funcionalidades para codificação e decodificação de dados em formato Base64
+import { decode, encode} from 'base-64'
 
-if( !global.atob ){
-  global.atob = decode
+if (!global.atob) {
+    global.atob = decode
 }
 
-if( !global.btoa){
-  global.btoa = encode
+if (!global.btoa) {
+    global.btoa = encode
 }
 
+//atob: Esta função decodifica uma string de dados que foi codificada usando a codificação base64.
+//btoa: Esta função codifica uma string de texto em uma string base64.
+
+//Funcao de decodificar o token
 export const userDecodeToken = async () => {
-  //Capturando o token
-  const token = await AsyncStorage.getItem('token');
-  if( token === null){
-    return null;
-  }
+    //Capturar o token
+    const token = await AsyncStorage.getItem('token');
+
+    if (token === null) {
+      return null;  
+    }
 
   //descriptografando o token
   const decoded = jwtDecode(token)
@@ -28,4 +35,3 @@ export const userDecodeToken = async () => {
     id: decoded.jti,
   }
 }
-

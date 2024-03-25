@@ -1,32 +1,30 @@
-import { ContainerHeader, ContainerMargin } from "../Conatainer"
-import { ImageUser } from "../Images/style"
-import { TextNameUserWhite, TitleHeader } from "../Texts/style"
-import { LinearGradienteHeader } from "./style"
+import { ContainerHeader, ContainerMargin } from "../Conatainer";
+import { ImageUser } from "../Images/style";
+import { TextNameUserWhite, TitleHeader } from "../Texts/style";
+import { LinearGradienteHeader } from "./style";
 import { Ionicons } from '@expo/vector-icons';
-import {userDecodeToken} from '../../utils/Auth'
+//import do decode token 
+import { userDecodeToken } from '../../utils/Auth';
 import { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
-
-
+import {TouchableOpacity} from 'react-native'
 
 export const Header = (
   {
-    navigation
+   navigation
   }
 ) => {
 
-  const [profile , setProfile] = useState({})
+  const [profile, setProfile] = useState({})
 
   async function profileLoad(){
-    const token = await userDecodeToken();  
-    if(token){
-      setProfile(token)
-    }  
-  }
-  useEffect(()=>{
-    profileLoad();
-  },[])
+    const token = await userDecodeToken();
 
+    setProfile(token);
+  }
+
+  useEffect(() => {
+    profileLoad();
+  }, [])
   return (
     <ContainerHeader>
       <LinearGradienteHeader>
