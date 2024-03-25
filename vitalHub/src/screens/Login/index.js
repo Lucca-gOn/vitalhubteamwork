@@ -31,14 +31,15 @@ export default function Login({
       email:'lucas@lucas.com',
       senha:'lucas'
     })
+    
     await AsyncStorage.setItem('token', JSON.stringify(response.data))
+
     .then(res=>{
       console.log(res)
       navigation.navigate('Home')
   })
     .catch(error=> console.log(error))
   }
-
 
   const [email, setEmail] = useState('');
   const [senha,setSenha] = useState('');
