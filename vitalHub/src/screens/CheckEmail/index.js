@@ -19,7 +19,12 @@ export default function CheckEmail({
       <StatusBar translucent={true} barStyle="dark-content" backgroundColor={'transparent'} currentHeight />
 
       <ContainerMargin $mb={25} $mt={20}>
-        <ButtonIcon onPress={()=> navigation.replace('Login')}>
+        <ButtonIcon onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }]
+          })
+        }}>
           <IconX />
         </ButtonIcon>
         <BrandLogoBlue />
@@ -31,7 +36,7 @@ export default function CheckEmail({
 
         <ContainerMargin $mt={15}>
           <Description>
-            Digite o código de 4 dígitos enviado para 
+            Digite o código de 4 dígitos enviado para
           </Description>
           <LinkBlueMedium>
             username@email.com
@@ -39,14 +44,14 @@ export default function CheckEmail({
         </ContainerMargin>
 
         <ContainerMargin $gap={15} $mt={20} $fd="row" $justContent="space-between">
-          <InputGreenCode/>
-          <InputGreenCode/>
-          <InputGreenCode/>
-          <InputGreenCode/>
+          <InputGreenCode />
+          <InputGreenCode />
+          <InputGreenCode />
+          <InputGreenCode />
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Continuar" onPress={() => navigation.navigate('NewPassword')}/>
+          <ButtonDefault textButton="Continuar" onPress={() => navigation.navigate('NewPassword')} />
 
           <LinkUnderlineDefault>Reenviar código</LinkUnderlineDefault>
         </ContainerMargin>
