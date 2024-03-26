@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using WebAPI.Contexts;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
@@ -25,8 +26,6 @@ namespace WebAPI.Repositories
             return true;
 
         }
-
-
 
         public Usuario BuscarPorEmailESenha(string email, string senha)
         {
@@ -59,45 +58,58 @@ namespace WebAPI.Repositories
 
         }
 
-        public Usuario BuscarPorId(Guid id)
+        public Usuario BuscarPorId(Guid? id)
         {
+            //permitir que sejam nulos, erro nullable object must have a value
             try
             {
-                Usuario usuarioBuscado = ctx.Usuarios
-                .Include(u => u.Paciente)
-                .Include(u => u.Medico)
-                .Select(u => new Usuario
-                {
-                    Id = u.Id,
-                    Nome = u.Nome,
-                    Email = u.Email,
-                    Foto = u.Foto,
+                //X != null verifica se o objeto X não é nulo. Se X não for nulo, o operador ternário cria um novo objeto X e atribui os valores existentes a ele. Se X for nulo, o operador ternário atribui null ao campo X do objeto Usuario.
 
-                    Paciente = new Paciente
+                //X = u.Paciente != null ? new X
+                //{
+                    // Atribui os valores
+                //} : null
+
+                     Usuario usuarioBuscado = ctx.Usuarios
+                    .Include(u => u.Paciente)
+                    .Include(u => u.Medico)
+                    .Select(u => new Usuario
                     {
-                        Id = u.Paciente.Id,
-                        DataNascimento = u.Paciente.DataNascimento,
-                        Cpf = u.Paciente.Cpf,
-                        Endereco = new Endereco
+                        Id = u.Id,
+                        Nome = u.Nome,
+                        Email = u.Email,
+                        Foto = u.Foto,
+
+                        Paciente = u.Paciente != null ? new Paciente
                         {
-                            Id = u.Paciente.Endereco.Id,
-                            Cep = u.Paciente.Endereco.Cep,
-                            Logradouro = u.Paciente.Endereco.Logradouro
-                        }
-                    },
-                    Medico = new Medico
-                    {
-                        Id = u.Medico.Id,
-                        Crm = u.Medico.Crm
-                    }
-                })
-            .FirstOrDefault(u => u.Id == id)!;
+                            Id = u.Paciente.Id,
+                            DataNascimento = u.Paciente.DataNascimento,
+                            Cpf = u.Paciente.Cpf,
+                            Endereco = u.Paciente.Endereco != null ? new Endereco
+                            {
+                                Id = u.Paciente.Endereco.Id,
+                                Cep = u.Paciente.Endereco.Cep,
+                                Logradouro = u.Paciente.Endereco.Logradouro,
+                                Latitude = u.Paciente.Endereco.Latitude,
+                                Longitude = u.Paciente.Endereco.Longitude
+                            } : null
+                        } : null,
+
+                        Medico = u.Medico != null ? new Medico
+                        {
+                            Id = u.Medico.Id,
+                            Crm = u.Medico.Crm,
+                            Especialidade = u.Medico.Especialidade,
+                            Endereco = u.Medico.Endereco
+                            
+                        } : null
+                    })
+                    .FirstOrDefault(u => u.Id == id)!;
 
                 return usuarioBuscado;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

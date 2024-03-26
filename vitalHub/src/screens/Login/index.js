@@ -28,7 +28,7 @@ export default function Login({
     
     // chamar a api de login 
     const response = await api.post('/Login',{
-      email:'lucas@lucas.com',
+      email:'lucas@gmail.com',
       senha:'lucas'
     })
     
