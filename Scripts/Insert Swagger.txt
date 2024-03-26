@@ -1,0 +1,5 @@
+//Especialidade
+
+{
+  "especialidade1": "Clinico",  
+}

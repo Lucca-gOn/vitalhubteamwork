@@ -1,9 +1,10 @@
-CREATE DATABASE [VitalHub]
+CREATE DATABASE [VitalHub_G09M]
 GO
 
-USE [VitalHub]
+USE [VitalHub_G09M]
 GO
-/****** Object:  Table [dbo].[Clinicas]    Script Date: 20/12/2023 13:55:13 ******/
+
+/****** Object:  Table [dbo].[Clinicas]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -13,16 +14,15 @@ CREATE TABLE [dbo].[Clinicas](
 	[NomeFantasia] [varchar](150) NULL,
 	[CNPJ] [varchar](30) NULL,
 	[RazaoSocial] [varchar](150) NULL,
-	[Latitude] [decimal](8, 6) NULL,
-	[Longitude] [decimal](9, 6) NULL,
 	[Email] [varchar](225) NULL,
+	[EnderecoID] [uniqueidentifier] NULL,
  CONSTRAINT [PK_Clinicas] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Consultas]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Consultas]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -43,7 +43,7 @@ CREATE TABLE [dbo].[Consultas](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Enderecos]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Enderecos]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -53,13 +53,15 @@ CREATE TABLE [dbo].[Enderecos](
 	[CEP] [varchar](50) NULL,
 	[Logradouro] [varchar](50) NULL,
 	[Numero] [int] NULL,
+	[Longitude] [decimal](9, 6) NULL,
+	[Latitude] [decimal](8, 6) NULL,
  CONSTRAINT [PK_Enderecos] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Especialidades]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Especialidades]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -73,7 +75,7 @@ CREATE TABLE [dbo].[Especialidades](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Exames]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Exames]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -89,7 +91,7 @@ CREATE TABLE [dbo].[Exames](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Medicos]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Medicos]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -98,13 +100,14 @@ CREATE TABLE [dbo].[Medicos](
 	[ID] [uniqueidentifier] NOT NULL,
 	[EspecialidadeID] [uniqueidentifier] NULL,
 	[CRM] [varchar](10) NULL,
+	[EnderecoID] [uniqueidentifier] NULL,
  CONSTRAINT [PK_Medicos] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MedicosClinicas]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[MedicosClinicas]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -119,7 +122,7 @@ CREATE TABLE [dbo].[MedicosClinicas](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[NiveisPrioridade]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[NiveisPrioridade]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -133,7 +136,7 @@ CREATE TABLE [dbo].[NiveisPrioridade](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Pacientes]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Pacientes]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -150,7 +153,7 @@ CREATE TABLE [dbo].[Pacientes](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Receitas]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Receitas]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -165,7 +168,7 @@ CREATE TABLE [dbo].[Receitas](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Situacoes]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Situacoes]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -179,21 +182,21 @@ CREATE TABLE [dbo].[Situacoes](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TiposUsuario]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[TiposUsuario]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[TiposUsuario](
 	[ID] [uniqueidentifier] NOT NULL,
-	[TipoUsuario] [nchar](10) NULL,
+	[TipoUsuario] [varchar](50) NULL,
  CONSTRAINT [PK_TiposUsuario] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Usuarios]    Script Date: 20/12/2023 13:55:13 ******/
+/****** Object:  Table [dbo].[Usuarios]    Script Date: 26/03/2024 09:53:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -211,7 +214,10 @@ CREATE TABLE [dbo].[Usuarios](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-INSERT [dbo].[Especialidades] ([ID], [Especialidade]) VALUES (N'3fa85f64-5717-4562-b3fc-2c963f66afa6', N'Cardiologia')
+ALTER TABLE [dbo].[Clinicas]  WITH CHECK ADD  CONSTRAINT [FK_Clinicas_Enderecos] FOREIGN KEY([EnderecoID])
+REFERENCES [dbo].[Enderecos] ([ID])
+GO
+ALTER TABLE [dbo].[Clinicas] CHECK CONSTRAINT [FK_Clinicas_Enderecos]
 GO
 ALTER TABLE [dbo].[Consultas]  WITH CHECK ADD  CONSTRAINT [FK_Consultas_MedicosClinicas] FOREIGN KEY([MedicoClinicaID])
 REFERENCES [dbo].[MedicosClinicas] ([ID])
@@ -242,6 +248,11 @@ ALTER TABLE [dbo].[Exames]  WITH CHECK ADD  CONSTRAINT [FK_Exames_Consultas] FOR
 REFERENCES [dbo].[Consultas] ([ID])
 GO
 ALTER TABLE [dbo].[Exames] CHECK CONSTRAINT [FK_Exames_Consultas]
+GO
+ALTER TABLE [dbo].[Medicos]  WITH CHECK ADD  CONSTRAINT [FK_Medicos_Enderecos] FOREIGN KEY([EnderecoID])
+REFERENCES [dbo].[Enderecos] ([ID])
+GO
+ALTER TABLE [dbo].[Medicos] CHECK CONSTRAINT [FK_Medicos_Enderecos]
 GO
 ALTER TABLE [dbo].[Medicos]  WITH CHECK ADD  CONSTRAINT [FK_Medicos_Especialidades] FOREIGN KEY([EspecialidadeID])
 REFERENCES [dbo].[Especialidades] ([ID])
@@ -277,4 +288,8 @@ ALTER TABLE [dbo].[Usuarios]  WITH CHECK ADD  CONSTRAINT [FK_Usuarios_TiposUsuar
 REFERENCES [dbo].[TiposUsuario] ([ID])
 GO
 ALTER TABLE [dbo].[Usuarios] CHECK CONSTRAINT [FK_Usuarios_TiposUsuario]
+GO
+USE [master]
+GO
+ALTER DATABASE [VitalHub_G09M] SET  READ_WRITE 
 GO
