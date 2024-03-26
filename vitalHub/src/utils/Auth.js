@@ -24,6 +24,9 @@ export const userDecodeToken = async () => {
       return null;  
     }
 
+  //descriptografando o token
+  const decoded = jwtDecode(token)
+
   
   return {
     role: decoded.role,

@@ -16,6 +16,7 @@ import SelectMedic from "./src/screens/SelectMedic";
 import SelectDate from "./src/screens/SelectDate";
 import Profile from "./src/screens/Profile";
 import ConsultationAddress from "./src/screens/ConsultationAddress";
+import { Main } from "./src/screens/Main";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ export default function App() {
 
         <Stack.Screen name='Splash' component={Splash}/>
         <Stack.Screen name='Login' component={Login}/>
+        <Stack.Screen name='Main' component={Main}/>
         <Stack.Screen name='RecoveryPassWord' component={RecoveryPassWord}/>
         <Stack.Screen name='CheckEmail' component={CheckEmail}/>
         <Stack.Screen name='NewPassword' component={NewPassword}/>

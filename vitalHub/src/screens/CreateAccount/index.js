@@ -56,7 +56,12 @@ export default function CreateAccount({
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
           <ButtonDefault textButton="Confirmar nova senha" onPress={() => navigation.replace('Login')} />
 
-          <LinkUnderlineDefault onPress={()=> {navigation.replace('Login')}}>Cancelar</LinkUnderlineDefault>
+          <LinkUnderlineDefault onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main' }]
+            })
+          }}>Cancelar</LinkUnderlineDefault>
         </ContainerMargin>
 
       </ContainerScrollView>

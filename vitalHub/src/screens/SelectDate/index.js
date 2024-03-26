@@ -20,6 +20,8 @@ export default function SelectDate({
 }) {
 
   const [select, setSelect] = useState(null)
+  const [showSummaryMedicalAgenda, setShowSummaryMedicalAgenda] = useState(null)
+
 
   const timeCLinic = [
     { label: '08:00', value: '08:00' },
@@ -67,7 +69,7 @@ export default function SelectDate({
             Icon={() => {
               return (
                 <TouchableOpacity>
-                  <AntDesign name="caretdown" size={14} color="#34898F" style={{ backgroundColor: 'pink' }} />
+                  <AntDesign name="caretdown" size={14} color="#34898F"/>
                 </TouchableOpacity>
               )
             }}
@@ -108,18 +110,23 @@ export default function SelectDate({
       </ContainerMargin>
 
 
-      <ContainerMargin $mt={42} $mb={30} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" />
+      <ContainerMargin $mt={42} $mb={30} $gap={30}>
+        <ButtonDefault textButton="Continuar" onPress={()=>setShowSummaryMedicalAgenda(true)} />
 
         <LinkUnderlineDefault
-          onPress={() => setShowModalScheduleAppointment(false)}
+          onPress={() => {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' }]
+              })
+          }}
         >
           Cancelar
         </LinkUnderlineDefault>
       </ContainerMargin>
 
 
-      <SummaryMedicalAgenda />
+      <SummaryMedicalAgenda navigation={navigation} showSummaryMedicalAgenda={showSummaryMedicalAgenda} setShowSummaryMedicalAgenda={setShowSummaryMedicalAgenda} />
     </ContainerMarginStatusBar>
   )
 }
