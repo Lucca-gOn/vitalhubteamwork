@@ -1,4 +1,5 @@
-﻿using WebAPI.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Contexts;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Utils;
@@ -25,19 +26,19 @@ namespace WebAPI.Repositories
 
         }
 
-        
+
 
         public Usuario BuscarPorEmailESenha(string email, string senha)
         {
-           // var user = ctx.Usuarios.FirstOrDefault
-               // (x => x.Email== email);
+            // var user = ctx.Usuarios.FirstOrDefault
+            // (x => x.Email== email);
 
             var user = ctx.Usuarios.Select(u => new Usuario
             {
                 Id = u.Id,
                 Email = u.Email,
                 Senha = u.Senha,
-                Nome =  u.Nome,
+                Nome = u.Nome,
                 TipoUsuario = new TiposUsuario
                 {
                     Id = u.TipoUsuario.Id,
@@ -50,17 +51,55 @@ namespace WebAPI.Repositories
 
             // var senhaInformada = Criptografia.GerarHash(senha);
 
-             if (!Criptografia.CompararHash(senha, user.Senha)) return null;
+            if (!Criptografia.CompararHash(senha, user.Senha)) return null;
 
             // if (!Criptografia.CompararHash(user.Senha, senhaInformada)) return null;
 
             return user;
-            
+
         }
 
         public Usuario BuscarPorId(Guid id)
         {
-            return ctx.Usuarios.FirstOrDefault(x => x.Id == id);
+            try
+            {
+                Usuario usuarioBuscado = ctx.Usuarios
+                .Include(u => u.Paciente)
+                .Include(u => u.Medico)
+                .Select(u => new Usuario
+                {
+                    Id = u.Id,
+                    Nome = u.Nome,
+                    Email = u.Email,
+                    Foto = u.Foto,
+
+                    Paciente = new Paciente
+                    {
+                        Id = u.Paciente.Id,
+                        DataNascimento = u.Paciente.DataNascimento,
+                        Cpf = u.Paciente.Cpf,
+                        Endereco = new Endereco
+                        {
+                            Id = u.Paciente.Endereco.Id,
+                            Cep = u.Paciente.Endereco.Cep,
+                            Logradouro = u.Paciente.Endereco.Logradouro
+                        }
+                    },
+                    Medico = new Medico
+                    {
+                        Id = u.Medico.Id,
+                        Crm = u.Medico.Crm
+                    }
+                })
+            .FirstOrDefault(u => u.Id == id)!;
+
+                return usuarioBuscado;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public void Cadastrar(Usuario usuario)
