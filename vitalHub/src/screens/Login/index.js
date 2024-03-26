@@ -1,4 +1,4 @@
-import {StatusBar} from "react-native";
+import {ActivityIndicator, StatusBar} from "react-native";
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { ButtonDefault, ButtonGoogle } from "../../components/Buttons";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
@@ -23,26 +23,37 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Login({
   navigation
 }) {
-  //Chamar a funcao de login
-  async function Login(){
-    
-    // chamar a api de login 
-    const response = await api.post('/Login',{
-      email:'lucas@lucas.com',
-      senha:'lucas'
-    })
-    
-    await AsyncStorage.setItem('token', JSON.stringify(response.data))
-
-    .then(res=>{
-      console.log(res)
-      navigation.navigate('Main')
-  })
-    .catch(error=> console.log(error))
-  }
-
   const [email, setEmail] = useState('');
   const [senha,setSenha] = useState('');
+  const [statusResponseLogin, setStatusResponseLogin] = useState(false);
+  const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
+  
+  //Chamar a funcao de login
+  async function Login(){    
+    // chamar a api de login 
+    try {
+      const response = await api.post('/Login',{
+        email:'lucas@lucas.com',
+        senha:'lucas'
+      })    
+      await AsyncStorage.setItem('token', JSON.stringify(response.data))
+      .then(res=>{
+        navigation.navigate('Main')
+        setStatusResponseLogin(false)
+        setStatusResponseLoginGoogle(false)
+        
+    })
+      .catch(error=>{ 
+        console.log(error)
+        setStatusResponseLoginGoogle(false)
+      })
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+ 
   return (
 
     // <ContainerSafeArea style={{ justifyContent: "center", alignItems: "center" }}>
@@ -83,8 +94,14 @@ export default function Login({
         <LinkGray onPress={() => { navigation.navigate('RecoveryPassWord') }}>Esqueceu sua senha?</LinkGray>
 
         <ContainerMargin $mt={42} $gap={15} $mb={30}>
-          <ButtonDefault textButton="Entrar" onPress={()=> {Login()}}/>
-          <ButtonGoogle textButton="Entrar com google" onPress={()=> {Login()}}/>
+          <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' onPress={()=> {
+            Login()
+            setStatusResponseLogin(true)
+            }}/>
+          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" onPress={()=> {
+            Login()
+            setStatusResponseLoginGoogle(true)
+            }}/>
         </ContainerMargin>
 
         <ContainerMargin $fd="row" $mb={30} >
