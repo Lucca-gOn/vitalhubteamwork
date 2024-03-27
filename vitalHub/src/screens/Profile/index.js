@@ -10,11 +10,13 @@ import { Stethoscope } from "../../components/Stethoscope"
 import { userDecodeToken } from '../../utils/Auth';
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import {api, userResource} from "../../service/Service"
 
 export default function Profile({
   navigation,
 }) {
   const [profile, setProfile] = useState({})
+  const [user, setUser] = useState({})
 
   async function profileLoad() {
     const token = await userDecodeToken();
@@ -25,6 +27,16 @@ export default function Profile({
   useEffect(() => {
     profileLoad();
   }, [])
+
+  useEffect(() => {
+    async function ListUserProfile() {
+        const response = await api.get(`${userResource}/${profile.id}`);
+        const data = response.data;
+        setUser(data);
+    }
+
+    ListUserProfile();
+}, []);
 
   const Logout = async () => {
     try {

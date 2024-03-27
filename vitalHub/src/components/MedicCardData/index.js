@@ -9,23 +9,24 @@ export const MedicCardData = ({
   select,
   onPress,
   data: {
-    photo,
-    name,
-    especificidade
-  }
+    idNavigation : {nome, foto},
+    especialidade
+  },
+  data
 }) => {
-
+  console.log(data)
   return (
     <ButtonClinic onPress={onPress} $clickButton={select} style={{ gap: 12 }}>
       <ContainerMargin $fd="row" $justContent={"flex-start"} $gap={10}>
 
-        <ImageUser $width="77px" $height="80px" source={photo !== undefined ? { uri: photo } : require('../../assets/images/NotImage.svg')} />
+        <ImageUser $width="77px" $height="80px" source={(foto !== undefined && foto !== 'string' )? { uri: foto } : require('../../assets/images/NotImage.svg')} />
         <ContainerMargin $alingItens="flex-start" $width="content" style={{gap:10}}>
-          <TitleCard>{name}</TitleCard>
+          <TitleCard>{nome}</TitleCard>
           <TextQuickSandRegular>
-            {especificidade.map((element, index) => (
+            {/* {especificidade.map((element, index) => (
               index === 0 ? element : `, ${element}`
-            ))}
+            ))} */}
+            {especialidade.especialidade1}
           </TextQuickSandRegular>
         </ContainerMargin>
       </ContainerMargin>
