@@ -7,11 +7,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export const ButtonDefault = ({
   onPress,
   textButton = '',
-  statusResponse
+  statusResponse,
+  disabled
 }) => {
   return (
     <>
-      <ButtonBlueStyle onPress={onPress}>
+      <ButtonBlueStyle onPress={onPress} disabled={disabled}>
         <TextButtonBlue>{statusResponse ? <ActivityIndicator /> : textButton}</TextButtonBlue>
       </ButtonBlueStyle>
     </>
@@ -32,11 +33,12 @@ export const ButtonGray = ({
 export const ButtonGoogle = ({
   textButton = '',
   onPress,
-  statusResponse
+  statusResponse,
+  disabled
 }) => {
   return (
     <>
-      <ButtonGoogleStyle onPress={onPress}>
+      <ButtonGoogleStyle onPress={onPress} disabled={disabled}>
         {statusResponse ?
           <TextButtonGoogle><ActivityIndicator /></TextButtonGoogle>
           : <>

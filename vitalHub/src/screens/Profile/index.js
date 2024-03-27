@@ -10,14 +10,15 @@ import { Stethoscope } from "../../components/Stethoscope"
 import { userDecodeToken } from '../../utils/Auth';
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import {api, userResource} from "../../service/Service"
+import api from "../../service/Service"
 
 export default function Profile({
   navigation,
 }) {
+  
   const [profile, setProfile] = useState({})
-  const [user, setUser] = useState({})
-
+  const [user, setUser] = useState([])
+  
   async function profileLoad() {
     const token = await userDecodeToken();
 
@@ -28,15 +29,20 @@ export default function Profile({
     profileLoad();
   }, [])
 
-  useEffect(() => {
-    async function ListUserProfile() {
-        const response = await api.get(`${userResource}/${profile.id}`);
-        const data = response.data;
-        setUser(data);
+  async function ListarUsuario() {
+    try {
+      // Instanciar a chamada da api
+      const response = await api.get(`/Usuario/BuscarUsuarioPorId/${profile.id}`);
+      setUser(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
     }
-
-    ListUserProfile();
-}, []);
+  }
+  
+  useEffect(() => {
+    ListarUsuario();
+  }, [])
 
   const Logout = async () => {
     try {
@@ -59,8 +65,6 @@ export default function Profile({
       <ContainerScrollView
         showsVerticalScrollIndicator={false}
       >
-
-
         <ContainerMargin $mt={20} $width="100%">
           <Title>
             {profile.name}
@@ -79,6 +83,7 @@ export default function Profile({
             placeholder="DD/MM/AAAA"
             inputMode="decimal"
             autoComplete="birthdate-full"
+            // value={user.paciente.dataNascimento}
           />
         </ContainerMargin>
 
@@ -87,6 +92,7 @@ export default function Profile({
           <InputGray
             placeholder="xxx.xxx.xxx-xx"
             inputMode="decimal"
+            // value={user.paciente.cpf}
           />
         </ContainerMargin>
 
@@ -97,6 +103,7 @@ export default function Profile({
             autoComplete="address-line1"
             autoCapitalize="words"
             inputMode="text"
+            // value={user.paciente.endereco.logradouro}
           />
 
         </ContainerMargin>
@@ -109,6 +116,7 @@ export default function Profile({
               placeholder="XXXXX-XXX"
               inputMode="decimal"
               autoComplete="postal-code"
+              // value={user.paciente.endereco.cep}
             />
           </ContainerMargin>
           <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
@@ -117,6 +125,7 @@ export default function Profile({
               placeholder="Moema-SP"
               inputMode="text"
               autoCapitalize="words"
+              // value={user.paciente.endereco.cidade}
             />
           </ContainerMargin>
         </ContainerMargin>

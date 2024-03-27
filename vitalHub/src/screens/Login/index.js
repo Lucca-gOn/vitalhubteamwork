@@ -8,6 +8,7 @@ import { TextGrayDark, Title } from "../../components/Texts/style";
 import { useState } from "react";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { validEmail } from "../../utils/validForm";
 
 // const DataMedico = [
 //   { id: 1, nome: 'Allan Rodrigues dos Santos', email: 'allan@allan.com', senha: 'admin', image: 'https://github.com/AllanR1991.png', typeUser: 'admin' , idade: 12, crm: 'CRM/SP 123456', funcao: ['Demartologia', 'Esteticista'], dataNascimento: '13/08/1991', cpf:12345678912, endereco: 'Rua Oswaldo Stuchi, 120', cep: '09791770', cidade:'Moema', estado: 'sp' },
@@ -27,13 +28,15 @@ export default function Login({
   const [senha,setSenha] = useState('');
   const [statusResponseLogin, setStatusResponseLogin] = useState(false);
   const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
   
   //Chamar a funcao de login
   async function Login(){    
     // chamar a api de login 
+    console.log(`tentou fazer login`)
     try {
       const response = await api.post('/Login',{
-        email:'lucas@lucas.com',
+        email:'lucas@gmail.com',
         senha:'lucas'
       })    
       await AsyncStorage.setItem('token', JSON.stringify(response.data))
@@ -41,7 +44,9 @@ export default function Login({
         navigation.navigate('Main')
         setStatusResponseLogin(false)
         setStatusResponseLoginGoogle(false)
-        
+        setTimeout(()=>{
+          setButtonDisable(false)
+        },1000)        
     })
       .catch(error=>{ 
         console.log(error)
@@ -53,6 +58,7 @@ export default function Login({
     }
   }
 
+  validEmail(email)
  
   return (
 
@@ -75,7 +81,11 @@ export default function Login({
             inputMode="email"
             maxLength={50}
             value={email}
-            onChangeText={(txt) => setEmail(txt)}
+            onChangeText={(txt) => {
+              setEmail(txt)
+            }}
+            // onEndEditing={(txt)=>{validEmail(email)
+            //   setEmail(txt)}}
             // onChange={event => event.nativeEvent.text}
           />
 
@@ -94,13 +104,16 @@ export default function Login({
         <LinkGray onPress={() => { navigation.navigate('RecoveryPassWord') }}>Esqueceu sua senha?</LinkGray>
 
         <ContainerMargin $mt={42} $gap={15} $mb={30}>
-          <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' onPress={()=> {
+          <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' disabled={buttonDisable}
+            onPress={()=> {
             Login()
             setStatusResponseLogin(true)
+            setButtonDisable(true)
             }}/>
-          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" onPress={()=> {
+          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={()=> {
             Login()
             setStatusResponseLoginGoogle(true)
+            setButtonDisable(true)
             }}/>
         </ContainerMargin>
 

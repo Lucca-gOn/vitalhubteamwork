@@ -13,19 +13,6 @@ export default function SelectMedic({
 }) {
 
   const [select, setSelect] = useState(null)
-
-  // const dataMedic = [
-  //   { id: 1, name: 'Alessandra', especificidade: ['Cirurgião', 'Cardiologista'], photo: 'https://avatars.githubusercontent.com/u/133692577?v=4' },
-  //   { id: 2, name: 'Kumushiro', especificidade: ['Clínico', 'Pediatra'], photo: 'https://avatars.githubusercontent.com/u/125310213?v=4' },
-  //   { id: 3, name: 'Rodrigo Santos', especificidade: ['Demartologa', 'Esteticista'], photo: 'https://avatars.githubusercontent.com/u/125275514?v=4' },
-  //   { id: 4, name: 'Alessandra', especificidade: ['Cirurgião', 'Cardiologista'], photo: 'https://avatars.githubusercontent.com/u/133692577?v=4' },
-  //   { id: 5, name: 'Kumushiro', especificidade: ['Clínico', 'Pediatra'], photo: 'https://avatars.githubusercontent.com/u/125310213?v=4' },
-  //   { id: 6, name: 'Rodrigo Santos', especificidade: ['Demartologa', 'Esteticista'], photo: 'https://avatars.githubusercontent.com/u/125275514?v=4' },
-  //   { id: 7, name: 'Alessandra', especificidade: ['Cirurgião', 'Cardiologista'], photo: 'https://avatars.githubusercontent.com/u/133692577?v=4' },
-  //   { id: 8, name: 'Kumushiro', especificidade: ['Clínico', 'Pediatra'], photo: 'https://avatars.githubusercontent.com/u/125310213?v=4' },
-  //   { id: 9, name: 'Rodrigo Santos', especificidade: ['Demartologa', 'Esteticista'], photo: 'https://avatars.githubusercontent.com/u/125275514?v=4' },
-  // ]
-
   const [medicosLista, setMedicosLista] = useState([]);
 
   async function ListarMedicos(){

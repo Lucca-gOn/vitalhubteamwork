@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-export const userResource = "/Usuario/BuscarUsuarioPorId";
-
 //Declarar a porta da api, mesma porta da api do Swagger
 const portaApi = '4466';
 
