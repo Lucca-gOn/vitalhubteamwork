@@ -1,4 +1,4 @@
-import {ActivityIndicator, StatusBar} from "react-native";
+import {ActivityIndicator, StatusBar, Text} from "react-native";
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { ButtonDefault, ButtonGoogle } from "../../components/Buttons";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
@@ -29,14 +29,15 @@ export default function Login({
   const [statusResponseLogin, setStatusResponseLogin] = useState(false);
   const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(true);
   
   //Chamar a funcao de login
   async function Login(){    
     // chamar a api de login 
-    console.log(`tentou fazer login`)
+    // console.log(`tentou fazer login`)
     try {
-      const response = await api.post('/Login',{
-        email:'lucas@gmail.com',
+      const response = await api.post('http://192.168.21.50:4466/api/Login',{
+        email:'lucas@lucas.com',
         senha:'lucas'
       })    
       await AsyncStorage.setItem('token', JSON.stringify(response.data))
@@ -46,7 +47,7 @@ export default function Login({
         setStatusResponseLoginGoogle(false)
         setTimeout(()=>{
           setButtonDisable(false)
-        },1000)        
+        },1000)       
     })
       .catch(error=>{ 
         console.log(error)
@@ -58,7 +59,7 @@ export default function Login({
     }
   }
 
-  validEmail(email)
+  // validEmail(email)
  
   return (
 
@@ -83,11 +84,13 @@ export default function Login({
             value={email}
             onChangeText={(txt) => {
               setEmail(txt)
+            }} 
+            onBlur={()=>{
+              setCheckEmail(validEmail(email));
             }}
-            // onEndEditing={(txt)=>{validEmail(email)
-            //   setEmail(txt)}}
-            // onChange={event => event.nativeEvent.text}
+                    
           />
+          {!checkEmail ? <Text>Email invalido</Text> : <></>}
 
           <InputGreen
             placeholder="Senha"
