@@ -1,5 +1,9 @@
-export const validEmail = (text) => {
-  // const regex = new RegExp('@','.');
-
-  console.log(text)
+export const validEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  console.log(email)
+  if(email!= '' && email != null){
+    return emailRegex.test(email);
+  }else{
+    return false
+  }
 }
