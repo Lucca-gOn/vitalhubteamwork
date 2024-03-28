@@ -1,4 +1,4 @@
-USE VitalHub_G09M;
+USE VitalHub;
 
 -- Selecionando todos os endereços
 SELECT * FROM dbo.Enderecos;

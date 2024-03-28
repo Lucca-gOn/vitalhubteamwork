@@ -1,0 +1,28 @@
+{
+  "rg": "29.080.268-4",
+  "cpf": "925.647.574-05",
+  "dataNascimento": "1988-03-03",
+  "cep": "86043-018",
+  "logradouro": "Rua Aparecido Fernando de Oliveira",
+  "numero": 279,
+  "cidade": "Londrina",
+  "nome": "Augusto Marcos Vinicius Bernardes",
+  "email": "augusto@augusto.com",
+  "senha": "augusto",
+  "idTipoUsuario": "D9FA81A4-C55D-4DE3-9342-9ED83AAC9E3A",
+  "foto": "string"
+},
+{
+  "rg": "24.468.995-7",
+  "cpf": "817.111.841-01",
+  "dataNascimento": "1983-03-09",
+  "cep": "69304-370",
+  "logradouro": "Rua José Coelho",
+  "numero": 841,
+  "cidade": "Boa Vista",
+  "nome": "Caio Ian Jorge Brito",
+  "email": "caio@caio.com",
+  "senha": "caio",
+  "idTipoUsuario": "D9FA81A4-C55D-4DE3-9342-9ED83AAC9E3A",
+  "foto": "string"
+}

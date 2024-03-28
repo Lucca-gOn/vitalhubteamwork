@@ -1,0 +1,30 @@
+CadastroMedico
+
+{
+  "nome": "Allan Rodrigues dos Santos",
+  "email": "allan@allan.com",
+  "dataNascimento": "1995-05-20",
+  "senha": "allan",
+  "foto": "string",
+  "cep": "69316-044",
+  "logradouro": "Rua Eclipse",
+  "numero": 365,
+  "cidade": "Boa Vista",
+  "especialidadeId": "CAC22545-F621-4DF8-B64A-0D5561E1BA66",
+  "crm": "123456",
+  "idTipoUsuario": "51A0936F-8246-4278-9626-B977F4A61360"
+},
+{
+  "nome": "Lucas Oliveira",
+  "email": "lucas@lucas.com",
+  "dataNascimento": "1984-03-28",
+  "senha": "lucas",
+  "foto": "string",
+  "cep": "69020-155",
+  "logradouro": "Beco Saturnino",
+  "numero": 958,
+  "cidade": "Manaus",
+  "especialidadeId": "CAC22545-F621-4DF8-B64A-0D5561E1BA66",
+  "crm": "654321",
+  "idTipoUsuario": "51A0936F-8246-4278-9626-B977F4A61360"
+}

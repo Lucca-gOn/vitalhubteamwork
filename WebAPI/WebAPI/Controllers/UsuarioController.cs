@@ -33,19 +33,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        [HttpGet("BuscarUsuarioPorId/{id}")]
-        public IActionResult BuscarUserId(Guid id)
-        {
-            try
-            {
-                return Ok(usuarioRepository.BuscarPorId(id));
-            }
-            catch (Exception erro)
-            {
-
-                return BadRequest(erro.Message);
-            }
-        }
+        
 
     }
 }
