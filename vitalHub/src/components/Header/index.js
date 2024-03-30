@@ -10,21 +10,12 @@ import {TouchableOpacity} from 'react-native'
 
 export const Header = (
   {
-   navigation
+   navigation,
+   name
   }
 ) => {
 
-  const [profile, setProfile] = useState({})
-
-  async function profileLoad(){
-    const token = await userDecodeToken();
-
-    setProfile(token);
-  }
-
-  useEffect(() => {
-    profileLoad();
-  }, [])
+  
   return (
     <ContainerHeader>
       <LinearGradienteHeader>
@@ -34,7 +25,7 @@ export const Header = (
             <ImageUser source={{ uri: 'https://github.com/AllanR1991.png' }} />
             <ContainerMargin $alingItens="flex-start" $justContent="flex-start" $width="auto" $gap={3}>
               <TitleHeader>Bem vindo!</TitleHeader>
-              <TextNameUserWhite>{profile.name}</TextNameUserWhite>
+              <TextNameUserWhite>{name}</TextNameUserWhite>
             </ContainerMargin>
             </TouchableOpacity>
           </ContainerMargin>
