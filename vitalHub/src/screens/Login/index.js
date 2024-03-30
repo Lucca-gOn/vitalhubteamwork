@@ -1,66 +1,70 @@
-import {ActivityIndicator, StatusBar, Text} from "react-native";
+import { ActivityIndicator, StatusBar, Text } from "react-native";
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { ButtonDefault, ButtonGoogle } from "../../components/Buttons";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
 import { InputGreen } from "../../components/Inputs/styled";
 import { LinkBlueLigth, LinkGray } from "../../components/Links";
 import { TextGrayDark, Title } from "../../components/Texts/style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validEmail } from "../../utils/validForm";
-
-// const DataMedico = [
-//   { id: 1, nome: 'Allan Rodrigues dos Santos', email: 'allan@allan.com', senha: 'admin', image: 'https://github.com/AllanR1991.png', typeUser: 'admin' , idade: 12, crm: 'CRM/SP 123456', funcao: ['Demartologia', 'Esteticista'], dataNascimento: '13/08/1991', cpf:12345678912, endereco: 'Rua Oswaldo Stuchi, 120', cep: '09791770', cidade:'Moema', estado: 'sp' },
-//   { id: 2, nome: 'Everton', email: 'allan@allan.com', senha: 'admin', image: 'https://github.com/AllanR1991.png', typeUser: 'admin' , idade: 12, crm: 'CRM/SP 123456', funcao: ['Demartologia', 'Esteticista'], dataNascimento: '13/08/1991', cpf:12345678912, endereco: 'Rua Oswaldo Stuchi, 120', cep: '09791770', cidade:'Moema', estado: 'sp' },
-// ]
-
-// const DataPaciente = [
-//   { id: 1, nome: 'Allan Rodrigues dos Santos', email: 'allan@allan.com', senha: 'admin', image: 'https://github.com/AllanR1991.png', typeUser: 'admin' , idade: 12, crm: 'CRM/SP 123456', funcao: ['Demartologia', 'Esteticista'] },
-//   { id: 2, nome: 'Carlos', email: 'carlos@carlos.com', senha: 'user', image: 'https://github.com/Carlos-Augusto-Roque.png', typeUser: 'paciente' },
-//   { id: 3, nome: 'Evelin', email: 'evelin@evelin.com', senha: 'user', image: 'https://github.com/evy-oliveira0807.png', typeUser: 'paciente' },
-// ]
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Login({
   navigation
 }) {
   const [email, setEmail] = useState('');
-  const [senha,setSenha] = useState('');
+  const [senha, setSenha] = useState('');
   const [statusResponseLogin, setStatusResponseLogin] = useState(false);
   const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
+
   const [checkEmail, setCheckEmail] = useState(true);
-  
+  const isFocused = useIsFocused();
+
   //Chamar a funcao de login
-  async function Login(){    
+  async function Login() {
     // chamar a api de login 
-    // console.log(`tentou fazer login`)
-    try {
-      const response = await api.post('http://192.168.21.50:4466/api/Login',{
-        email:'lucas@lucas.com',
-        senha:'lucas'
-      })    
-      await AsyncStorage.setItem('token', JSON.stringify(response.data))
-      .then(res=>{
+    if (isFocused) {
+      console.log('FIZ REQUISIÇÃO')
+      try {
+        const response = await api.post('/Login', {
+          email: 'allan@allan.com',
+          senha: 'allan'
+        })
+        //console.log(response.data)
+        await AsyncStorage.setItem('token', JSON.stringify(response.data))
+
         navigation.navigate('Main')
-        setStatusResponseLogin(false)
-        setStatusResponseLoginGoogle(false)
-        setTimeout(()=>{
-          setButtonDisable(false)
-        },1000)       
-    })
-      .catch(error=>{ 
+          setTimeout(()=>{
+            setStatusResponseLogin(false),
+              setStatusResponseLoginGoogle(false),
+              setButtonDisable(false)
+
+          },250)  
+      } catch (error) {
         console.log(error)
-        setStatusResponseLoginGoogle(false)
-      })
-      
-    } catch (error) {
-      console.log(error)
+        alert('Problema ao tentar conectar com o servidor, favor acionar o suporte');
+        
+      }
     }
+
   }
 
+  useEffect(()=> {
+    const unsucscribe = navigation.addListener('transitionEnd', (e) => {
+      setStatusResponseLogin(false)
+      setStatusResponseLoginGoogle(false)
+      setButtonDisable(false)
+    })
+    return unsucscribe;
+  },[navigation])
   // validEmail(email)
- 
+
+  useEffect(() => {
+    setButtonDisable(!isFocused);
+  }, [isFocused]);
   return (
 
     // <ContainerSafeArea style={{ justifyContent: "center", alignItems: "center" }}>
@@ -84,11 +88,11 @@ export default function Login({
             value={email}
             onChangeText={(txt) => {
               setEmail(txt)
-            }} 
-            onBlur={()=>{
-              setCheckEmail(validEmail(email));
             }}
-                    
+          // onBlur={()=>{
+          //   setCheckEmail(validEmail(email));
+          // }}
+
           />
           {!checkEmail ? <Text>Email invalido</Text> : <></>}
 
@@ -100,7 +104,7 @@ export default function Login({
             maxLength={50}
             secureTextEntry={true}
             value={senha}
-            onChangeText={(txt)=>setSenha(txt)}
+            onChangeText={(txt) => setSenha(txt)}
           />
         </ContainerMargin>
 
@@ -108,16 +112,16 @@ export default function Login({
 
         <ContainerMargin $mt={42} $gap={15} $mb={30}>
           <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' disabled={buttonDisable}
-            onPress={()=> {
-            Login()
-            setStatusResponseLogin(true)
-            setButtonDisable(true)
-            }}/>
-          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={()=> {
+            onPress={() => {
+              Login()
+              setStatusResponseLogin(true)
+              setButtonDisable(true)
+            }} />
+          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={() => {
             Login()
             setStatusResponseLoginGoogle(true)
             setButtonDisable(true)
-            }}/>
+          }} />
         </ContainerMargin>
 
         <ContainerMargin $fd="row" $mb={30} >
@@ -129,5 +133,7 @@ export default function Login({
     // </ContainerSafeArea>
 
 
+
   )
-} 
+}
+
