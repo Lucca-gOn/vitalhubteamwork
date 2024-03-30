@@ -3,27 +3,28 @@ import { Container, ContainerMargin, ContainerScrollView } from "../../component
 import { Header } from "../../components/Header";
 import { CalendarListWeek } from "../../components/Calendars";
 import { ButtonNotSelect, ButtonSelect } from "../../components/Buttons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardAppointment from "../../components/CardAppointment";
 import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment } from "../../components/Modals";
 import { Stethoscope } from "../../components/Stethoscope";
+import { userDecodeToken } from "../../utils/Auth";
 
 export default function Home(
   {
     navigation
   }
 ) {
-
   const [select, setSelect] = useState('Agendadas');
 
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
-  // const [dataTest, setDataTeste] = useState(dataPacient);
-
+  
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
-
+  // Definindo UseState para armazenar os dados do perfil
+  const [profile, setProfile] = useState({})
+  
   const dataPacient = [
     { id: 1, name: 'Allan Rodrigues dos Santos', age: 32, email: 'allan@allan.com', timeConsult: '15:00', typeConsult: 'Exame', statusConsult: 'Realizadas', photo: 'https://github.com/AllanR1991.png' },
     { id: 2, name: 'Everton Araujo', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
@@ -35,12 +36,27 @@ export default function Home(
     { id: 8, name: 'Kamille Milo', age: 20, email: 'kamille@kamille.com', timeConsult: '13:00', typeConsult: 'Exame', statusConsult: 'Canceladas', photo: 'https://github.com/KamiMilo.png' }
   ]
 
+  // Função para obter os dados descriptografados do token
+  async function profileLoad() {
+    const token = await userDecodeToken();
+    setProfile(token);    
+  }
+
+  // Desestruturando apenas os dados a serem utilizados no momento
+  const { name, role } = profile;
+
+  //Executando a função ProfileLoad
+  useEffect(() => {
+    profileLoad();
+  }, [])
 
   return (
+
     <Container $bgColor="#fbfbfb">
+
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header navigation={navigation} />
+      <Header navigation={navigation} name={name} />
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek />
@@ -52,7 +68,7 @@ export default function Home(
         ))}
       </ContainerMargin>
 
-      <Container style={{width:'90%', marginTop:30}}>
+      <Container style={{ width: '90%', marginTop: 30 }}>
         <FlatList
           data={dataPacient}
           renderItem={({ item }) =>
@@ -74,10 +90,13 @@ export default function Home(
         />
       </Container>
 
-      <Stethoscope
-        onPress={()=>setShowModalScheduleAppointment(true)}
-        
-      />
+      {
+        role === 'Paciente' ?
+        <Stethoscope
+          onPress={() => setShowModalScheduleAppointment(true)}
+        />:
+         <></>      
+      }
 
       <ModalCancel
         consultSelect={consultSelect}
@@ -106,3 +125,4 @@ export default function Home(
 
   )
 }
+
