@@ -1,0 +1,23 @@
+{
+  "nomeFantasia": "Policlínica Centro",
+  "cnpj": "47.434.279/0001-85",
+  "razaoSocial": "Mirella e Leonardo Padaria ME",
+  "email": "policlinica@policlinica.com",
+  "enderecoId": "3E4ACD98-6E5F-4268-AAA2-A81B7023C264",
+}
+
+{
+  "nomeFantasia": "Hospital Ipiranga",
+  "cnpj": "08.068.267/0001-22",
+  "razaoSocial": "Carlos e Camila Lavanderia ME",
+  "email": "ipiranga@ipiranga.com",
+  "enderecoId": "09893622-4BC3-4FC2-AE59-6A990BA3C9BD",
+}
+
+{
+  "nomeFantasia": "Hospital da Mulher",
+  "cnpj": "47.462.223/0001-34",
+  "razaoSocial": "Olivia e Gustavo Telecom ME",
+  "email": "mulher@mulher.com",
+  "enderecoId": "8522E8C0-A65C-42FE-A135-87EA6646A361",
+}

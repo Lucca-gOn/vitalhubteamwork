@@ -10,9 +10,9 @@ CadastroMedico
   "logradouro": "Rua Eclipse",
   "numero": 365,
   "cidade": "Boa Vista",
-  "especialidadeId": "CAC22545-F621-4DF8-B64A-0D5561E1BA66",
+  "especialidadeId": "C5401DA6-F98C-4A24-8DD1-3C8C244ECDB4",
   "crm": "123456",
-  "idTipoUsuario": "51A0936F-8246-4278-9626-B977F4A61360"
+  "idTipoUsuario": "B7BBED79-43B2-43D8-9751-2575DA0DA7C5"
 },
 {
   "nome": "Lucas Oliveira",
@@ -24,7 +24,7 @@ CadastroMedico
   "logradouro": "Beco Saturnino",
   "numero": 958,
   "cidade": "Manaus",
-  "especialidadeId": "CAC22545-F621-4DF8-B64A-0D5561E1BA66",
+  "especialidadeId": "F9B58DAE-3E46-4AEB-9447-3D16E88C753E",
   "crm": "654321",
-  "idTipoUsuario": "51A0936F-8246-4278-9626-B977F4A61360"
+  "idTipoUsuario": "B7BBED79-43B2-43D8-9751-2575DA0DA7C5"
 }

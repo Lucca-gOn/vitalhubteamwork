@@ -1,4 +1,4 @@
-{
+ {
   "rg": "29.080.268-4",
   "cpf": "925.647.574-05",
   "dataNascimento": "1988-03-03",
@@ -9,7 +9,7 @@
   "nome": "Augusto Marcos Vinicius Bernardes",
   "email": "augusto@augusto.com",
   "senha": "augusto",
-  "idTipoUsuario": "D9FA81A4-C55D-4DE3-9342-9ED83AAC9E3A",
+  "idTipoUsuario": "95636771-8410-4AC7-A0BE-F9AF57AEF3CD",
   "foto": "string"
 },
 {
@@ -23,6 +23,6 @@
   "nome": "Caio Ian Jorge Brito",
   "email": "caio@caio.com",
   "senha": "caio",
-  "idTipoUsuario": "D9FA81A4-C55D-4DE3-9342-9ED83AAC9E3A",
+  "idTipoUsuario": "95636771-8410-4AC7-A0BE-F9AF57AEF3CD",
   "foto": "string"
 }
