@@ -7,6 +7,7 @@ SELECT TOP (1000) [ID]
       ,[Cidade]
   FROM [VitalHub_G09M].[dbo].[Enderecos]
 
+  USE [VitalHub_G09M]
 
   insert into Enderecos values 
 	(NEWID(),'09760-280','Av. Armando Ítalo Setti',402,-23.6982, -46.5473,'São Bernardo do Campo'),
