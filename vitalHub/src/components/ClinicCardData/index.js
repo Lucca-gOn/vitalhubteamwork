@@ -15,7 +15,7 @@ export const ClinicCardData = ({
     open
   }
 }) => {
-
+  console.log(data)
   return (
     <ButtonClinic onPress={onPress} $clickButton={select} style={{gap:12}}>
       <ContainerMargin $fd="row" $justContent="space-between" $width="100%" >

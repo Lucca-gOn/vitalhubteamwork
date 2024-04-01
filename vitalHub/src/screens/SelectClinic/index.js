@@ -1,7 +1,7 @@
 import { FlatList, Text } from "react-native";
 import { ContainerMargin, ContainerMarginStatusBar } from "../../components/Conatainer";
 import { Title } from "../../components/Texts/style";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClinicCardData } from "../../components/ClinicCardData";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
@@ -11,6 +11,21 @@ export default function SelectClinic({
 }) {
 
   const [select, setSelect] = useState(null)
+  const [clinicaLista, setClinicaLista] = useState([]);
+
+  async function ListarClinicas(){
+    //Instanciar a chamada da api
+    api.get('/Clinica/ListarTodas')
+    .then( response => {
+      setClinicaLista(response.data)
+    }).catch( error =>{
+      console.log(error);
+    })
+  }
+
+  useEffect(() => {
+    ListarClinicas()
+  },[])
 
   const clinicas = [
     { id: 1, company: 'Clínica Natureh', grade: 4.5, city: 'São Paulo', uf: 'SP', open: 'Seg-Sex' },
@@ -34,7 +49,7 @@ export default function SelectClinic({
       </ContainerMargin>
 
       <FlatList
-        data={clinicas}
+        data={clinicaLista}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ClinicCardData
