@@ -14,10 +14,12 @@ namespace WebAPI.Controllers
     public class PacientesController : ControllerBase
     {
         private IPacienteRepository pacienteRepository { get; set; }
+        private IMedicoRepository medicoRepository { get; set; }
 
         public PacientesController()
         {
             pacienteRepository = new PacienteRepository();
+            medicoRepository = new MedicoRepository();
         }
 
         [Authorize]
@@ -50,9 +52,19 @@ namespace WebAPI.Controllers
         [HttpGet("PerfilLogado")]
         public IActionResult BuscarLogado()
         {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+            try
+            {
+                Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
 
-            return Ok(pacienteRepository.BuscarPorId(idUsuario));
+                var paciente = pacienteRepository.BuscarPorId(idUsuario);
+                var medico = medicoRepository.BuscarPorId(idUsuario);
+
+                return Ok((Paciente: paciente, Medico: medico));
+            }
+            catch (Exception erro)
+            {
+                return BadRequest(erro.Message);
+            }
         }
 
         //[Authorize]

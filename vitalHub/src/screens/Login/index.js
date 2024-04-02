@@ -30,8 +30,8 @@ export default function Login({
       console.log('FIZ REQUISIÇÃO')
       try {
         const response = await api.post('/Login', {
-          email: 'caio@caio.com',
-          senha: 'caio'
+          email: 'lucas@lucas.com',
+          senha: 'lucas'
         })
         //console.log(response.data)
         await AsyncStorage.setItem('token', JSON.stringify(response.data))
