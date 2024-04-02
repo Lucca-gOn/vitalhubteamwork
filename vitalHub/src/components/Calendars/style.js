@@ -24,7 +24,7 @@ const startingDate = new Date(currentDate.getFullYear(), currentDate.getMonth(),
 
 const endingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
 
-export const CalendarListStyle = styled(CalendarStrip).attrs({
+export const CalendarListStyle = styled(CalendarStrip).attrs((props) => ({
   selectedDate: currentDate,
 
   startingDate: currentDate,
@@ -109,6 +109,8 @@ export const CalendarListStyle = styled(CalendarStrip).attrs({
 
   },
 
+  onDateSelected:props.onDateSelected,
+
   useIsoWeekday:false ,
 
   shouldAllowFontScaling: false, //Evita que a font cresça
@@ -116,7 +118,7 @@ export const CalendarListStyle = styled(CalendarStrip).attrs({
   maxDayComponentSize: 60,  //Tamanho maximo do componente dia
 
   minDayComponentSize: 48,  // Tamanho minimo do componente dia
-})` 
+}))` 
   width: '100%';
   height: 100px;
 `

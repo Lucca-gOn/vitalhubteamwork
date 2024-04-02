@@ -6,10 +6,12 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 
 
-export const CalendarListWeek = () => {
+export const CalendarListWeek = ({
+  setDateConsult
+}) => {
   return (
     <View style={{ width: '100%' }}>
-      <CalendarListStyle />
+      <CalendarListStyle setDateConsult={setDateConsult} />
     </View>
   )
 };
@@ -48,6 +50,8 @@ export const CalendarMonth = () => {
         hideArrows={true}
         hideExtraDays
         enableSwipeMonths
+
+        //onDateSelect = {((day)=> {setDateConsult(moment(date).format('YYYY-MM-DD'))})}
 
         theme={{
           calendarBackground:'transparent',

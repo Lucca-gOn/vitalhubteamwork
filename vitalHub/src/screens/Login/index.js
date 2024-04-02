@@ -30,8 +30,8 @@ export default function Login({
       console.log('FIZ REQUISIÇÃO')
       try {
         const response = await api.post('/Login', {
-          email: 'caio@caio.com',
-          senha: 'caio'
+          email: 'allan@allan.com',
+          senha: 'allan'
         })
         //console.log(response.data)
         await AsyncStorage.setItem('token', JSON.stringify(response.data))
@@ -39,9 +39,8 @@ export default function Login({
         navigation.navigate('Main')
           setTimeout(()=>{
             setStatusResponseLogin(false),
-              setStatusResponseLoginGoogle(false),
-              setButtonDisable(false)
-
+            setStatusResponseLoginGoogle(false),
+            setButtonDisable(false)
           },250)  
       } catch (error) {
         console.log(error)

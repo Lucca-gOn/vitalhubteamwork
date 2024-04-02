@@ -8,6 +8,8 @@ import CardAppointment from "../../components/CardAppointment";
 import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment } from "../../components/Modals";
 import { Stethoscope } from "../../components/Stethoscope";
 import { userDecodeToken } from "../../utils/Auth";
+import moment from "moment";
+import api from "../../service/Service";
 
 export default function Home(
   {
@@ -15,6 +17,8 @@ export default function Home(
   }
 ) {
   const [select, setSelect] = useState('Agendadas');
+  const [consultas, setConsultas] = useState({})
+  const [dateConsult,setDateConsult] = useState(moment());
 
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
@@ -25,21 +29,25 @@ export default function Home(
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
   
-  const dataPacient = [
-    { id: 1, name: 'Allan Rodrigues dos Santos', age: 32, email: 'allan@allan.com', timeConsult: '15:00', typeConsult: 'Exame', statusConsult: 'Realizadas', photo: 'https://github.com/AllanR1991.png' },
-    { id: 2, name: 'Everton Araujo', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
-    { id: 3, name: 'Teste 1', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
-    { id: 4, name: 'Teste 2', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
-    { id: 5, name: 'Teste 3', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
-    { id: 6, name: 'Teste 4', age: 35, email: 'eveton@everton.com', timeConsult: '12:00', typeConsult: 'Rotina', statusConsult: 'Agendadas', photo: 'https://github.com/Evertonaraujo88.png' },
-    { id: 7, name: 'Evelyn Oliveira', age: 19, email: 'evelin@evelin.com', timeConsult: '08:00', typeConsult: 'Urgência', statusConsult: 'Realizadas', photo: 'https://github.com/evy-oliveira0807.png' },
-    { id: 8, name: 'Kamille Milo', age: 20, email: 'kamille@kamille.com', timeConsult: '13:00', typeConsult: 'Exame', statusConsult: 'Canceladas', photo: 'https://github.com/KamiMilo.png' }
-  ]
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
     const token = await userDecodeToken();
     setProfile(token);    
+
+    //setConsultSelect(moment().format)
+  }
+
+  async function ListarConsultas(){
+    const url = ( profile.role == 'Medico' ? 'Medico': 'Paciente')
+    console.log('Function ListarConsultas url: ',url)
+    await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.user}`)
+    .then(response => {
+      console.log(response.data);
+      setConsultas(response.data);
+    }).catch( error => {
+      console.log(error);
+    })
   }
 
   // Desestruturando apenas os dados a serem utilizados no momento
@@ -48,7 +56,14 @@ export default function Home(
   //Executando a função ProfileLoad
   useEffect(() => {
     profileLoad();
+    ListarConsultas()
   }, [])
+
+  useEffect(()=>{
+    if(dateConsult !== ''){
+      ListarConsultas();
+    }
+  },dateConsult)
 
   return (
 
@@ -59,7 +74,7 @@ export default function Home(
       <Header navigation={navigation} name={name} />
 
       <ContainerMargin $mt={20}>
-        <CalendarListWeek />
+        <CalendarListWeek  setDateConsult={setDateConsult}/>
       </ContainerMargin>
 
       <ContainerMargin $fd="row" $justContent="space-between" $mt={38}>
@@ -70,7 +85,7 @@ export default function Home(
 
       <Container style={{ width: '90%', marginTop: 30 }}>
         <FlatList
-          data={dataPacient}
+          data={consultas}
           renderItem={({ item }) =>
             select == item.statusConsult && (
               <CardAppointment
@@ -100,7 +115,7 @@ export default function Home(
 
       <ModalCancel
         consultSelect={consultSelect}
-        data={dataPacient}
+        data={consultas}
         setShowModalCancel={setShowModalCancel}
         showModalCancel={showModalCancel}
       />

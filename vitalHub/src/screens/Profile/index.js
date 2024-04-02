@@ -22,10 +22,7 @@ export default function Profile({ navigation }) {
     }
   }
 
-  useEffect(() => {
-    profileLoad();
-  }, []);
-
+  
   async function ListarUsuario(userId) {
     try {
       const response = await api.get(`/Usuario/BuscarUsuarioPorId/${userId}`);
@@ -35,6 +32,8 @@ export default function Profile({ navigation }) {
       console.error(error);
     }
   }
+
+  const { role} = profile
 
   const Logout = async () => {
     try {
@@ -47,6 +46,9 @@ export default function Profile({ navigation }) {
       console.error("Erro ao realizar logout:", error);
     }
   };
+  useEffect(() => {
+    profileLoad();
+  }, []);
 
   return (
     <Container>
@@ -64,66 +66,15 @@ export default function Profile({ navigation }) {
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
           <Description2>{user?.email}</Description2>
         </ContainerMargin>
-
-        {user?.medico && (
-          <>
-            <ContainerMargin $alingItens="flex-start" $gap={10}>
-              <TextLabel>CRM:</TextLabel>
-              <InputGray
-                placeholder="Número do CRM"
-                inputMode="numeric"
-                value={user.medico.crm}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10}>
-              <TextLabel>Especialidade:</TextLabel>
-              <InputGray
-                placeholder="Especialidade"
-                inputMode="text"
-                value={user.medico.especialidade.especialidade1}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10}>
-              <TextLabel>Endereço:</TextLabel>
-              <InputGray
-                placeholder="Endereço do consultório"
-                inputMode="text"
-                value={user.medico.endereco.logradouro}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10}>
-              <TextLabel>Número:</TextLabel>
-              <InputGray
-                placeholder="Número do consultório"
-                inputMode="numeric"
-                value={user.medico.endereco.numero.toString()} 
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10}>
-              <TextLabel>CEP:</TextLabel>
-              <InputGray
-                placeholder="CEP do consultório"
-                inputMode="numeric"
-                value={user.medico.endereco.cep}
-              />
-            </ContainerMargin>
-          </>
-
-        )}
+               
         
-        {user?.paciente && (
-          <>
             <ContainerMargin $alingItens="flex-start" $gap={10}>
               <TextLabel>Data de nascimento:</TextLabel>
               <InputGray
                 placeholder="DD/MM/AAAA"
                 inputMode="decimal"
                 autoComplete="birthdate-full"
-                value={user.paciente.dataNascimento}
+                value={user && user[role] ? user[role].dataNascimento : ''}
               />
             </ContainerMargin>
 
@@ -132,7 +83,7 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="xxx.xxx.xxx-xx"
                 inputMode="decimal"
-                value={user.paciente.cpf}
+                //value={user.paciente.cpf}
               />
             </ContainerMargin>
 
@@ -143,7 +94,7 @@ export default function Profile({ navigation }) {
                 autoComplete="address-line1"
                 autoCapitalize="words"
                 inputMode="text"
-                value={user.paciente.endereco?.logradouro}
+                //value={user.paciente.endereco?.logradouro}
               />
             </ContainerMargin>
 
@@ -154,7 +105,7 @@ export default function Profile({ navigation }) {
                   placeholder="XXXXX-XXX"
                   inputMode="decimal"
                   autoComplete="postal-code"
-                  value={user.paciente.endereco?.cep}
+                  //value={user.paciente.endereco?.cep}
                 />
               </ContainerMargin>
 
@@ -164,13 +115,12 @@ export default function Profile({ navigation }) {
                   placeholder="Moema-SP"
                   inputMode="text"
                   autoCapitalize="words"
-                  value={user.paciente.endereco?.cidade}
+                  //value={user.paciente.endereco?.cidade}
                 />
               </ContainerMargin>
 
             </ContainerMargin>
-          </>
-        )}
+         
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
