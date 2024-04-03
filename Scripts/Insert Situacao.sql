@@ -5,5 +5,6 @@ SELECT TOP (1000) [ID]
   USE [VitalHub_G09M]
 
   insert into Situacoes values
-  (NEWID(),'Normal'),
-  (NEWID(),'Grave')
+  (NEWID(),'Agendadas'),
+  (NEWID(),'Canceladas'),
+  (NEWID(),'Realizadas')

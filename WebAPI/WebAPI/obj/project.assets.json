@@ -3347,37 +3347,19 @@
     ]
   },
   "packageFolders": {
-<<<<<<< HEAD
-    "C:\\Users\\41017653836\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
-=======
-    "C:\\Users\\51021784826\\.nuget\\packages\\": {}
->>>>>>> lucas
+    "C:\\Users\\allan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-<<<<<<< HEAD
-      "projectUniqueName": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\allan\\OneDrive\\Documentos\\Projetos\\1 - Senai\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
       "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
-      "packagesPath": "C:\\Users\\41017653836\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\obj\\",
-=======
-      "projectUniqueName": "C:\\Users\\51021784826\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
-      "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\51021784826\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
-      "packagesPath": "C:\\Users\\51021784826\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\51021784826\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\obj\\",
->>>>>>> lucas
+      "projectPath": "C:\\Users\\allan\\OneDrive\\Documentos\\Projetos\\1 - Senai\\vitalhubteamwork\\WebAPI\\WebAPI\\WebAPI.csproj",
+      "packagesPath": "C:\\Users\\allan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\allan\\OneDrive\\Documentos\\Projetos\\1 - Senai\\vitalhubteamwork\\WebAPI\\WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-<<<<<<< HEAD
-        "C:\\Users\\41017653836\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-=======
-        "C:\\Users\\51021784826\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> lucas
+        "C:\\Users\\allan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3397,11 +3379,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -3457,19 +3434,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[7.0.15, 7.0.15]"
+            "version": "[7.0.14, 7.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[7.0.15, 7.0.15]"
+            "version": "[7.0.14, 7.0.14]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[7.0.15, 7.0.15]"
+            "version": "[7.0.14, 7.0.14]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[7.0.15, 7.0.15]"
+            "version": "[7.0.14, 7.0.14]"
           }
         ],
         "frameworkReferences": {
@@ -3480,24 +3457,22 @@
             "privateAssets": "all"
           }
         },
-<<<<<<< HEAD
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
-=======
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
->>>>>>> lucas
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
     {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problema ao ler o arquivo de cache C:\\Users\\allan\\OneDrive\\Documentos\\Projetos\\1 - Senai\\vitalhubteamwork\\WebAPI\\WebAPI\\obj\\project.nuget.cache: Invalid property identifier character: <. Path 'version', line 3, position 0."
+    },
+    {
       "code": "NU1902",
       "level": "Warning",
       "warningLevel": 1,
-<<<<<<< HEAD
-      "message": "Package 'System.IdentityModel.Tokens.Jwt' 7.0.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
-=======
       "message": "O pacote 'System.IdentityModel.Tokens.Jwt' 7.0.3 tem uma moderado vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
->>>>>>> lucas
       "libraryId": "System.IdentityModel.Tokens.Jwt",
       "targetGraphs": [
         "net7.0"
@@ -3507,11 +3482,7 @@
       "code": "NU1902",
       "level": "Warning",
       "warningLevel": 1,
-<<<<<<< HEAD
-      "message": "Package 'System.IdentityModel.Tokens.Jwt' 7.0.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-8g9c-28fc-mcx2",
-=======
       "message": "O pacote 'System.IdentityModel.Tokens.Jwt' 7.0.3 tem uma moderado vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-8g9c-28fc-mcx2",
->>>>>>> lucas
       "libraryId": "System.IdentityModel.Tokens.Jwt",
       "targetGraphs": [
         "net7.0"
