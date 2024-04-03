@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import CalendarStrip from 'react-native-calendar-strip';
 import 'moment';
 import 'moment/locale/pt-br';
+import moment from "moment";
 
 const locale = {
   name: 'pt-br',
@@ -109,7 +110,7 @@ export const CalendarListStyle = styled(CalendarStrip).attrs((props) => ({
 
   },
 
-  onDateSelected:props.onDateSelected,
+  onDateSelected: (date) => {props.setDateConsult(moment(date).format('YYYY:MM:DD')) },
 
   useIsoWeekday:false ,
 

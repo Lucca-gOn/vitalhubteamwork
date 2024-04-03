@@ -18,7 +18,7 @@ export default function Home(
 ) {
   const [select, setSelect] = useState('Agendadas');
   const [consultas, setConsultas] = useState({})
-  const [dateConsult,setDateConsult] = useState(moment());
+  const [dateConsult,setDateConsult] = useState('');
 
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
@@ -34,19 +34,22 @@ export default function Home(
   async function profileLoad() {
     const token = await userDecodeToken();
     setProfile(token);    
-
-    //setConsultSelect(moment().format)
+    setDateConsult(moment().format('YYYY-MM-DD'))
   }
 
   async function ListarConsultas(){
-    const url = ( profile.role == 'Medico' ? 'Medico': 'Paciente')
-    console.log('Function ListarConsultas url: ',url)
-    await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.user}`)
+
+    const url = ( profile.role == 'Medico' ? 'Medicos': 'Pacientes')
+    console.log('ListarConsulta Valor de Url: ', url);
+    console.log('ListarConsulta Valor de DateConsult: ', dateConsult)
+    console.log('Listar Consulta valor de id: ', profile.id)
+
+    await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
     .then(response => {
-      console.log(response.data);
       setConsultas(response.data);
+      console.log('Api buscar por data',response.data)
     }).catch( error => {
-      console.log(error);
+      console.log('Erro ao listar Consultas: ',error);
     })
   }
 
@@ -56,14 +59,14 @@ export default function Home(
   //Executando a função ProfileLoad
   useEffect(() => {
     profileLoad();
-    ListarConsultas()
+    // ListarConsultas()
   }, [])
 
   useEffect(()=>{
     if(dateConsult !== ''){
       ListarConsultas();
     }
-  },dateConsult)
+  },[dateConsult])
 
   return (
 
@@ -87,9 +90,10 @@ export default function Home(
         <FlatList
           data={consultas}
           renderItem={({ item }) =>
-            select == item.statusConsult && (
+            select == item.situacao.situacao && (
               <CardAppointment
                 data={item}
+                role={profile.role}
                 selectStatus={select}
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
