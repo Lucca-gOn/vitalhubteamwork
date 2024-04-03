@@ -110,7 +110,7 @@ export const CalendarListStyle = styled(CalendarStrip).attrs((props) => ({
 
   },
 
-  onDateSelected: (date) => {props.setDateConsult(moment(date).format('YYYY:MM:DD')) },
+  onDateSelected: (date) => {props.setDateConsult(moment(date).format('YYYY-MM-DD')) },
 
   useIsoWeekday:false ,
 
