@@ -4,6 +4,8 @@ import { NivelConsult, TextCancelAppointment, TextNameUserBlack, TextPontuarioAp
 import { Entypo } from '@expo/vector-icons';
 import { Time } from "../Time";
 import { ImageUser } from "../Images/style";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
 export default CardAppointment = (
   {
@@ -15,23 +17,50 @@ export default CardAppointment = (
     role
   }
 ) => {
-  //const roles = role == 'Medico'? 'paciente' : 'medicoClinica.medico';
-  console.log('Dados medico : ', data)
+  const [idade,setIdade] = useState();
+  
+  const roles = role == 'Medico'? data.paciente : data.medicoClinica.medico;
+  // console.log('Dados medico : ', data)
+  console.log(data)
+  console.log(roles)
+  
+  const dataNascimento = roles.dataNascimento
+  const foto = roles.idNavigation.foto 
+  const tipoConsulta = data.prioridade.prioridade
+  
 
+  const calculateAge = () => {   
+    const dob = moment(dataNascimento, 'YYYY-MM-DD');    
+    const today = moment();
+    const years = today.diff(dob, 'years');
+    setIdade(years);
+  };
+
+  useEffect(()=>{
+    calculateAge();
+  },[])
 
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
-      {/* <ImageUser $width="77px" $height="80px" source={data.paciente.idNavigation.foto !== undefined ? { uri: data.paciente.idNavigation.fotos } : require('../../assets/images/NotImage.svg')} /> */}
+      <ImageUser $width="77px" $height="80px" source={foto !== undefined  && foto !== 'string' ? { uri: foto } : require('../../assets/images/NotImage.svg')} />
 
       <ContainerMargin $width='none' $alingItens="flex-start" style={{ flex: 1 }} >
-        <TextNameUserBlack></TextNameUserBlack>
+        <TextNameUserBlack>{roles.idNavigation.nome}</TextNameUserBlack>
         <ContainerMargin $fd="row" $gap={7} $mt={5} $mb={11} $justContent="flex-start" $width="content">
-          {/* <TextQuickSandRegular>{age < 2 ? age + ' ano' : age + ' anos'}</TextQuickSandRegular> */}
+          <TextQuickSandRegular>
+          {
+            dataNascimento < 2 ? 
+            idade + ' ano' : 
+                dataNascimento === undefined ?
+                  'CRM - '+roles.crm :
+                  idade + ' anos'
+          }
+          </TextQuickSandRegular>
           <Entypo name="dot-single" size={10} color="#D9D9D9" />
-          {/* <NivelConsult>{typeConsult}</NivelConsult> */}
+          <NivelConsult>{tipoConsulta == 1 ? 'Rotina' : tipoConsulta == 2 ? 'Exame' : 'Urgência'}</NivelConsult>
         </ContainerMargin>
         <ContainerMargin $width="100%" $fd="row" $justContent="space-between" >
-          {/* <Time timeConsult={timeConsult} selectStatus={selectStatus === 'Agendadas'} /> */}
+          <Time timeConsult={'10:00'} selectStatus={selectStatus === 'Agendadas'} />
           {
             selectStatus === 'Agendadas' ?
               <TextCancelAppointment onPress={() => {
