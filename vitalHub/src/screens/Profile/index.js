@@ -11,36 +11,25 @@ import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 
 export default function Profile({ navigation }) {
   const [profile, setProfile] = useState({});
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
 
-  //Decodifica o Token, set profile chama o token decodificado, apos isso, condicional para ver se o token do user foi obetido com sucesso, se achar, chama ListarUsuario(), com o token.id como argumento.
   async function profileLoad() {
-    const token = await userDecodeToken();
-    //Tive que formatar o token para vir como string 
-    const tokenObj = JSON.parse(token.token);
-    const jwtToken = tokenObj.token;
-    await ListarUsuario(jwtToken);
+    try {
+      const token = await userDecodeToken();
+      if (token.id) {
+        const response = await api.get(`/Usuario/BuscarUsuarioPorId/${token.id}`);
+        setUser(response.data); 
+        setProfile(token); 
 
-    //console.log(jwtToken); 
-  }
-
-  async function ListarUsuario(tokenJwt) {
-    await api.get(`/Pacientes/PerfilLogado`, {
-      headers: {
-        'Authorization': `Bearer ${tokenJwt}`
+        console.log(response.data);
       }
-    })
-    .then(response => {
-      console.log(response.data);
-      const userData = response.data.item1 || response.data.item2;
-      setUser(userData);
-  }).catch(error => {
-      console.log(error);
-  })
+    } catch (error) {
+      console.error(error);
+    }
   }
-
+  
   useEffect(() => {
-    profileLoad();
+    profileLoad(); 
   }, []);
 
   const Logout = async () => {
@@ -57,7 +46,6 @@ export default function Profile({ navigation }) {
 
   return (
     <Container>
-
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
 
       <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
@@ -65,64 +53,120 @@ export default function Profile({ navigation }) {
       <ContainerScrollView showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
-          <Title>{user?.idNavigation?.nome}</Title>
+          <Title>{user?.nome}</Title>
         </ContainerMargin>
 
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-          <Description2>{user?.idNavigation?.email}</Description2>
-        </ContainerMargin>
-        <ContainerMargin $alingItens="flex-start" $gap={10}>
-          <TextLabel>Data de nascimento:</TextLabel>
-          <InputGray
-            placeholder="DD/MM/AAAA"
-            inputMode="decimal"
-            autoComplete="birthdate-full"
-            value={user?.dataNascimento ? new Date(user?.dataNascimento).toLocaleDateString() : ''}
-          />
+          <Description2>{user?.email}</Description2>
         </ContainerMargin>
 
-        <ContainerMargin $alingItens="flex-start" $gap={10}>
-          <TextLabel>CPF</TextLabel>
-          <InputGray
-            placeholder="xxx.xxx.xxx-xx"
-            inputMode="decimal"
-            value={user?.cpf}
-          />
-        </ContainerMargin>
+        {user?.medico && (
+          <>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>CRM:</TextLabel>
+              <InputGray
+                placeholder="Número do CRM"
+                inputMode="numeric"
+                value={user.medico.crm}
+              />
+            </ContainerMargin>
 
-        <ContainerMargin $alingItens="flex-start" $gap={10}>
-          <TextLabel>Endereço</TextLabel>
-          <InputGray
-            placeholder="Rua niteroi, 80"
-            autoComplete="address-line1"
-            autoCapitalize="words"
-            inputMode="text"
-            value={user?.endereco?.logradouro}
-          />
-        </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Especialidade:</TextLabel>
+              <InputGray
+                placeholder="Especialidade"
+                inputMode="text"
+                value={user.medico.especialidade.especialidade1}
+              />
+            </ContainerMargin>
 
-        <ContainerMargin $fd="row" $gap={32}>
-          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
-            <TextLabel>Cep</TextLabel>
-            <InputGray
-              placeholder="XXXXX-XXX"
-              inputMode="decimal"
-              autoComplete="postal-code"
-              value={user?.endereco?.cep}
-            />
-          </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Endereço:</TextLabel>
+              <InputGray
+                placeholder="Endereço do consultório"
+                inputMode="text"
+                value={user.medico.endereco.logradouro}
+              />
+            </ContainerMargin>
 
-          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
-            <TextLabel>Cidade</TextLabel>
-            <InputGray
-              placeholder="Moema-SP"
-              inputMode="text"
-              autoCapitalize="words"
-              value={user?.endereco?.cidade}
-            />
-          </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Número:</TextLabel>
+              <InputGray
+                placeholder="Número do consultório"
+                inputMode="numeric"
+                value={user.medico.endereco.numero.toString()}
+              />
+            </ContainerMargin>
 
-        </ContainerMargin>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>CEP:</TextLabel>
+              <InputGray
+                placeholder="CEP do consultório"
+                inputMode="numeric"
+                value={user.medico.endereco.cep}
+              />
+            </ContainerMargin>
+          </>
+
+        )}
+
+        {user?.paciente && (
+          <>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Data de nascimento:</TextLabel>
+              <InputGray
+                placeholder="DD/MM/AAAA"
+                inputMode="decimal"
+                autoComplete="birthdate-full"
+                value={user.paciente.dataNascimento ? new Date(user.paciente.dataNascimento).toLocaleDateString() : ''}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>CPF</TextLabel>
+              <InputGray
+                placeholder="xxx.xxx.xxx-xx"
+                inputMode="decimal"
+                value={user.paciente.cpf}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Endereço</TextLabel>
+              <InputGray
+                placeholder="Rua niteroi, 80"
+                autoComplete="address-line1"
+                autoCapitalize="words"
+                inputMode="text"
+                value={user.paciente.endereco?.logradouro}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $fd="row" $gap={32}>
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
+                <TextLabel>Cep</TextLabel>
+                <InputGray
+                  placeholder="XXXXX-XXX"
+                  inputMode="decimal"
+                  autoComplete="postal-code"
+                  value={user.paciente.endereco?.cep}
+                />
+              </ContainerMargin>
+
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
+                <TextLabel>Cidade</TextLabel>
+                <InputGray
+                  placeholder="Moema-SP"
+                  inputMode="text"
+                  autoCapitalize="words"
+                  value={user.paciente.endereco?.cidade}
+                />
+              </ContainerMargin>
+
+            </ContainerMargin>
+          </>
+        )}
+
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
           <ButtonDefault textButton="Salvar" />

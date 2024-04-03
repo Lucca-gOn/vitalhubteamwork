@@ -9,7 +9,6 @@ import CheckEmail from "./src/screens/CheckEmail";
 import NewPassword from "./src/screens/NewPassword";
 import CreateAccount from "./src/screens/CreateAccount";
 import Home from "./src/screens/Home";
-
 import SelectClinic from "./src/screens/SelectClinic";
 import MedicalRecord from "./src/screens/MedicalRecord";
 import SelectMedic from "./src/screens/SelectMedic";
