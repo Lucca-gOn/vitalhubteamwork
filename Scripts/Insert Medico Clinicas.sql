@@ -1,0 +1,10 @@
+SELECT TOP (1000) [ID]
+      ,[ClinicaID]
+      ,[MedicoID]
+  FROM [VitalHub_G09M].[dbo].[MedicosClinicas]
+
+  USE [VitalHub_G09M]
+
+INSERT INTO MedicosClinicas
+VALUES
+(NEWID(),'3154EFEA-6182-4E59-A027-4A01B9F1A7D6', '0A4B9737-E340-4768-BBC2-09AFD775ECB6');

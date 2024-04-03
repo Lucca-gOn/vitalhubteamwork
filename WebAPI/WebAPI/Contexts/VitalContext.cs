@@ -49,6 +49,7 @@ public partial class VitalContext : DbContext
     //Allan Senai - > "Data Source=NOTE06-S21\\SQLEXPRESS; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
     //Allan Casa - > "Data Source=ALLANRS-1991\\SQLEXPRESS; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
     //Lucas Casa - > "Server=DESKTOP-OO85A2H\SQLEXPRESS; initial catalog=VitalHub_G09M; Integrated Security=true; TrustServerCertificate=True;"
+    //Lucas Senai - > "Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Clinica>(entity =>

@@ -132,9 +132,6 @@ export default function Login({
       </ContainerScrollView>
     </ContainerMarginStatusBar>
     // </ContainerSafeArea>
-
-
-
   )
 }
 

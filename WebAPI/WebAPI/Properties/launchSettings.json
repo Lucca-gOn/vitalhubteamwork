@@ -14,10 +14,15 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
+<<<<<<< HEAD
       "applicationUrl": "http://192.168.21.50:4466",
+=======
+      "applicationUrl": "http://192.168.21.126:4466",
+>>>>>>> lucas
       //Allan Casa -> 192.168.15.21
       //Allan Escola -> 192.168.21.50
       //Lucas Casa -> 192.168.0.11
+      //Lucas Senai -> 192.168.21.126
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
