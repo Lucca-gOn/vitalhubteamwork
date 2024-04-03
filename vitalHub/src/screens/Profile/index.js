@@ -32,7 +32,8 @@ export default function Profile({ navigation }) {
     })
     .then(response => {
       console.log(response.data);
-      setUser(response.data);
+      const userData = response.data.item1 || response.data.item2;
+      setUser(userData);
   }).catch(error => {
       console.log(error);
   })
@@ -64,11 +65,11 @@ export default function Profile({ navigation }) {
       <ContainerScrollView showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
-          <Title>{user.item1?.idNavigation?.nome}</Title>
+          <Title>{user?.idNavigation?.nome}</Title>
         </ContainerMargin>
 
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-          <Description2>{user.item1?.idNavigation?.email}</Description2>
+          <Description2>{user?.idNavigation?.email}</Description2>
         </ContainerMargin>
         <ContainerMargin $alingItens="flex-start" $gap={10}>
           <TextLabel>Data de nascimento:</TextLabel>
@@ -76,7 +77,7 @@ export default function Profile({ navigation }) {
             placeholder="DD/MM/AAAA"
             inputMode="decimal"
             autoComplete="birthdate-full"
-            value={user.item1?.dataNascimento ? new Date(user.item1?.dataNascimento).toLocaleDateString() : ''}
+            value={user?.dataNascimento ? new Date(user?.dataNascimento).toLocaleDateString() : ''}
           />
         </ContainerMargin>
 
@@ -85,7 +86,7 @@ export default function Profile({ navigation }) {
           <InputGray
             placeholder="xxx.xxx.xxx-xx"
             inputMode="decimal"
-            value={user.item1?.cpf}
+            value={user?.cpf}
           />
         </ContainerMargin>
 
@@ -96,7 +97,7 @@ export default function Profile({ navigation }) {
             autoComplete="address-line1"
             autoCapitalize="words"
             inputMode="text"
-            value={user.item1?.endereco?.logradouro}
+            value={user?.endereco?.logradouro}
           />
         </ContainerMargin>
 
@@ -107,7 +108,7 @@ export default function Profile({ navigation }) {
               placeholder="XXXXX-XXX"
               inputMode="decimal"
               autoComplete="postal-code"
-              value={user.item1?.endereco?.cep}
+              value={user?.endereco?.cep}
             />
           </ContainerMargin>
 
@@ -117,7 +118,7 @@ export default function Profile({ navigation }) {
               placeholder="Moema-SP"
               inputMode="text"
               autoCapitalize="words"
-              value={user.item1?.endereco?.cidade}
+              value={user?.endereco?.cidade}
             />
           </ContainerMargin>
 
