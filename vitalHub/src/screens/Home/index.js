@@ -40,14 +40,14 @@ export default function Home(
   async function ListarConsultas(){
 
     const url = ( profile.role == 'Medico' ? 'Medicos': 'Pacientes')
-    console.log('ListarConsulta Valor de Url: ', url);
-    console.log('ListarConsulta Valor de DateConsult: ', dateConsult)
-    console.log('Listar Consulta valor de id: ', profile.id)
+    // console.log('ListarConsulta Valor de Url: ', url);
+    // console.log('ListarConsulta Valor de DateConsult: ', dateConsult)
+    // console.log('Listar Consulta valor de id: ', profile.id)
 
     await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
     .then(response => {
       setConsultas(response.data);
-      console.log('Api buscar por data',response.data)
+      // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
     }).catch( error => {
       console.log('Erro ao listar Consultas: ',error);
     })
