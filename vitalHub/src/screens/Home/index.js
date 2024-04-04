@@ -1,4 +1,4 @@
-import { FlatList, StatusBar, View } from "react-native";
+import { ActivityIndicator, FlatList, StatusBar, View } from "react-native";
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer";
 import { Header } from "../../components/Header";
 import { CalendarListWeek } from "../../components/Calendars";
@@ -28,7 +28,7 @@ export default function Home(
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  console.log('Profile : ', profile)
+  //console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
@@ -69,7 +69,7 @@ export default function Home(
   },[dateConsult])
 
   return (
-
+  
     <Container $bgColor="#fbfbfb">
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
@@ -139,7 +139,7 @@ export default function Home(
       />
 
       <ModalDataConsult />
-
+   
     </Container>
 
 
