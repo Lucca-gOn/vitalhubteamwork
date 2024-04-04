@@ -17,6 +17,7 @@ export default function MedicalRecord({
   route
 }) {
 
+<<<<<<< HEAD
   async function profileLoad() {
     const token = await userDecodeToken();
     //Tive que formatar o token para vir como string 
@@ -47,6 +48,9 @@ export default function MedicalRecord({
 
 
   const { name, age, email, photo, fotoCam } = route.params || {};
+=======
+  const { name, age, email, photo, fotoCam } = route.params || {}
+>>>>>>> origin/allan
   const [showModalCamera, setShowModalCamera] = useState(false)
 
   console.log(fotoCam)

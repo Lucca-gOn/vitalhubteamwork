@@ -6,7 +6,12 @@ import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
 
-export default function ConsultationAddress () {
+export default function ConsultationAddress ({
+  navigation,
+  route
+}) {
+
+  console.log('params : ',clinica)
   return (
     
     <Container>
