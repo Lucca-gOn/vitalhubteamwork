@@ -1,4 +1,3 @@
-
 import { StatusBar, Text, TouchableOpacity, View } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
@@ -10,6 +9,8 @@ import { Stethoscope } from "../../components/Stethoscope"
 import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
+import { userDecodeToken } from "../../utils/Auth"
+import api from "../../service/Service";
 
 
 export default function MedicalRecord({
@@ -17,7 +18,8 @@ export default function MedicalRecord({
   route
 }) {
 
-<<<<<<< HEAD
+  const [user, setUser] = useState(null);
+
   async function profileLoad() {
     const token = await userDecodeToken();
     //Tive que formatar o token para vir como string 
@@ -25,11 +27,11 @@ export default function MedicalRecord({
     const jwtToken = tokenObj.token;
     await ListarConsulta(jwtToken);
 
-    //console.log(jwtToken); 
+    console.log(jwtToken); 
   }
 
   async function ListarConsulta(tokenJwt) {
-    await api.get(`/Consulta`, {
+    await api.get(`/Consultas`, {
       headers: {
         'Authorization': `Bearer ${tokenJwt}`
       }
@@ -48,9 +50,6 @@ export default function MedicalRecord({
 
 
   const { name, age, email, photo, fotoCam } = route.params || {};
-=======
-  const { name, age, email, photo, fotoCam } = route.params || {}
->>>>>>> origin/allan
   const [showModalCamera, setShowModalCamera] = useState(false)
 
   console.log(fotoCam)

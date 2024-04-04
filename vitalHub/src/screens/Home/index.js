@@ -28,7 +28,7 @@ export default function Home(
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  console.log('Profile : ', profile)
+  // console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {

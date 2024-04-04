@@ -18,8 +18,8 @@ export default function Profile({ navigation }) {
       const token = await userDecodeToken();
       if (token.id) {
         const response = await api.get(`/Usuario/BuscarUsuarioPorId/${token.id}`);
-        setUser(response.data);
-        setProfile(token);
+        setUser(response.data); 
+        setProfile(token); 
 
         console.log(response.data);
       }
@@ -126,7 +126,7 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="xxx.xxx.xxx-xx"
                 inputMode="decimal"
-              //value={user.paciente.cpf}
+                value={user.paciente.cpf}
               />
             </ContainerMargin>
 
@@ -137,7 +137,7 @@ export default function Profile({ navigation }) {
                 autoComplete="address-line1"
                 autoCapitalize="words"
                 inputMode="text"
-              //value={user.paciente.endereco?.logradouro}
+                value={user.paciente.endereco?.logradouro}
               />
             </ContainerMargin>
 
@@ -148,7 +148,7 @@ export default function Profile({ navigation }) {
                   placeholder="XXXXX-XXX"
                   inputMode="decimal"
                   autoComplete="postal-code"
-                //value={user.paciente.endereco?.cep}
+                  value={user.paciente.endereco?.cep}
                 />
               </ContainerMargin>
 
@@ -158,7 +158,7 @@ export default function Profile({ navigation }) {
                   placeholder="Moema-SP"
                   inputMode="text"
                   autoCapitalize="words"
-                //value={user.paciente.endereco?.cidade}
+                  value={user.paciente.endereco?.cidade}
                 />
               </ContainerMargin>
 
