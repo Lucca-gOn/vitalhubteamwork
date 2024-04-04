@@ -28,7 +28,7 @@ export default function Home(
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  
+  console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
@@ -94,6 +94,7 @@ export default function Home(
               <CardAppointment
                 data={item}
                 role={profile.role}
+                navigation={navigation}
                 selectStatus={select}
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
