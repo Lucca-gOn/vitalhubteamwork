@@ -9,7 +9,7 @@ import { LinkUnderlineDefault } from "../../components/Links"
 import { Stethoscope } from "../../components/Stethoscope"
 import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export default function MedicalRecord({
@@ -17,7 +17,36 @@ export default function MedicalRecord({
   route
 }) {
 
-  const { name, age, email, photo, fotoCam } = route.params
+  async function profileLoad() {
+    const token = await userDecodeToken();
+    //Tive que formatar o token para vir como string 
+    const tokenObj = JSON.parse(token.token);
+    const jwtToken = tokenObj.token;
+    await ListarConsulta(jwtToken);
+
+    //console.log(jwtToken); 
+  }
+
+  async function ListarConsulta(tokenJwt) {
+    await api.get(`/Consulta`, {
+      headers: {
+        'Authorization': `Bearer ${tokenJwt}`
+      }
+    })
+    .then(response => {
+      console.log(response.data);
+      setUser(response.data);
+  }).catch(error => {
+      console.log(error);
+  })
+  }
+
+  useEffect(() => {
+    profileLoad();
+  }, []);
+
+
+  const { name, age, email, photo, fotoCam } = route.params || {};
   const [showModalCamera, setShowModalCamera] = useState(false)
 
   console.log(fotoCam)

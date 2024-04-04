@@ -28,19 +28,6 @@ export default function Profile({ navigation }) {
     }
   }
 
-
-  async function ListarUsuario(userId) {
-    try {
-      const response = await api.get(`/Usuario/BuscarUsuarioPorId/${userId}`);
-      setUser(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const { role } = profile
-
   const Logout = async () => {
     try {
       await AsyncStorage.removeItem('token');

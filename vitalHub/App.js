@@ -38,7 +38,7 @@ export default function App() {
     <NavigationContainer>
 
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="MedicalRecord"
         screenOptions={{headerShown:false}}
       >
 
