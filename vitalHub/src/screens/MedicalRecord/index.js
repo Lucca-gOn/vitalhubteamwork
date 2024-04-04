@@ -17,7 +17,7 @@ export default function MedicalRecord({
   route
 }) {
 
-  const { name, age, email, photo, fotoCam } = route.params
+  const { name, age, email, photo, fotoCam } = route.params || {}
   const [showModalCamera, setShowModalCamera] = useState(false)
 
   console.log(fotoCam)
