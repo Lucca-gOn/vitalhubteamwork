@@ -23,13 +23,19 @@ export default CardAppointment = (
 
   const roles = role == 'Medico' ? data.paciente : data.medicoClinica.medico;
   // console.log('Dados medico : ', data)
-  // console.log(data)
-  // console.log(roles)
+   console.log('dados da consulta: ',data)
+   console.log('roles : ',roles)
 
   const dataNascimento = roles.dataNascimento
   const foto = roles.idNavigation.foto
   const tipoConsulta = data.prioridade.prioridade
+  const nomePaciente= data.paciente.idNavigation.nome ;
+  const email=  data.paciente.idNavigation.email; 
+  // const descricaoConsulta= ;
+  // const diagnosticoPaciente= ; 
+  // const prescricaoMedica= ;
 
+  console.log('dados consulta teste: ', data.medicoClinica.medico) 
 
   const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
