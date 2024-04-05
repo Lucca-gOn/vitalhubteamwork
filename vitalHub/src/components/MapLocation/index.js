@@ -18,10 +18,15 @@ import MapViewDirections from "react-native-maps-directions";
 import { mapskey } from '../../utils/mapsApiKey'
 
 export const MapLocation = ({
-
+  latitudeClinica,
+  longitudeClinica,
+  nomeClinica
 }) => {
+//"clinica": "Policlínica Centro", "latitude": -46.5473, "longitude": -23.6982
+//-23.698297574881053, -46.547379047406196
+  const clinica = [{ latitude: latitudeClinica, longitude: longitudeClinica, clinica: nomeClinica }]
 
-  const clinica = [{ latitude: -23.6983, longitude: -46.5473, clinica: 'Health Clinic' }]
+  //console.log('clinica no mapa = ',clinica)
 
   const [initialPosition, setInitialPosition] = useState(null); //Hook par armezar a posição atual do dispositivo
   const [endPosition, setEndPosition] = useState({ //Hook para armazenar a posição da clinica
@@ -38,6 +43,7 @@ export const MapLocation = ({
     if (granted) { // Se a permissão for concedida faza
       const captureLocation = await getCurrentPositionAsync(); // Obtem a latitude e longitude do dispositivo
       setInitialPosition(captureLocation);// Seta a posição inicial com a localização obtida
+      //console.log('posicao inicial : ',initialPosition)
     }
   }
 
@@ -119,7 +125,6 @@ export const MapLocation = ({
                 description="Posição inicial"
                 pinColor="green"
               />
-
               <MapViewDirections
                 origin={initialPosition.coords}
                 destination={{
