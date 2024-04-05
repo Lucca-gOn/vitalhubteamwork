@@ -18,6 +18,7 @@ export default function ConsultationAddress({
     await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
       .then(response => {
         setClinica(response.data)
+        console.log('resposta de buscar clinica: ', response.data)
 
       })
       .catch(error => {
@@ -25,9 +26,12 @@ export default function ConsultationAddress({
       })
   }
 
-  const latitudeClinica = clinica.latitude;
-  const logitudeClinica = clinica.longitude;
-  const nomeClinica = clinica.nomeFantasia;
+  const latitudeClinica = clinica ? clinica.endereco.latitude : null;
+  const longitudeClinica = clinica ? clinica.endereco.longitude : null;
+  const nomeClinica = clinica ? clinica.nomeFantasia : null;
+  const cidadeClinica = clinica ? clinica.endereco.cidade : null;
+  const enderecoClinica = clinica ? clinica.endereco.logradouro : null;
+  const cepClinica = clinica ? clinica.endereco.cep : null;
 
   useEffect(() => {
     if (clinica == null) {
@@ -46,7 +50,7 @@ export default function ConsultationAddress({
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
 
-      <MapLocation />
+      <MapLocation latitudeClinica={latitudeClinica} longitudeClinica={longitudeClinica} nomeClinica={nomeClinica} />
       
 
       <ContainerScrollView style={{borderTopLeftRadius:10,borderTopRightRadius:10, position:"absolute", bottom:0, backgroundColor:'#FFF', height:'51%'}}
@@ -56,12 +60,12 @@ export default function ConsultationAddress({
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>
-            Clínica Natureh
+            {nomeClinica}
           </Title>
         </ContainerMargin>
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
           <TextAdress>
-            Moema, SP
+            {cidadeClinica}
           </TextAdress>
 
         </ContainerMargin>
@@ -70,7 +74,7 @@ export default function ConsultationAddress({
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
           <TextLabel>Endereço</TextLabel>
           <InputGray 
-            value="Rua niteroi, 80" 
+            value={enderecoClinica} 
             autoComplete="address-line1"
             autoCapitalize="words"
             inputMode="text"
@@ -84,7 +88,7 @@ export default function ConsultationAddress({
           <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{flex:1}}>
             <TextLabel>Cep</TextLabel>
             <InputGray 
-              value="XXXXX-XXX" 
+              value={cepClinica} 
               inputMode="decimal"
               autoComplete="postal-code"
               readOnly
@@ -93,7 +97,7 @@ export default function ConsultationAddress({
           <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{flex:2}}>
             <TextLabel>Cidade</TextLabel>
             <InputGray 
-              value="Moema-SP" 
+              value={cidadeClinica} 
               inputMode="text"
               autoCapitalize="words"
               readOnly
