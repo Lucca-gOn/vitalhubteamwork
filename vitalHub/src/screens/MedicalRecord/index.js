@@ -18,7 +18,9 @@ export default function MedicalRecord({
   route
 }) {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState([]);
+  const { name, age, email, photo, fotoCam } = route.params || {};
+  const [showModalCamera, setShowModalCamera] = useState(false)
 
   async function profileLoad() {
     const token = await userDecodeToken();
@@ -26,33 +28,26 @@ export default function MedicalRecord({
     const tokenObj = JSON.parse(token.token);
     const jwtToken = tokenObj.token;
     await ListarConsulta(jwtToken);
-
-    console.log(jwtToken); 
   }
 
   async function ListarConsulta(tokenJwt) {
-    await api.get(`/Consultas`, {
-      headers: {
-        'Authorization': `Bearer ${tokenJwt}`
-      }
-    })
-    .then(response => {
-      console.log(response.data);
+    try {
+      const response = await api.get(`/Consultas/ConsultasMedico`, {
+        headers: { 'Authorization': `Bearer ${tokenJwt}` }
+      });
       setUser(response.data);
-  }).catch(error => {
+    } catch (error) {
       console.log(error);
-  })
+    }
   }
 
   useEffect(() => {
     profileLoad();
   }, []);
 
+  // console.log(user);
 
-  const { name, age, email, photo, fotoCam } = route.params || {};
-  const [showModalCamera, setShowModalCamera] = useState(false)
-
-  console.log(fotoCam)
+  console.log(user[0].medicoClinica)
   return (
     <Container>
 
@@ -67,13 +62,10 @@ export default function MedicalRecord({
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>
-            {name}
+            aaa
           </Title>
         </ContainerMargin>
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-          <TextQuickSandRegular>
-            {age}
-          </TextQuickSandRegular>
           <TextQuickSandRegular>
             {email}
           </TextQuickSandRegular>

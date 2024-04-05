@@ -47,6 +47,7 @@ namespace WebAPI.Repositories
         {
             List<Consulta> listaConsultas = ctx.Consultas
                 .Include(x => x.Paciente!.IdNavigation)
+                .Include(x => x.MedicoClinica!.Medico!.IdNavigation)
                 .Include(x => x.Situacao)
                 .Include(x => x.Prioridade)
                 .Where(x => x.MedicoClinica != null && x.MedicoClinica.MedicoId == IdMedico)

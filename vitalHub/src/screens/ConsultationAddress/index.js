@@ -1,24 +1,52 @@
-import { StatusBar } from "react-native";
+import { ActivityIndicator, StatusBar } from "react-native";
 import { MapLocation } from "../../components/MapLocation";
 import { Description2, TextAdress, TextLabel, Title } from "../../components/Texts/style";
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer";
 import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
+import { useEffect, useState } from "react";
+import api from "../../service/Service";
 
-export default function ConsultationAddress ({
+export default function ConsultationAddress({
   navigation,
   route
 }) {
+  const [clinica, setClinica] = useState(null)
 
-  console.log('params : ',clinica)
+  async function BuscarClinica() {
+    await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
+      .then(response => {
+        setClinica(response.data)
+
+      })
+      .catch(error => {
+        'Erro ao buscar clinica por id = ', error
+      })
+  }
+
+  const latitudeClinica = clinica.latitude;
+  const logitudeClinica = clinica.longitude;
+  const nomeClinica = clinica.nomeFantasia;
+
+  useEffect(() => {
+    if (clinica == null) {
+      BuscarClinica()
+    }
+  }, [clinica])
   return (
-    
+
     <Container>
+
+      {
+        clinica !== null ? (
+
+        <>
+
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
 
-      <MapLocation/>
+      <MapLocation />
       
 
       <ContainerScrollView style={{borderTopLeftRadius:10,borderTopRightRadius:10, position:"absolute", bottom:0, backgroundColor:'#FFF', height:'51%'}}
@@ -79,8 +107,13 @@ export default function ConsultationAddress ({
         </LinkUnderlineDefault>
         </ContainerMargin>
       </ContainerScrollView>
+      </>
+      ) : (
+        <ActivityIndicator/>
+      )
+      }
 
-
+     
     </Container>
   )
 }
