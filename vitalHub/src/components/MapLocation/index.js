@@ -22,20 +22,18 @@ export const MapLocation = ({
   longitudeClinica,
   nomeClinica
 }) => {
-//"clinica": "Policlínica Centro", "latitude": -46.5473, "longitude": -23.6982
-//-23.698297574881053, -46.547379047406196
   const clinica = [{ latitude: latitudeClinica, longitude: longitudeClinica, clinica: nomeClinica }]
-
-  //console.log('clinica no mapa = ',clinica)
-
+  
   const [initialPosition, setInitialPosition] = useState(null); //Hook par armezar a posição atual do dispositivo
   const [endPosition, setEndPosition] = useState({ //Hook para armazenar a posição da clinica
     latitude: clinica[0].latitude,
     longitude: clinica[0].longitude
-  })
-
+  }) 
   const mapReference = useRef(null);
-
+  
+  const [mapRendered, setMapRendered] = useState(false);
+  
+  console.log(clinica)
 
   // Função para capturar a localização atual.
   async function CurrentLocation() {
@@ -47,7 +45,26 @@ export const MapLocation = ({
     }
   }
 
-
+  async function reloadPreviewMap() {
+    if (mapReference.current && initialPosition) {
+      await mapReference.current.fitToCoordinates(
+        [
+          {
+            latitude: initialPosition.coords.latitude,
+            longitude: initialPosition.coords.longitude
+          }
+        ,
+        {
+          latitude: endPosition.latitude,
+          longitude: endPosition.longitude
+        }
+      ], {
+          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },     
+          animated: true,
+        }
+      )
+    }
+  }
 
   useEffect(() => {
     CurrentLocation();
@@ -70,34 +87,12 @@ export const MapLocation = ({
 
   useEffect(() => {
     reloadPreviewMap()
-  }, [initialPosition == null])
-
-
-  async function reloadPreviewMap() {
-    if (mapReference.current && initialPosition) {
-      await mapReference.current.fitToCoordinates(
-        [
-          {
-            latitude: initialPosition.coords.latitude,
-            longitude: initialPosition.coords.longitude
-          }
-        ,
-        {
-          latitude: endPosition.latitude,
-          longitude: endPosition.longitude,
-        }
-      ], {
-          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },
-          animated: true,
-        }
-      )
-    }
-  }
+  }, [mapRendered])
 
   return (
     <View style={styles.container}>
       {
-        initialPosition != null ?
+        initialPosition !== null ?
           (
             <MapView
               ref={mapReference}
@@ -115,6 +110,7 @@ export const MapLocation = ({
                 height: '100%',
                 width: '100%',
               }}
+              onLayout={()=> {setMapRendered(true)}}
             >
               <Marker
                 coordinate={{
