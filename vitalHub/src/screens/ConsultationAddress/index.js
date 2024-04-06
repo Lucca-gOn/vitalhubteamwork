@@ -18,7 +18,7 @@ export default function ConsultationAddress({
     await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
       .then(response => {
         setClinica(response.data)
-        console.log('resposta de buscar clinica: ', response.data)
+        //console.log('resposta de buscar clinica: ', response.data)
 
       })
       .catch(error => {
@@ -38,6 +38,8 @@ export default function ConsultationAddress({
       BuscarClinica()
     }
   }, [clinica])
+
+  console.log('valor da rota clinica',route.params.clinica)
   return (
 
     <Container>
@@ -106,7 +108,7 @@ export default function ConsultationAddress({
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-        <LinkUnderlineDefault>
+        <LinkUnderlineDefault onPress={()=> navigation.goBack()}>
           Voltar
         </LinkUnderlineDefault>
         </ContainerMargin>
