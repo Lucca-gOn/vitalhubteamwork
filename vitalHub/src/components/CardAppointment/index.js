@@ -19,18 +19,14 @@ export default CardAppointment = (
     role
   }
 ) => {
-  const [idade, setIdade] = useState();
-
   const roles = role == 'Medico' ? data.paciente : data.medicoClinica.medico;
-  // console.log('Dados medico : ', data)
-  // console.log(data)
-  // console.log(roles)
-
+  
   const dataNascimento = roles.dataNascimento
   const foto = roles.idNavigation.foto
   const tipoConsulta = data.prioridade.prioridade
-
-
+  // console.log(dataNascimento)
+  const [idade, setIdade] = useState();
+ 
   const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
@@ -49,7 +45,7 @@ export default CardAppointment = (
       activeOpacity={0.7} 
       onPress={()=>{
         role == 'Medico'? 
-          navigation.navigate('MedicalRecord') :
+          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role}) :
           navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
       }}  
     >
@@ -60,7 +56,7 @@ export default CardAppointment = (
           <ContainerMargin $fd="row" $gap={7} $mt={5} $mb={11} $justContent="flex-start" $width="content">
             <TextQuickSandRegular>
               {
-                dataNascimento < 2 ?
+                idade < 2 ?
                   idade + ' ano' :
                   dataNascimento === undefined ?
                     'CRM - ' + roles.crm :

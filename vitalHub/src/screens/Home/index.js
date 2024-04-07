@@ -39,11 +39,8 @@ export default function Home(
 
   async function ListarConsultas(){
 
-    const url = ( profile.role == 'Medico' ? 'Medicos': 'Pacientes')
-    // console.log('ListarConsulta Valor de Url: ', url);
-    // console.log('ListarConsulta Valor de DateConsult: ', dateConsult)
-    // console.log('Listar Consulta valor de id: ', profile.id)
-
+    const url = ( profile.role == 'Medico' ?  'Medicos' : 'Pacientes' )
+   
     await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
     .then(response => {
       setConsultas(response.data);
@@ -67,6 +64,8 @@ export default function Home(
       ListarConsultas();
     }
   },[dateConsult])
+
+  // console.log(consultas)
 
   return (
   
