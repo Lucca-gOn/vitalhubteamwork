@@ -93,7 +93,15 @@ export default function MedicalRecord({
         
           <TextLabel>Prescrição médica</TextLabel>
         
-          <InputGreenMultiLine editable={!disabledInput} placeholder="Prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} />
+          <InputGreenMultiLine 
+          editable={!disabledInput}
+          //expressão condicional
+          //(!disabledInput verdadeiro), mostra "Prescrição médica". Se esta desabilitado, deixa o placeholder vazio.
+          placeholder={!disabledInput ? "Prescrição médica" : ""}
+          disabledInput={disabledInput}
+          //Adicionado value "" apenas para teste, consumir prescrição
+          value={"Consumir prescrição"} 
+          />
         
         </ContainerMargin>
 
