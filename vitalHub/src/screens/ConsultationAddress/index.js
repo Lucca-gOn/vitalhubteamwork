@@ -14,18 +14,6 @@ export default function ConsultationAddress({
 }) {
   const [clinica, setClinica] = useState(null)
 
-  async function BuscarClinica() {
-    await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
-      .then(response => {
-        setClinica(response.data)
-        //console.log('resposta de buscar clinica: ', response.data)
-
-      })
-      .catch(error => {
-        'Erro ao buscar clinica por id = ', error
-      })
-  }
-
   const latitudeClinica = clinica ? clinica.endereco.latitude : null;
   const longitudeClinica = clinica ? clinica.endereco.longitude : null;
   const nomeClinica = clinica ? clinica.nomeFantasia : null;
@@ -33,13 +21,22 @@ export default function ConsultationAddress({
   const enderecoClinica = clinica ? clinica.endereco.logradouro : null;
   const cepClinica = clinica ? clinica.endereco.cep : null;
 
+  async function BuscarClinica() {
+    await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
+      .then(response => {
+        setClinica(response.data)
+      })
+      .catch(error => {
+        'Erro ao buscar clinica por id = ', error
+      })
+  }  
+
   useEffect(() => {
     if (clinica == null) {
       BuscarClinica()
     }
   }, [clinica])
 
-  console.log('valor da rota clinica',route.params.clinica)
   return (
 
     <Container>
