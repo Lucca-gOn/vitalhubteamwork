@@ -10,35 +10,47 @@ import { Stethoscope } from "../../components/Stethoscope"
 import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
+import api from "../../service/Service"
 
 
 export default function MedicalRecord({
   navigation,
   route
-}) {  
+}) {
+  const [showModalCamera, setShowModalCamera] = useState(false)
+  const [disabledInput, setDisableInput] = useState(false)
+  
   const nomePaciente = route.params.dadosConsulta.paciente.idNavigation.nome;
   const email = route.params.dadosConsulta.paciente.idNavigation.email;
-  const descricaoConsulta = route.params.dadosConsulta.descricao ;
+  const descricaoConsulta = route.params.dadosConsulta.descricao;
   const diagnosticoPaciente = route.params.dadosConsulta.diagnostico;
   const prescricaoMedica = route.params.dadosConsulta.receita;
   const idade = route.params.idade
   const foto = route.params.dadosConsulta.paciente.idNavigation.foto;
   const role = route.params.role;
   const fotoCam = route.params.fotoCam
-  
-  const [showModalCamera, setShowModalCamera] = useState(false)
-  const [disabledInput, setDisableInput] = useState(false)
+  const situacaoConsulta = route.params.dadosConsulta.situacao.situacao
 
-  function verificaProntuario(){
   
-    diagnosticoPaciente!== null || diagnosticoPaciente !== null || prescricaoMedica !== null ?
-    setDisableInput(true) :
+  console.log(route.params.dadosConsulta)
+
+  function verificaProntuario() {
+
+    diagnosticoPaciente !== undefined || diagnosticoPaciente !== undefined || prescricaoMedica !== undefined ?
+      setDisableInput(true) :
       setDisableInput(false)
   }
 
-  useEffect(()=>{
+  async function alterarDadosConsulta(){
+    const response = await api.put('/Consultas/Prontuario', {
+      id : route.params.dadosConsulta.id,
+      
+    })
+  }
+
+  useEffect(() => {
     verificaProntuario()
-  },[])
+  }, [])
   return (
     <Container>
 
@@ -51,15 +63,15 @@ export default function MedicalRecord({
       >
 
         <ContainerMargin $mt={20} $width="100%">
-      
+
           <Title>
             {nomePaciente}
           </Title>
-      
+
         </ContainerMargin>
-        
+
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-      
+
           <TextQuickSandRegular>
             {
               idade < 2 ?
@@ -67,46 +79,46 @@ export default function MedicalRecord({
                 idade + ' anos'
             }
           </TextQuickSandRegular>
-      
+
           <TextQuickSandRegular>
-            {email}         
+            {email}
           </TextQuickSandRegular>
-        
+
         </ContainerMargin>
 
         <ContainerMargin $alingItens="flex-start" $gap={10}>
-        
+
           <TextLabel>Descrição da consulta</TextLabel>
-        
-          <InputGreenMultiLine placeholder="Descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} />
-        
+
+          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} />
+
         </ContainerMargin>
 
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-        
+
           <TextLabel>Diagnóstico do paciente</TextLabel>
-        
-          <InputGreen placeholder="Diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} />
-        
+
+          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} />
+
         </ContainerMargin>
 
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-        
+
           <TextLabel>Prescrição médica</TextLabel>
-        
-          <InputGreenMultiLine editable={!disabledInput} placeholder="Prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} />
-        
+
+          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} />
+
         </ContainerMargin>
 
         {
           role !== 'Medico' ? (
+
             <>
 
-
               <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-        
+
                 <TextLabel>Exames médicos</TextLabel>
-        
+
                 <ContainerMargin $width="100%" $height="111px" $bgColor="#F5F3F3" $borderRadius={5} $fd="row" $gap={9}>
                   {fotoCam !== undefined ?
 
@@ -119,15 +131,15 @@ export default function MedicalRecord({
 
                   }
                 </ContainerMargin>
-        
+
               </ContainerMargin>
 
               <ContainerMargin $fd="row" $justContent="space-between" $mt={10}>
-        
+
                 <ButtonGreen onPress={() => { setShowModalCamera(true) }} />
-        
+
                 <TextCancelAppointment style={{ width: '25%', paddingTop: 10, paddingBottom: 10 }}>Cancelar</TextCancelAppointment>
-        
+
               </ContainerMargin>
             </>
           ) :
@@ -137,19 +149,26 @@ export default function MedicalRecord({
 
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-       
-          <ButtonDefault textButton="Salvar" />
 
-          <ButtonDefault textButton="Editar" />
+          <ButtonDefault textButton="Salvar"
+            onPress={() => {
+
+             
+      
+                
+                
+            }} />
+
+          <ButtonDefault textButton="Editar" disabled={!disabledInput} disabledInput={!disabledInput} onPress={() => setDisableInput(false)} />
 
           <LinkUnderlineDefault onPress={() => { navigation.replace('Home') }}>Cancelar</LinkUnderlineDefault>
-       
+
         </ContainerMargin>
-      
+
       </ContainerScrollView>
 
       <ModalCamera showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
-   
+
     </Container>
   )
 }
