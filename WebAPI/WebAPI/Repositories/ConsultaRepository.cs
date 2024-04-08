@@ -29,6 +29,7 @@ namespace WebAPI.Repositories
 
             buscada.Descricao = consulta.Descricao;
             buscada.Diagnostico = consulta.Diagnostico;
+            buscada.Receita = consulta.Receita;// alterado allan 08/04/2024            
             ctx.Update(buscada);
             ctx.SaveChanges();
         }
