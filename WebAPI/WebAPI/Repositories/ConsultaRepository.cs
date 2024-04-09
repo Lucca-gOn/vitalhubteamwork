@@ -50,7 +50,7 @@ namespace WebAPI.Repositories
             Consulta buscada = ctx.Consultas.Find(consulta.Id);
             
             buscada.SituacaoId = consulta.SituacaoId;
-            ctx.Update(buscada);
+            ctx.Update(buscada); 
             ctx.SaveChanges();
         }
 
