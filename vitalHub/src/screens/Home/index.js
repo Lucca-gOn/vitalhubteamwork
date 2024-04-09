@@ -10,9 +10,7 @@ import { Stethoscope } from "../../components/Stethoscope";
 import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
 import api from "../../service/Service";
-
-
-
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Home(
   {
@@ -20,19 +18,20 @@ export default function Home(
     route
   }
 ) {
-  const ultimaDataSelecionada = route.params && route.params.dateConsulta ? route.params.dateConsulta : null;
+
   const [select, setSelect] = useState('Agendadas');
   const [consultas, setConsultas] = useState({})
-  const [dateConsult,setDateConsult] = useState('');
+  const [dateConsult, setDateConsult] = useState('');
   const [dadosSituacoes, setDadosSituacoes] = useState({})
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
-  
-  
-  
+
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
+
+  const [situacao, setSituacao] = useState("");
+
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
   //console.log('Profile : ', profile)
@@ -40,33 +39,33 @@ export default function Home(
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
     const token = await userDecodeToken();
-    setProfile(token);    
+    setProfile(token);
     setDateConsult(moment().format('YYYY-MM-DD'))
   }
 
 
-  async function ListaSituacoes (){
+  async function ListaSituacoes() {
     await api.get('/Situacao/ListarTodas')
-    .then(response => {
-      setDadosSituacoes(response.data)
-    })
-    .catch(error => {
-      console.log('Erro ao listar dados de Situações : ,', error)
-    })
+      .then(response => {
+        setDadosSituacoes(response.data)
+      })
+      .catch(error => {
+        console.log('Erro ao listar dados de Situações : ,', error)
+      })
   }
 
+  async function ListarConsultas() {
+    if (useIsFocused) {
+      const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
 
-  async function ListarConsultas(){
-
-    const url = ( profile.role == 'Medico' ?  'Medicos' : 'Pacientes' )
-   
-    await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
-    .then(response => {
-      setConsultas(response.data);
-      // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
-    }).catch( error => {
-      console.log('Erro ao listar Consultas: ',error);
-    })
+      await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
+        .then(response => {
+          setConsultas(response.data);
+          // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
+        }).catch(error => {
+          console.log('Erro ao listar Consultas: ', error);
+        })
+    }
   }
 
   // Desestruturando apenas os dados a serem utilizados no momento
@@ -78,16 +77,16 @@ export default function Home(
     ListaSituacoes();
   }, [])
 
-  useEffect(()=>{
-    if(dateConsult !== ''){
+  useEffect(() => {
+    if (dateConsult !== '') {
       ListarConsultas();
     }
-  },[dateConsult])
+  }, [dateConsult])
 
   // console.log(consultas)
 
   return (
-  
+
     <Container $bgColor="#fbfbfb">
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
@@ -95,7 +94,7 @@ export default function Home(
       <Header navigation={navigation} name={name} />
 
       <ContainerMargin $mt={20}>
-        <CalendarListWeek  setDateConsult={setDateConsult}/>
+        <CalendarListWeek setDateConsult={setDateConsult} />
       </ContainerMargin>
 
       <ContainerMargin $fd="row" $justContent="space-between" $mt={38}>
@@ -110,10 +109,11 @@ export default function Home(
           renderItem={({ item }) =>
             select == item.situacao.situacao && (
               <CardAppointment
+                setSituacao={item.situacao.situacao}
                 data={item}
                 role={profile.role}
                 navigation={navigation}
-                selectStatus={select}                
+                selectStatus={select}
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setConsultSelect={setConsultSelect}
@@ -131,15 +131,15 @@ export default function Home(
 
       {
         role === 'Paciente' ?
-        <Stethoscope
-          onPress={() => setShowModalScheduleAppointment(true)}
-        />:
-         <></>      
+          <Stethoscope
+            onPress={() => setShowModalScheduleAppointment(true)}
+          /> :
+          <></>
       }
 
       <ModalCancel
-        consultSelect={consultSelect} 
-        dadosSituacoes={dadosSituacoes}       
+        consultSelect={consultSelect}
+        dadosSituacoes={dadosSituacoes}
         setShowModalCancel={setShowModalCancel}
         showModalCancel={showModalCancel}
       />
@@ -158,7 +158,7 @@ export default function Home(
       />
 
       <ModalDataConsult />
-   
+
     </Container>
 
 

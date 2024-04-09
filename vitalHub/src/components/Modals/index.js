@@ -52,7 +52,7 @@ export const ModalCancel = ({
       await api.put('/Consultas/Status', {
         id: consultSelect,
         situacaoId: idSituacaoRealizadas,
-      })      
+      })            
       console.log('Relizado cancelamento')
     } catch (error) {
       alert('Erro ao fazer alteração nos dados: ', error)

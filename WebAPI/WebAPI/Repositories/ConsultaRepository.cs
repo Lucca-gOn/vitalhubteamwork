@@ -33,12 +33,12 @@ namespace WebAPI.Repositories
             buscada.Diagnostico = consulta.Diagnostico;           
             buscada.Receita.Medicamento = consulta.Receita.Medicamento;
             buscada.SituacaoId = consulta.SituacaoId;
-            Console.WriteLine(@$"
-                descricao : {buscada.Descricao}
-                Diagnostico: {buscada.Diagnostico}
-                Receita: {buscada.Receita}
-                Situacaoid: {buscada.SituacaoId}
-                ");
+            //Console.WriteLine(@$"
+            //    descricao : {buscada.Descricao}
+            //    Diagnostico: {buscada.Diagnostico}
+            //    Receita: {buscada.Receita}
+            //    Situacaoid: {buscada.SituacaoId}
+            //    ");
             ctx.Update(buscada);
             ctx.SaveChanges();
 

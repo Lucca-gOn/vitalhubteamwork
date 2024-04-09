@@ -39,7 +39,7 @@ export default function MedicalRecord({
   const fotoCam = route.params.fotoCam
   const situacaoConsulta = route.params.dadosConsulta.situacao.situacao
 
-  console.log(route.params.dadosConsulta)
+  //console.log(route.params.dadosConsulta)
   function encontraIdConsultaRealizada(){
     for (const item of dadosSituações) {
       if (item.situacao === 'Realizadas') {

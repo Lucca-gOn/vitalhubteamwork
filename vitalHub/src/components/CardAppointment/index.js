@@ -36,6 +36,8 @@ export default CardAppointment = (
     setIdade(years);
   };
 
+  const [testeData,setTesteData] = useState(data)
+
   useEffect(() => {
     calculateAge();
   }, [])
