@@ -14,6 +14,7 @@ import * as MediaLibary from 'expo-media-library';
 import { FontAwesome } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image"
+import api from "../../service/Service"
 
 Notifications.requestPermissionsAsync();
 
@@ -28,9 +29,35 @@ Notifications.setNotificationHandler({
 export const ModalCancel = ({
   showModalCancel,
   consultSelect,
-  data,
+  dadosSituacoes,
   setShowModalCancel
 }) => {
+
+  const dadosSituações = dadosSituacoes;
+    
+  function encontraIdConsultaCancelada(){
+    for (const item of dadosSituações) {
+      if (item.situacao === 'Canceladas') {
+        return idSituacaoRealizadas = item.id;
+      }
+    }
+  }
+
+  async function alterarDadosConsulta() {
+    let idSituacaoRealizadas = encontraIdConsultaCancelada();
+
+    console.log('id ConsultSelect : ', consultSelect)
+    console.log('id ConsultSelect : ', idSituacaoRealizadas)
+    try {
+      await api.put('/Consultas/Status', {
+        id: consultSelect,
+        situacaoId: idSituacaoRealizadas,
+      })      
+      console.log('Relizado cancelamento')
+    } catch (error) {
+      alert('Erro ao fazer alteração nos dados: ', error)
+    }
+  }
 
   const handleCallNotifications = async () => {
     const { status } = await Notifications.getPermissionsAsync();
@@ -84,6 +111,7 @@ export const ModalCancel = ({
             <ButtonDefault textButton="Confirmar" onPress={() => {
               handleCallNotifications()
               setShowModalCancel(false)
+              alterarDadosConsulta()
               // const index = data.findIndex(paciente => paciente.id === consultSelect.id);
               // if (index !== -1){
               //   data[index].statusConsult = 'Canceladas'
@@ -92,6 +120,7 @@ export const ModalCancel = ({
 
             <LinkUnderlineDefault onPress={() => {
               setShowModalCancel(false)
+              
             }}>
               Cancelar
             </LinkUnderlineDefault>

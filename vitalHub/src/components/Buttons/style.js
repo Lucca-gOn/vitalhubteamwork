@@ -1,9 +1,20 @@
 import styled, { css } from "styled-components/native";
 
 export const ButtonBlueStyle = styled.TouchableOpacity`
+  ${(props) => {
+    if(!props.disabledInput){
+      return css`
+        background-color: #496BBA;
+      `
+    }else{
+      return css`
+        background-color: #ACABB7;
+      `
+    }
+  }}
   width: 100%;
   border-radius: 5px;
-  background-color: #496BBA;
+  //background-color: #496BBA;
   padding:12px;
 `
 export const ButtonGrayStyle = styled(ButtonBlueStyle)`

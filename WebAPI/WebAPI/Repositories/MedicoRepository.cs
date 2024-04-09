@@ -51,6 +51,7 @@ namespace WebAPI.Repositories
             return ctx.Medicos
                 .Include(x => x.IdNavigation)
                 .Include(x => x.Endereco)
+                .Include(x => x.Especialidade)
                 .FirstOrDefault(x => x.Id == Id)!;
         }
 
@@ -88,7 +89,7 @@ namespace WebAPI.Repositories
                 .Include(x => x.Prioridade)
                 .Include(x => x.Paciente!.IdNavigation)
                 .Include(x => x.MedicoClinica!.Medico!.IdNavigation)
-
+                .Include(x => x.Receita)
                 .Where(x => x.MedicoClinica!.MedicoId == idMedico && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
                 .ToList();
         }

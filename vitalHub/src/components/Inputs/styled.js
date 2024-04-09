@@ -1,7 +1,8 @@
+import { css } from "styled-components";
 import styled from "styled-components/native";
 
 
-export const InputGreen = styled.TextInput.attrs((props)=>({
+export const InputGreen = styled.TextInput.attrs((props) => ({
   placeholderTextColor: '#34898F',
   autoCapitalize: props.autoCapitalize !== undefined ? props.autoCapitalize : "none",
   autoCorrect: false,
@@ -9,16 +10,30 @@ export const InputGreen = styled.TextInput.attrs((props)=>({
   cursorColor: '#34898F',
   enablesReturnKeyAutomatically: true,
 }))`
+  ${(props) => {
+    if (!props.disabledInput) {
+      return css`
+        color: #34898F;
+        border: 2px solid #49B3BA;
+      `
+    } else {
+      return css`
+        background-color: #F5F3F3;
+        border-color: #F5F3F3;
+        color: #4E4B59;
+      `
+    }
+  }
+  }
+
   padding:16px;
   width:100%;
   
-  border: 2px solid #49B3BA;
+  
   border-radius: 5px;
 
   font-family: 'MontserratAlternates_600SemiBold';
   font-size: 14px;
-  color: #34898F;
-
 `
 
 export const InputGray = styled(InputGreen).attrs({
@@ -33,17 +48,31 @@ export const InputGray = styled(InputGreen).attrs({
 
 
 export const InputGreenMultiLine = styled(InputGreen).attrs({
-  multiline:true,
-  textAlignVertical: "top"  
+  multiline: true,
+  textAlignVertical: "top"
 })`
-  height:121px;
-
+  ${(props) => {
+    if (!props.disabledInput) {
+      return css`
+        color: #34898F;
+        border-color: #34898F;
+      `
+    } else {
+      return css`
+        background-color: #F5F3F3;
+        border-color: #F5F3F3;
+        color: #4E4B59;
+      `
+    }
+  }
+  }
+  height:121px;  
 `
 
 export const InputGreenCode = styled.TextInput.attrs({
-  placeholderTextColor: '#34898F',  
+  placeholderTextColor: '#34898F',
   autoCapitalize: "none",
-  autoCorrect: false,  
+  autoCorrect: false,
   cursorColor: '#34898F',
   enablesReturnKeyAutomatically: true,
   maxLength: 1,

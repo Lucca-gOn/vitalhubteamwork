@@ -11,24 +11,31 @@ import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
 import api from "../../service/Service";
 
+
+
+
 export default function Home(
   {
-    navigation
+    navigation,
+    route
   }
 ) {
+  const ultimaDataSelecionada = route.params && route.params.dateConsulta ? route.params.dateConsulta : null;
   const [select, setSelect] = useState('Agendadas');
   const [consultas, setConsultas] = useState({})
   const [dateConsult,setDateConsult] = useState('');
-
+  const [dadosSituacoes, setDadosSituacoes] = useState({})
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
   
+  
+  
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  // console.log('Profile : ', profile)
+  //console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
@@ -37,13 +44,22 @@ export default function Home(
     setDateConsult(moment().format('YYYY-MM-DD'))
   }
 
+
+  async function ListaSituacoes (){
+    await api.get('/Situacao/ListarTodas')
+    .then(response => {
+      setDadosSituacoes(response.data)
+    })
+    .catch(error => {
+      console.log('Erro ao listar dados de Situações : ,', error)
+    })
+  }
+
+
   async function ListarConsultas(){
 
-    const url = ( profile.role == 'Medico' ? 'Medicos': 'Pacientes')
-    // console.log('ListarConsulta Valor de Url: ', url);
-    // console.log('ListarConsulta Valor de DateConsult: ', dateConsult)
-    // console.log('Listar Consulta valor de id: ', profile.id)
-
+    const url = ( profile.role == 'Medico' ?  'Medicos' : 'Pacientes' )
+   
     await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
     .then(response => {
       setConsultas(response.data);
@@ -59,7 +75,7 @@ export default function Home(
   //Executando a função ProfileLoad
   useEffect(() => {
     profileLoad();
-    // ListarConsultas()
+    ListaSituacoes();
   }, [])
 
   useEffect(()=>{
@@ -67,6 +83,8 @@ export default function Home(
       ListarConsultas();
     }
   },[dateConsult])
+
+  // console.log(consultas)
 
   return (
   
@@ -95,10 +113,11 @@ export default function Home(
                 data={item}
                 role={profile.role}
                 navigation={navigation}
-                selectStatus={select}
+                selectStatus={select}                
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setConsultSelect={setConsultSelect}
+                dadosSituacoes={dadosSituacoes}
               />
             )
           }
@@ -119,8 +138,8 @@ export default function Home(
       }
 
       <ModalCancel
-        consultSelect={consultSelect}
-        data={consultas}
+        consultSelect={consultSelect} 
+        dadosSituacoes={dadosSituacoes}       
         setShowModalCancel={setShowModalCancel}
         showModalCancel={showModalCancel}
       />

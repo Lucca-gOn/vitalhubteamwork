@@ -25,12 +25,24 @@ namespace WebAPI.Repositories
 
         public void EditarProntuario(Consulta consulta)
         {
-            Consulta buscada = ctx.Consultas.Find(consulta.Id)!;
+            Consulta buscada = ctx.Consultas
+                .Include(c => c.Receita)                
+                .FirstOrDefault(c => c.Id == consulta.Id)!;
 
             buscada.Descricao = consulta.Descricao;
-            buscada.Diagnostico = consulta.Diagnostico;
+            buscada.Diagnostico = consulta.Diagnostico;           
+            buscada.Receita.Medicamento = consulta.Receita.Medicamento;
+            buscada.SituacaoId = consulta.SituacaoId;
+            Console.WriteLine(@$"
+                descricao : {buscada.Descricao}
+                Diagnostico: {buscada.Diagnostico}
+                Receita: {buscada.Receita}
+                Situacaoid: {buscada.SituacaoId}
+                ");
             ctx.Update(buscada);
             ctx.SaveChanges();
+
+            
         }
 
         public void EditarStatus(Consulta consulta)
@@ -38,7 +50,7 @@ namespace WebAPI.Repositories
             Consulta buscada = ctx.Consultas.Find(consulta.Id);
             
             buscada.SituacaoId = consulta.SituacaoId;
-            ctx.Update(buscada);
+            ctx.Update(buscada); 
             ctx.SaveChanges();
         }
 
@@ -47,7 +59,6 @@ namespace WebAPI.Repositories
         {
             List<Consulta> listaConsultas = ctx.Consultas
                 .Include(x => x.Paciente!.IdNavigation)
-                .Include(x => x.MedicoClinica!.Medico!.IdNavigation)
                 .Include(x => x.Situacao)
                 .Include(x => x.Prioridade)
                 .Where(x => x.MedicoClinica != null && x.MedicoClinica.MedicoId == IdMedico)

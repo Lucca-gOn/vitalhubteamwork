@@ -8,12 +8,13 @@ export const ButtonDefault = ({
   onPress,
   textButton = '',
   statusResponse,
-  disabled
+  disabled,
+  disabledInput
 }) => {
   return (
     <>
-      <ButtonBlueStyle onPress={onPress} disabled={disabled}>
-        <TextButtonBlue>{statusResponse ? <ActivityIndicator /> : textButton}</TextButtonBlue>
+      <ButtonBlueStyle onPress={onPress} disabled={disabled} disabledInput={disabledInput}>
+        <TextButtonBlue disabledInput={disabledInput}>{statusResponse ? <ActivityIndicator /> : textButton}</TextButtonBlue>
       </ButtonBlueStyle>
     </>
   )

@@ -18,19 +18,20 @@ import MapViewDirections from "react-native-maps-directions";
 import { mapskey } from '../../utils/mapsApiKey'
 
 export const MapLocation = ({
-
+  latitudeClinica,
+  longitudeClinica,
+  nomeClinica
 }) => {
-
-  const clinica = [{ latitude: -23.6983, longitude: -46.5473, clinica: 'Health Clinic' }]
-
+  const clinica = [{ latitude: latitudeClinica, longitude: longitudeClinica, clinica: nomeClinica }]
+  
   const [initialPosition, setInitialPosition] = useState(null); //Hook par armezar a posição atual do dispositivo
   const [endPosition, setEndPosition] = useState({ //Hook para armazenar a posição da clinica
     latitude: clinica[0].latitude,
     longitude: clinica[0].longitude
-  })
-
+  }) 
   const mapReference = useRef(null);
-
+  
+  const [mapRendered, setMapRendered] = useState(false);
 
   // Função para capturar a localização atual.
   async function CurrentLocation() {
@@ -38,10 +39,30 @@ export const MapLocation = ({
     if (granted) { // Se a permissão for concedida faza
       const captureLocation = await getCurrentPositionAsync(); // Obtem a latitude e longitude do dispositivo
       setInitialPosition(captureLocation);// Seta a posição inicial com a localização obtida
+      //console.log('posicao inicial : ',initialPosition)
     }
   }
 
-
+  async function reloadPreviewMap() {
+    if (mapReference.current && initialPosition) {
+      await mapReference.current.fitToCoordinates(
+        [
+          {
+            latitude: initialPosition.coords.latitude,
+            longitude: initialPosition.coords.longitude
+          }
+        ,
+        {
+          latitude: endPosition.latitude,
+          longitude: endPosition.longitude
+        }
+      ], {
+          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },     
+          animated: true,
+        }
+      )
+    }
+  }
 
   useEffect(() => {
     CurrentLocation();
@@ -64,34 +85,12 @@ export const MapLocation = ({
 
   useEffect(() => {
     reloadPreviewMap()
-  }, [initialPosition == null])
-
-
-  async function reloadPreviewMap() {
-    if (mapReference.current && initialPosition) {
-      await mapReference.current.fitToCoordinates(
-        [
-          {
-            latitude: initialPosition.coords.latitude,
-            longitude: initialPosition.coords.longitude
-          }
-        ,
-        {
-          latitude: endPosition.latitude,
-          longitude: endPosition.longitude,
-        }
-      ], {
-          edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },
-          animated: true,
-        }
-      )
-    }
-  }
+  }, [mapRendered])
 
   return (
     <View style={styles.container}>
       {
-        initialPosition != null ?
+        initialPosition !== null ?
           (
             <MapView
               ref={mapReference}
@@ -109,6 +108,7 @@ export const MapLocation = ({
                 height: '100%',
                 width: '100%',
               }}
+              onLayout={()=> {setMapRendered(true)}}
             >
               <Marker
                 coordinate={{
@@ -119,7 +119,6 @@ export const MapLocation = ({
                 description="Posição inicial"
                 pinColor="green"
               />
-
               <MapViewDirections
                 origin={initialPosition.coords}
                 destination={{

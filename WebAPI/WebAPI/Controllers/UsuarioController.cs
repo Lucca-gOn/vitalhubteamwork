@@ -46,7 +46,5 @@ namespace WebAPI.Controllers
                 return BadRequest(erro.Message);
             }
         }
-
-
     }
 }
