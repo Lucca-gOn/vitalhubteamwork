@@ -28,7 +28,11 @@ export default CardAppointment = (
   const tipoConsulta = data.prioridade.prioridade
   // console.log(dataNascimento)
   const [idade, setIdade] = useState();
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
   const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
@@ -47,7 +51,11 @@ export default CardAppointment = (
       activeOpacity={0.7} 
       onPress={()=>{
         role == 'Medico'? 
+<<<<<<< HEAD
           navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role, dadosSituacoes:dadosSituacoes}) :
+=======
+          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role}) :
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
           navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
       }}  
     >

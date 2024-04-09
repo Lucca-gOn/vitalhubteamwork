@@ -25,11 +25,27 @@ export default function ConsultationAddress({
     await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
       .then(response => {
         setClinica(response.data)
+<<<<<<< HEAD
+=======
+        //console.log('resposta de buscar clinica: ', response.data)
+
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
       })
       .catch(error => {
         'Erro ao buscar clinica por id = ', error
       })
+<<<<<<< HEAD
   }  
+=======
+  }
+
+  const latitudeClinica = clinica ? clinica.endereco.latitude : null;
+  const longitudeClinica = clinica ? clinica.endereco.longitude : null;
+  const nomeClinica = clinica ? clinica.nomeFantasia : null;
+  const cidadeClinica = clinica ? clinica.endereco.cidade : null;
+  const enderecoClinica = clinica ? clinica.endereco.logradouro : null;
+  const cepClinica = clinica ? clinica.endereco.cep : null;
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
 
   useEffect(() => {
     if (clinica == null) {
@@ -37,6 +53,10 @@ export default function ConsultationAddress({
     }
   }, [clinica])
 
+<<<<<<< HEAD
+=======
+  console.log('valor da rota clinica',route.params.clinica)
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
   return (
 
     <Container>

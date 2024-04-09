@@ -50,6 +50,7 @@
           "Children": [
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 4,
               "Title": "UsuarioRepository.cs",
               "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
@@ -85,6 +86,17 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-08T13:24:30.705Z",
+=======
+              "DocumentIndex": 2,
+              "Title": "VitalContext.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Contexts\\VitalContext.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Contexts\\VitalContext.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Contexts\\VitalContext.cs",
+              "RelativeToolTip": "WebAPI\\Contexts\\VitalContext.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAAUwC4AAAClAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-04T11:34:35.611Z",
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
               "EditorCaption": ""
             },
             {
@@ -147,7 +159,11 @@
               "RelativeDocumentMoniker": "WebAPI\\Repositories\\PacienteRepository.cs",
               "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\PacienteRepository.cs",
               "RelativeToolTip": "WebAPI\\Repositories\\PacienteRepository.cs",
+<<<<<<< HEAD
               "ViewState": "AQIAAC4AAAAAAAAAAAAzwEEAAAAaAAAA",
+=======
+              "ViewState": "AQIAAC4AAAAAAAAAAAAQwEEAAAAaAAAA",
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-04T11:33:17.801Z",
               "EditorCaption": ""

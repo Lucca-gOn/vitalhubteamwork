@@ -32,8 +32,13 @@ export default function Login({
         const response = await api.post('/Login', {
           email: 'caio@caio.com',
           senha: 'caio'
+<<<<<<< HEAD
           // email: 'lucas@lucas.com',
           // senha: 'lucas'
+=======
+          //email: 'lucas@lucas.com',
+          //senha: 'lucas'
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
           // email: 'allan@allan.com',
           // senha: 'allan'
           // email: 'teste@teste.com',

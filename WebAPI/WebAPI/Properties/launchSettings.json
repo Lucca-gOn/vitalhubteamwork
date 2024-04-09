@@ -14,8 +14,13 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
+<<<<<<< HEAD
       "applicationUrl": "http://192.168.21.126:4466",
       //Allan Casa -> 192.168.15.15
+=======
+      "applicationUrl": "http://192.168.0.11:4466",
+      //Allan Casa -> 192.168.15.16
+>>>>>>> c7757d143544aa6b990aac96ba697f333385b034
       //Allan Escola -> 192.168.21.50
       //Lucas Casa -> 192.168.0.11
       //Lucas Senai -> 192.168.21.126
