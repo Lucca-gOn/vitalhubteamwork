@@ -25,13 +25,24 @@ namespace WebAPI.Repositories
 
         public void EditarProntuario(Consulta consulta)
         {
-            Consulta buscada = ctx.Consultas.Find(consulta.Id)!;
+            Consulta buscada = ctx.Consultas
+                .Include(c => c.Receita)                
+                .FirstOrDefault(c => c.Id == consulta.Id)!;
 
             buscada.Descricao = consulta.Descricao;
-            buscada.Diagnostico = consulta.Diagnostico;
-            buscada.Receita = consulta.Receita;// alterado allan 08/04/2024            
+            buscada.Diagnostico = consulta.Diagnostico;           
+            buscada.Receita.Medicamento = consulta.Receita.Medicamento;
+            buscada.SituacaoId = consulta.SituacaoId;
+            Console.WriteLine(@$"
+                descricao : {buscada.Descricao}
+                Diagnostico: {buscada.Diagnostico}
+                Receita: {buscada.Receita}
+                Situacaoid: {buscada.SituacaoId}
+                ");
             ctx.Update(buscada);
             ctx.SaveChanges();
+
+            
         }
 
         public void EditarStatus(Consulta consulta)

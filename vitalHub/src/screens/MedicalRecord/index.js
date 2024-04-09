@@ -11,45 +11,71 @@ import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
 import api from "../../service/Service"
+import moment from "moment"
 
 
 export default function MedicalRecord({
   navigation,
   route
 }) {
+
+  
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
   
+  const [descricaoConsulta, setDescricaoConsulta] = useState(route.params.dadosConsulta.descricao ? route.params.dadosConsulta.descricao : '');
+  const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params.dadosConsulta.diagnostico ? route.params.dadosConsulta.diagnostico : '' );
+  const [prescricaoMedica, setPrescricaoMedica] = useState(route.params.dadosConsulta.receita ? route.params.dadosConsulta.receita.medicamento : '');
+
+  const dadosSituações = route.params.dadosSituacoes;
+
+  //console.log(route.params.dadosConsulta)
+  const idConsulta = route.params.dadosConsulta.id
   const nomePaciente = route.params.dadosConsulta.paciente.idNavigation.nome;
   const email = route.params.dadosConsulta.paciente.idNavigation.email;
-  const descricaoConsulta = route.params.dadosConsulta.descricao;
-  const diagnosticoPaciente = route.params.dadosConsulta.diagnostico;
-  const prescricaoMedica = route.params.dadosConsulta.receita;
   const idade = route.params.idade
   const foto = route.params.dadosConsulta.paciente.idNavigation.foto;
   const role = route.params.role;
   const fotoCam = route.params.fotoCam
   const situacaoConsulta = route.params.dadosConsulta.situacao.situacao
 
-  
   console.log(route.params.dadosConsulta)
-
+  function encontraIdConsultaRealizada(){
+    for (const item of dadosSituações) {
+      if (item.situacao === 'Realizadas') {
+        return idSituacaoRealizadas = item.id;
+      }
+    }
+  }  
+  
   function verificaProntuario() {
-
     diagnosticoPaciente !== undefined || diagnosticoPaciente !== undefined || prescricaoMedica !== undefined ?
-      setDisableInput(true) :
-      setDisableInput(false)
+    setDisableInput(true) :
+    setDisableInput(false)
   }
-
-  async function alterarDadosConsulta(){
-    const response = await api.put('/Consultas/Prontuario', {
-      id : route.params.dadosConsulta.id,
-      
-    })
+  //console.log(route.params.dadosConsulta.id)
+  async function alterarDadosConsulta() {
+    let idSituacaoRealizadas = encontraIdConsultaRealizada();
+    try {
+      await api.put('/Consultas/Prontuario', {
+        id: idConsulta,
+        situacaoId: idSituacaoRealizadas,
+        descricao: descricaoConsulta,
+        diagnostico: diagnosticoPaciente,        
+        receita:{
+          medicamento:prescricaoMedica,
+        } ,
+      })
+      setDisableInput(true);
+      console.log('Relizado alteracao')
+    } catch (error) {
+      alert('Erro ao fazer alteração nos dados: ', error)
+    }
   }
 
   useEffect(() => {
     verificaProntuario()
+    
   }, [])
   return (
     <Container>
@@ -90,7 +116,7 @@ export default function MedicalRecord({
 
           <TextLabel>Descrição da consulta</TextLabel>
 
-          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} />
+          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} onChangeText={(txt)=>{setDescricaoConsulta(txt)}}/>
 
         </ContainerMargin>
 
@@ -98,7 +124,7 @@ export default function MedicalRecord({
 
           <TextLabel>Diagnóstico do paciente</TextLabel>
 
-          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} />
+          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} onChangeText={(txt)=>{setDiagnosticoPaciente(txt)}}/>
 
         </ContainerMargin>
 
@@ -106,7 +132,7 @@ export default function MedicalRecord({
 
           <TextLabel>Prescrição médica</TextLabel>
 
-          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} />
+          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} onChangeText={(txt)=>{setPrescricaoMedica(txt)}}/>
 
         </ContainerMargin>
 
@@ -152,16 +178,15 @@ export default function MedicalRecord({
 
           <ButtonDefault textButton="Salvar"
             onPress={() => {
-
-             
-      
-                
-                
+                alterarDadosConsulta();
+                             
             }} />
 
           <ButtonDefault textButton="Editar" disabled={!disabledInput} disabledInput={!disabledInput} onPress={() => setDisableInput(false)} />
 
-          <LinkUnderlineDefault onPress={() => { navigation.replace('Home') }}>Cancelar</LinkUnderlineDefault>
+          <LinkUnderlineDefault 
+            onPress={() => { navigation.replace('Home',{dateConsulta : moment(route.params.dadosConsulta.dataConsulta).format('YYYY-MM-DD')}) 
+            }}>Cancelar</LinkUnderlineDefault>
 
         </ContainerMargin>
 

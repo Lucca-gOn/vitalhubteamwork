@@ -16,6 +16,8 @@ export default CardAppointment = (
     setConsultSelect,
     selectStatus,
     data,
+    setStatusIdConsultCard,
+    dadosSituacoes,
     role
   }
 ) => {
@@ -26,7 +28,7 @@ export default CardAppointment = (
   const tipoConsulta = data.prioridade.prioridade
   // console.log(dataNascimento)
   const [idade, setIdade] = useState();
- 
+
   const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
@@ -45,7 +47,7 @@ export default CardAppointment = (
       activeOpacity={0.7} 
       onPress={()=>{
         role == 'Medico'? 
-          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role}) :
+          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role, dadosSituacoes:dadosSituacoes}) :
           navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
       }}  
     >
@@ -72,7 +74,7 @@ export default CardAppointment = (
               selectStatus === 'Agendadas' ?
                 <TextCancelAppointment onPress={() => {
                   setShowModalCancel(true)
-                  setConsultSelect(data)
+                  setConsultSelect(data.id)
                 }}>
                   Cancelar
                 </TextCancelAppointment>

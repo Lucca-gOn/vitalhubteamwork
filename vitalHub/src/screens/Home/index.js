@@ -11,19 +11,26 @@ import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
 import api from "../../service/Service";
 
+
+
+
 export default function Home(
   {
-    navigation
+    navigation,
+    route
   }
 ) {
+  const ultimaDataSelecionada = route.params && route.params.dateConsulta ? route.params.dateConsulta : null;
   const [select, setSelect] = useState('Agendadas');
   const [consultas, setConsultas] = useState({})
   const [dateConsult,setDateConsult] = useState('');
-
+  const [dadosSituacoes, setDadosSituacoes] = useState({})
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
+  
+  
   
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   // Definindo UseState para armazenar os dados do perfil
@@ -36,6 +43,18 @@ export default function Home(
     setProfile(token);    
     setDateConsult(moment().format('YYYY-MM-DD'))
   }
+
+
+  async function ListaSituacoes (){
+    await api.get('/Situacao/ListarTodas')
+    .then(response => {
+      setDadosSituacoes(response.data)
+    })
+    .catch(error => {
+      console.log('Erro ao listar dados de Situações : ,', error)
+    })
+  }
+
 
   async function ListarConsultas(){
 
@@ -56,7 +75,7 @@ export default function Home(
   //Executando a função ProfileLoad
   useEffect(() => {
     profileLoad();
-    // ListarConsultas()
+    ListaSituacoes();
   }, [])
 
   useEffect(()=>{
@@ -94,10 +113,11 @@ export default function Home(
                 data={item}
                 role={profile.role}
                 navigation={navigation}
-                selectStatus={select}
+                selectStatus={select}                
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setConsultSelect={setConsultSelect}
+                dadosSituacoes={dadosSituacoes}
               />
             )
           }
@@ -118,8 +138,8 @@ export default function Home(
       }
 
       <ModalCancel
-        consultSelect={consultSelect}
-        data={consultas}
+        consultSelect={consultSelect} 
+        dadosSituacoes={dadosSituacoes}       
         setShowModalCancel={setShowModalCancel}
         showModalCancel={showModalCancel}
       />
