@@ -16,33 +16,55 @@ namespace WebAPI.Repositories
         public Medico AtualizarPerfil(Guid Id, MedicoViewModel medico)
         {
 
-            Medico medicoBuscado = ctx.Medicos.FirstOrDefault(x => x.Id == Id)!;
+            Medico medicoBuscado = ctx.Medicos.Include(x => x.IdNavigation).FirstOrDefault(x => x.Id == Id);
 
+            if (medicoBuscado == null) return null;
 
-            if (medicoBuscado == null) return null!;
-
+            // Atualizar somente os campos que foram modificados
             if (medico.Foto != null)
+            {
                 medicoBuscado.IdNavigation.Foto = medico.Foto;
-
+            }
+            if (medico.Nome != null)
+            {
+                medicoBuscado.IdNavigation.Nome = medico.Nome;
+            }
+            if (medico.Email != null)
+            {
+                medicoBuscado.IdNavigation.Email = medico.Email;
+            }
             if (medico.EspecialidadeId != null)
-                medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
-
+            {
+                var especialidade = ctx.Especialidades.Find(medico.EspecialidadeId);
+                if (especialidade == null)
+                {
+                }
+                else
+                {
+                    medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
+                }
+            }
             if (medico.Crm != null)
+            {
                 medicoBuscado.Crm = medico.Crm;
-
+            }
+            if (medicoBuscado.Endereco == null)
+            {
+                medicoBuscado.Endereco = new Endereco(); // Crie uma nova instância se necessário
+            }
             if (medico.Logradouro != null)
-                medicoBuscado.Endereco!.Logradouro = medico.Logradouro;
-
-            if (medico.Numero != null)
-                medicoBuscado.Endereco!.Numero = medico.Numero;
-
+            {
+                medicoBuscado.Endereco.Logradouro = medico.Logradouro;
+            }
             if (medico.Cep != null)
-                medicoBuscado.Endereco!.Cep = medico.Cep;
+            {
+               medicoBuscado.Endereco!.Cep = medico.Cep;
+            }
 
             ctx.Medicos.Update(medicoBuscado);
             ctx.SaveChanges();
 
-            return medicoBuscado;   
+            return medicoBuscado;
 
         }
 

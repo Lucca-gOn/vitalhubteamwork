@@ -108,5 +108,20 @@ namespace WebAPI.Controllers
         {
             return Ok(pacienteRepository.BuscarPorData(data,id));
         }
+
+        [HttpPut("Atualizar")]
+        public IActionResult AtualizarPerfil(PacienteViewModel paciente)
+        {
+            var jtiClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+
+            if (jtiClaim == null)
+            {
+                return Unauthorized("Token JWT inválido: Claim JTI não encontrado.");
+            }
+
+            Guid idUsuario = Guid.Parse(jtiClaim.Value);
+
+            return Ok(pacienteRepository.AtualizarPerfil(idUsuario, paciente));
+        }
     }
 }

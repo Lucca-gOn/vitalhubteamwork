@@ -12,6 +12,10 @@ import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 export default function Profile({ navigation }) {
   const [user, setUser] = useState();
   const [tokenUser, setTokenUser] = useState();
+  const [editForm, setEditForm] = useState(false);
+  const [endereco, setEndereco] = useState('');
+  const [cep, setCep] = useState('');
+  const [cidade, setCidade] = useState('');
 
   const nome = user?.idNavigation.nome;
   const email = user?.idNavigation.email;
@@ -19,37 +23,83 @@ export default function Profile({ navigation }) {
   const crm = user?.crm;
   const especialidade = user?.especialidade?.especialidade1;
 
-  const endereco = user?.endereco.logradouro;
-  const cep = user?.endereco.cep;
-  const cidade = user?.endereco.cidade;
+  const dataNascimento = user?.dataNascimento;
+  const cpf = user?.cpf;
+  const rg = user?.rg;
 
-  async function loadProfile() {
+  async function userProfile() {
+
     try {
-      try {
-        const token = await userDecodeToken();
-
-        setTokenUser(token);
-
-        const id = token.id;
-        let userData;
-        if (token.role === 'Paciente' || token.role === 'Medico') {
-          const endpoint = token.role === 'Paciente' ? '/Pacientes/BuscarPorID' : '/Medicos/BuscarPorID';
-          const response = await api.get(`${endpoint}?id=${id}`);
-          userData = response.data;
+      const token = await userDecodeToken();
+      setTokenUser(token);
+      await AsyncStorage.setItem('token', JSON.stringify(token));
+      const id = token.id;
+      let userData;
+      if (token.role === 'Paciente' || token.role === 'Medico') {
+        const endpoint = token.role === 'Paciente' ? '/Pacientes/BuscarPorID' : '/Medicos/BuscarPorID';
+        const response = await api.get(`${endpoint}?id=${id}`);
+        if (response.data) {
+          setUser(response.data);
+          setEndereco(response.data.endereco.logradouro || '');
+          setCep(response.data.endereco.cep || '');
+          setCidade(response.data.endereco.cidade || '');
         }
-
-        if (userData) {
-          setUser(userData);
-        }
-      } catch (error) {
-        console.log(error);
       }
-      console.log(user);
+
+      if (userData) {
+        setUser(userData);
+      }
+      //console.log(user);
       //console.log(tokenUser);
     } catch (error) {
       console.log(error);
     }
   }
+
+  async function updateProfile() {
+    const storedToken = await AsyncStorage.getItem('token');
+    const parsedToken = JSON.parse(storedToken);
+    const tokenJWT = parsedToken.token;
+
+    const updatedData = {
+      cep: cep,
+      endereco: endereco,
+      cidade: cidade,
+    };
+
+    try {
+      const endpoint = tokenUser.role === 'Medico' ? '/Medicos/Atualizar' : '/Pacientes/Atualizar';
+      const response = await api.put(endpoint, updatedData, {
+        headers: {
+          'Authorization': `Bearer ${tokenJWT}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (response.status === 200) {
+        console.log('Perfil atualizado com sucesso');
+        userProfile();
+      }
+    } catch (error) {
+      console.log('Erro ao atualizar perfil:', error);
+      if (error.response) {
+        console.log('Dados da resposta:', error.response.data);
+      }
+    }
+  }
+
+
+  const handleEdit = () => {
+    setEndereco(user.endereco.logradouro || '');
+    setCep(user.endereco.cep || '');
+    setCidade(user.endereco.cidade || '');
+    setEditForm(true);
+  };
+
+  const handleSave = async () => {
+    await updateProfile();
+    setEditForm(false);
+  };
 
   const Logout = async () => {
     try {
@@ -63,8 +113,8 @@ export default function Profile({ navigation }) {
     }
   };
   useEffect(() => {
-    loadProfile();
-  }, []);
+    userProfile();
+  }, [tokenUser?.id]);
 
   return (
     <Container>
@@ -95,48 +145,81 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
-                value={especialidade} 
+                value={especialidade}
               />
             </ContainerMargin>
           </>
         )}
+
+        {tokenUser?.role !== "Medico" && (
+          <>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Data de nascimento:</TextLabel>
+              <InputGray
+                editable={editForm}
+                placeholder="DD/MM/AAAA"
+                inputMode="decimal"
+                autoComplete="birthdate-full"
+                value={new Date(dataNascimento).toLocaleDateString('pt-BR')}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>CPF</TextLabel>
+              <InputGray
+                placeholder="xxx.xxx.xxx-xx"
+                inputMode="decimal"
+                value={cpf}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>RG</TextLabel>
+              <InputGray
+                placeholder="xx.xxx.xxx-x"
+                inputMode="decimal"
+                value={rg}
+              />
+            </ContainerMargin>
+
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+              <TextLabel>Cidade:</TextLabel>
+              <InputGray
+                editable={editForm}
+                placeholder="Cidade"
+                value={cidade}
+                onChangeText={text => setCidade(text)}
+              />
+            </ContainerMargin>
+          </>
+        )}
+
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
           <TextLabel>Endereço:</TextLabel>
           <InputGray
-            placeholder="Rua niteroi, 80"
-            autoComplete="address-line1"
-            autoCapitalize="words"
-            inputMode="text"
-            value={endereco} />
+            editable={editForm}
+            placeholder="Endereço"
+            value={endereco}
+            onChangeText={text => setEndereco(text)}
+          />
         </ContainerMargin>
 
-        <ContainerMargin $fd="row" $gap={32}>
-          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
-            <TextLabel>CEP:</TextLabel>
-            <InputGray
-              placeholder="XXXXX-XXX"
-              inputMode="decimal"
-              autoComplete="postal-code"
-              value={cep} 
-            />
-          </ContainerMargin>
-
-          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
-            <TextLabel>Cidade:</TextLabel>
-            <InputGray
-              placeholder="Moema-SP"
-              inputMode="text"
-              autoCapitalize="words"
-              value={cidade} 
-            />
-          </ContainerMargin>
+        <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+          <TextLabel>CEP:</TextLabel>
+          <InputGray
+            editable={editForm}
+            placeholder="CEP"
+            value={cep}
+            onChangeText={text => setCep(text)}
+          />
         </ContainerMargin>
-
-
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Salvar" />
-          <ButtonDefault textButton="Editar" />
+          {editForm ? (
+            <ButtonDefault textButton="Salvar" onPress={handleSave} />
+          ) : (
+            <ButtonDefault textButton="Editar" onPress={handleEdit} />
+          )}
           <ButtonGray textButton="Sair do app" onPress={Logout} />
         </ContainerMargin>
       </ContainerScrollView>

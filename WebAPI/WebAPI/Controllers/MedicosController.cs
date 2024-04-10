@@ -32,11 +32,18 @@ namespace WebAPI.Controllers
             return Ok(_medicoRepository.BuscarPorId(id)); ;
         }
 
-        [Authorize]
-        [HttpPut]
+        //[Authorize]
+        [HttpPut("Atualizar")]
         public IActionResult AtualizarPerfil(MedicoViewModel medico)
         {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+            var jtiClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+
+            if (jtiClaim == null)
+            {
+                return Unauthorized("Token JWT inválido: Claim JTI não encontrado.");
+            }
+
+            Guid idUsuario = Guid.Parse(jtiClaim.Value);
 
             return Ok(_medicoRepository.AtualizarPerfil(idUsuario, medico));
         }

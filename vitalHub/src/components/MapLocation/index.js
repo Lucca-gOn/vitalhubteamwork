@@ -32,11 +32,8 @@ export const MapLocation = ({
   const mapReference = useRef(null);
   
   const [mapRendered, setMapRendered] = useState(false);
-<<<<<<< HEAD
-=======
   
   console.log(clinica)
->>>>>>> c7757d143544aa6b990aac96ba697f333385b034
 
   // Função para capturar a localização atual.
   async function CurrentLocation() {
