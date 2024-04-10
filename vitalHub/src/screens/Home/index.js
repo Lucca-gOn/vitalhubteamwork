@@ -27,6 +27,7 @@ export default function Home(
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
+  const [renderizaDados, setRenderizaDados]= useState(false);
 
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
 
@@ -55,17 +56,17 @@ export default function Home(
   }
 
   async function ListarConsultas() {
-    if (useIsFocused) {
-      const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
-
-      await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
-        .then(response => {
-          setConsultas(response.data);
-          // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
-        }).catch(error => {
-          console.log('Erro ao listar Consultas: ', error);
-        })
-    }
+        console.log(renderizaDados)
+        const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
+  
+        await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
+          .then(response => {
+            setConsultas(response.data);
+            // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
+          }).catch(error => {
+            console.log('Erro ao listar Consultas: ', error);
+          })
+    
   }
 
   // Desestruturando apenas os dados a serem utilizados no momento
@@ -81,9 +82,7 @@ export default function Home(
     if (dateConsult !== '') {
       ListarConsultas();
     }
-  }, [dateConsult])
-
-  // console.log(consultas)
+  }, [dateConsult, useIsFocused(), renderizaDados])
 
   return (
 
@@ -142,6 +141,8 @@ export default function Home(
         dadosSituacoes={dadosSituacoes}
         setShowModalCancel={setShowModalCancel}
         showModalCancel={showModalCancel}
+        setRenderizaDados={setRenderizaDados}
+        renderizaDados={renderizaDados}
       />
       <ModalMedicalRecord
         navigation={navigation}

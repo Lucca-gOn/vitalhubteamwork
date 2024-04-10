@@ -30,12 +30,14 @@ export const ModalCancel = ({
   showModalCancel,
   consultSelect,
   dadosSituacoes,
+  setRenderizaDados,
+  renderizaDados,
   setShowModalCancel
 }) => {
 
   const dadosSituações = dadosSituacoes;
-    
-  function encontraIdConsultaCancelada(){
+
+  function encontraIdConsultaCancelada() {
     for (const item of dadosSituações) {
       if (item.situacao === 'Canceladas') {
         return idSituacaoRealizadas = item.id;
@@ -45,15 +47,19 @@ export const ModalCancel = ({
 
   async function alterarDadosConsulta() {
     let idSituacaoRealizadas = encontraIdConsultaCancelada();
-
-    console.log('id ConsultSelect : ', consultSelect)
-    console.log('id ConsultSelect : ', idSituacaoRealizadas)
+    console.log('valor de consultSelect no modal: ', consultSelect)
+    console.log('valor de idSituacaoRealizadas no modal: ', idSituacaoRealizadas)
     try {
       await api.put('/Consultas/Status', {
         id: consultSelect,
         situacaoId: idSituacaoRealizadas,
-      })            
-      console.log('Relizado cancelamento')
+      })
+      if (renderizaDados) {
+        setRenderizaDados(false)
+      } else {
+        setRenderizaDados(true)
+      }
+      //alert('Relizado cancelamento')
     } catch (error) {
       alert('Erro ao fazer alteração nos dados: ', error)
     }
@@ -109,18 +115,14 @@ export const ModalCancel = ({
 
           <ContainerMargin $mt={30} $gap={30} $width="80%">
             <ButtonDefault textButton="Confirmar" onPress={() => {
-              handleCallNotifications()
-              setShowModalCancel(false)
               alterarDadosConsulta()
-              // const index = data.findIndex(paciente => paciente.id === consultSelect.id);
-              // if (index !== -1){
-              //   data[index].statusConsult = 'Canceladas'
-              // }
+              handleCallNotifications()              
+              setShowModalCancel(false)
             }} />
 
             <LinkUnderlineDefault onPress={() => {
               setShowModalCancel(false)
-              
+
             }}>
               Cancelar
             </LinkUnderlineDefault>
@@ -502,7 +504,7 @@ export const ModalCamera = ({
 
                   <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
                     savePhoto()
-                    navigation.navigate(                      
+                    navigation.navigate(
                       "MedicalRecord", { fotoCam: { photoCam } }
                     )
                     setOpenModal(false)
