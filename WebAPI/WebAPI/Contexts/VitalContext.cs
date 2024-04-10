@@ -44,12 +44,8 @@ public partial class VitalContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-OO85A2H\\SQLEXPRESS; initial catalog=VitalHub_G09M; Integrated Security=true; TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; user Id = sa; pwd = Senai@134; TrustServerCertificate=true;");
 
-    //Allan Senai - > "Data Source=NOTE06-S21\\SQLEXPRESS; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
-    //Allan Casa - > "Data Source=ALLANRS-1991\\SQLEXPRESS; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
-    //Lucas Casa - > "Server=DESKTOP-OO85A2H\SQLEXPRESS; initial catalog=VitalHub_G09M; Integrated Security=true; TrustServerCertificate=True;"
-    //Lucas Senai - > "Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Clinica>(entity =>
@@ -149,9 +145,6 @@ public partial class VitalContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.ConsultaId).HasColumnName("ConsultaID");
             entity.Property(e => e.Descricao).HasColumnType("text");
-            entity.Property(e => e.Titulo)
-                .HasMaxLength(100)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.Consulta).WithMany(p => p.Exames)
                 .HasForeignKey(d => d.ConsultaId)
@@ -248,7 +241,6 @@ public partial class VitalContext : DbContext
             entity.Property(e => e.Medicamento)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Observacoes).HasColumnType("text");
         });
 
         modelBuilder.Entity<SituacaoConsulta>(entity =>
