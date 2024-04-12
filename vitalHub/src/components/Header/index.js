@@ -11,7 +11,8 @@ import {TouchableOpacity} from 'react-native'
 export const Header = (
   {
    navigation,
-   name
+   name,
+   foto
   }
 ) => {
 
@@ -22,7 +23,7 @@ export const Header = (
         <ContainerMargin $fd="row" $justContent="space-between" $width="100%" $pd="62px 5% 22px 5%">
           <ContainerMargin $fd="row" $gap={10} $width="auto">
             <TouchableOpacity onPress={()=>navigation.navigate('Profile')} style={{flexDirection:"row", gap: 10, alignItems: "center"}}>
-            <ImageUser source={{ uri: 'https://github.com/AllanR1991.png' }} />
+            <ImageUser source={{ uri: foto }} />
             <ContainerMargin $alingItens="flex-start" $justContent="flex-start" $width="auto" $gap={3}>
               <TitleHeader>Bem vindo!</TitleHeader>
               <TextNameUserWhite>{name}</TextNameUserWhite>

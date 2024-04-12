@@ -35,7 +35,7 @@ export default function Home(
 
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  //console.log('Profile : ', profile)
+  console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
@@ -70,7 +70,7 @@ export default function Home(
   }
 
   // Desestruturando apenas os dados a serem utilizados no momento
-  const { name, role } = profile;
+  const { name, foto,  role } = profile;
 
   //Executando a função ProfileLoad
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function Home(
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header navigation={navigation} name={name} />
+      <Header navigation={navigation} name={name} foto={foto} />
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek setDateConsult={setDateConsult} />

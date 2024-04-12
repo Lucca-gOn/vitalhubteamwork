@@ -61,7 +61,8 @@ namespace WebAPI.Repositories
                     Id = u.Id,
                     Email = u.Email,
                     Senha = u.Senha,
-                    Nome = u.Nome,
+                    Nome = u.Nome,       
+                    Foto = u.Foto,
                     TipoUsuario = new TiposUsuario
                     {
                         Id = u.TipoUsuario!.Id,
