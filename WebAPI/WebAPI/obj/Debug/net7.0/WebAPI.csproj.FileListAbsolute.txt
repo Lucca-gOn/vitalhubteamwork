@@ -504,3 +504,6 @@ C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\run
 C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\Azure.Storage.Blobs.dll
 C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\Azure.Storage.Common.dll
 C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\System.IO.Hashing.dll
+C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\Microsoft.Azure.CognitiveServices.Vision.ComputerVision.dll
+C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\Microsoft.Rest.ClientRuntime.dll
+C:\Users\41017653836\Desktop\vitalhubteamwork\WebAPI\WebAPI\bin\Debug\net7.0\Microsoft.Rest.ClientRuntime.Azure.dll
