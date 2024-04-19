@@ -40,20 +40,20 @@ export const ModalCancel = ({
   function encontraIdConsultaCancelada() {
     for (const item of dadosSituações) {
       if (item.situacao === 'Canceladas') {
-        return idSituacaoRealizadas = item.id;
+        return idSituacaoCancelada = item.id;
       }
     }
   }
 
   async function alterarDadosConsulta() {
-    let idSituacaoRealizadas = encontraIdConsultaCancelada();
+    let idSituacaoCancelada = encontraIdConsultaCancelada();
+
+    
     console.log('valor de consultSelect no modal: ', consultSelect)
-    console.log('valor de idSituacaoRealizadas no modal: ', idSituacaoRealizadas)
+    console.log('valor de idSituacaoCancelada no modal: ', idSituacaoCancelada)
     try {
-      await api.put('/Consultas/Status', {
-        id: consultSelect,
-        situacaoId: idSituacaoRealizadas,
-      })
+      await api.put(`/Consultas/Status?idConsulta=${consultSelect}&status=${idSituacaoCancelada}`)
+      handleCallNotifications();
       if (renderizaDados) {
         setRenderizaDados(false)
       } else {
@@ -116,7 +116,7 @@ export const ModalCancel = ({
           <ContainerMargin $mt={30} $gap={30} $width="80%">
             <ButtonDefault textButton="Confirmar" onPress={() => {
               alterarDadosConsulta()
-              handleCallNotifications()              
+              //handleCallNotifications()              
               setShowModalCancel(false)
             }} />
 

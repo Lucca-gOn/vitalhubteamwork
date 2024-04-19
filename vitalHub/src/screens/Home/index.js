@@ -35,7 +35,7 @@ export default function Home(
 
   // Definindo UseState para armazenar os dados do perfil
   const [profile, setProfile] = useState({})
-  console.log('Profile : ', profile)
+  // console.log('Profile : ', profile)
 
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
@@ -56,7 +56,7 @@ export default function Home(
   }
 
   async function ListarConsultas() {
-        console.log(renderizaDados)
+        //console.log(renderizaDados)
         const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
   
         await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
