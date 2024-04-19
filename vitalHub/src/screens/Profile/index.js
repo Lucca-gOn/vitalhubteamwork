@@ -28,33 +28,30 @@ export default function Profile({ navigation }) {
   const rg = user?.rg;
 
   async function userProfile() {
-
     try {
       const token = await userDecodeToken();
+      if (!token) {
+        console.error('Falha ao decodificar o token');
+        return;
+      }
       setTokenUser(token);
       await AsyncStorage.setItem('token', JSON.stringify(token));
-      const id = token.id;
-      let userData;
-      if (token.role === 'Paciente' || token.role === 'Medico') {
-        const endpoint = token.role === 'Paciente' ? '/Pacientes/BuscarPorID' : '/Medicos/BuscarPorID';
-        const response = await api.get(`${endpoint}?id=${id}`);
-        if (response.data) {
-          setUser(response.data);
-          setEndereco(response.data.endereco.logradouro || '');
-          setCep(response.data.endereco.cep || '');
-          setCidade(response.data.endereco.cidade || '');
-        }
-      }
 
-      if (userData) {
-        setUser(userData);
+      const endpoint = token.role === 'Paciente' ? '/Pacientes/BuscarPorID' : '/Medicos/BuscarPorID';
+      const response = await api.get(`${endpoint}?id=${token.id}`);
+      if (response.data) {
+        setUser(response.data);
+        setEndereco(response.data.endereco.logradouro || '');
+        setCep(response.data.endereco.cep || '');
+        setCidade(response.data.endereco.cidade || '');
+      } else {
+        console.error('Dados não encontrados para o usuário com ID:', token.id);
       }
-      //console.log(user);
-      //console.log(tokenUser);
     } catch (error) {
-      console.log(error);
+      console.error('Erro ao buscar perfil do usuário:', error);
     }
   }
+
 
   async function updateProfile() {
     const storedToken = await AsyncStorage.getItem('token');
@@ -118,7 +115,7 @@ export default function Profile({ navigation }) {
 
   return (
     <Container>
-      <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
+      <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
       <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
 
       <ContainerScrollView showsVerticalScrollIndicator={false}>

@@ -32,7 +32,7 @@ export default function Login({
         const response = await api.post('/Login', {
           //email: 'caio@caio.com',
           //senha: 'caio'
-          email: 'string',
+          email: 'lucas@lucas.com',
           senha: 'lucas'
           // email: 'allan@allan.com',
           // senha: 'allan'

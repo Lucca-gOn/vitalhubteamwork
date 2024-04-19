@@ -56,8 +56,9 @@ namespace WebAPI.Controllers
             user.Senha = medicoModel.Senha;
 
             //Insere a foto de perfil
+            var connectionString =
+             "";
             var containerName = "";
-            var connectionString = "";
             user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(medicoModel.Arquivo!, connectionString, containerName);
 
             user.Medico = new Medico();

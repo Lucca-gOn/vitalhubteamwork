@@ -19,8 +19,6 @@ public partial class Endereco
 
     public decimal? Latitude { get; set; }
 
-    public string? Estado { get; set; }
-
     public virtual ICollection<Clinica> Clinicas { get; set; } = new List<Clinica>();
 
     public virtual ICollection<Medico> Medicos { get; set; } = new List<Medico>();
