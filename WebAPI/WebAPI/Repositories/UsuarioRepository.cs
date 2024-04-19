@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using WebAPI.Contexts;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
@@ -82,7 +83,7 @@ namespace WebAPI.Repositories
             }
         }
 
-        public Usuario BuscarPorId(Guid? id)
+        public Usuario BuscarPorId(Guid id)
         {
             try
             {
@@ -93,7 +94,6 @@ namespace WebAPI.Repositories
                 throw;
             }
         }
-
 
         public void Cadastrar(Usuario usuario)
         {

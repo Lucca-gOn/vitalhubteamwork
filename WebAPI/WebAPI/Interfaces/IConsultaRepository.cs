@@ -12,6 +12,5 @@ namespace WebAPI.Interfaces
         public List<Consulta> ListarTodos();
         public List<Consulta> ListarPorMedico(Guid IdMedico);
         public List<Consulta> ListarPorPaciente(Guid IdPaciente);
-        
     }
 }

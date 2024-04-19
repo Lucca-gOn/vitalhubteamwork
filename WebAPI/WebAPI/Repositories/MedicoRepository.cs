@@ -43,7 +43,7 @@ namespace WebAPI.Repositories
                     medicoBuscado.Endereco!.Cep = medico.Cep;
 
                 if (medico.Cidade != null)
-                    medicoBuscado.Endereco!.Cidade = medico.Cidade;
+                   medicoBuscado.Endereco!.Cidade = medico.Cidade;
 
                 ctx.Medicos.Update(medicoBuscado);
                 ctx.SaveChanges();
@@ -172,3 +172,5 @@ namespace WebAPI.Repositories
         }
     }
 }
+
+

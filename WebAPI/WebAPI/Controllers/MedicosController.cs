@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Repositories;
+using WebAPI.Utils.BlobStorage;
 using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
@@ -46,14 +47,18 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(MedicoViewModel medicoModel)
+        public async Task <IActionResult> Post(MedicoViewModel medicoModel)
         {
             Usuario user = new Usuario();
             user.Nome = medicoModel.Nome;
             user.Email = medicoModel.Email;
             user.TipoUsuarioId = medicoModel.IdTipoUsuario;
-            user.Foto = medicoModel.Foto;
             user.Senha = medicoModel.Senha;
+
+            //Insere a foto de perfil
+            var containerName = "";
+            var connectionString = "";
+            user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(medicoModel.Arquivo!, connectionString, containerName);
 
             user.Medico = new Medico();
             user.Medico.Crm = medicoModel.Crm;
@@ -67,7 +72,7 @@ namespace WebAPI.Controllers
 
             _medicoRepository.Cadastrar(user);
 
-            return Ok();
+            return Ok(user);
         }
 
         [HttpGet("BuscarPorIdClinica")]
@@ -98,7 +103,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpPut("UpdateProfile")]
+        [HttpPut]
         public IActionResult UpdateProfile(MedicoViewModel medico)
         {
             try

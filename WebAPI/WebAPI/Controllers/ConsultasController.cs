@@ -13,7 +13,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ConsultasController : ControllerBase
     {
-
         private IConsultaRepository consultaRepository;
 
         public ConsultasController()
@@ -153,4 +152,5 @@ namespace WebAPI.Controllers
         }
     }
 }
+
 

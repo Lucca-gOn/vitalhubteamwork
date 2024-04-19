@@ -38,7 +38,7 @@ namespace WebAPI.Repositories
                     pacienteBuscado!.Endereco!.Cep = paciente.Cep;
 
                 if (paciente.Cidade != null)
-                    pacienteBuscado!.Endereco!.Cidade = paciente.Cidade;
+                  pacienteBuscado!.Endereco!.Cidade = paciente.Cidade;
 
                 ctx.Pacientes.Update(pacienteBuscado!);
                 ctx.SaveChanges();

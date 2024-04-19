@@ -2,20 +2,15 @@
 {
     public class EmailSettings
     {
-        //Email do remetente
+        //email remetente
         public string? Email { get; set; }
-
-        //Senha do remetente
-        //Não é a senha do email, sim o codigo...
+        //senha remetente
         public string? Password { get; set; }
-
         //host do servidor SMTP
         public string? Host { get; set; }
-
-        //Nome exibido do remetente
-        public string? DisplayName { get; set; }
-
-        //Porta do servidor SMTP
+        //nome exibido do remetente
+        public string? Displayname { get; set; }
+        //porta servidor SMTP
         public int Port { get; set; }
     }
 }

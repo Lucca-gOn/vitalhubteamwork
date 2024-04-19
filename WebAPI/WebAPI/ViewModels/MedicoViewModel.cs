@@ -1,4 +1,7 @@
-﻿namespace WebAPI.ViewModels
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebAPI.ViewModels
 {
     public class MedicoViewModel
     {
@@ -23,5 +26,9 @@
         public string? Crm { get; set; }
 
         public Guid? IdTipoUsuario { get; set; }
+
+        [JsonIgnore]
+        [NotMapped]
+        public IFormFile? Arquivo { get; set; }
     }
 }

@@ -2,7 +2,8 @@
 {
     public interface IEmailService
     {
-        //Método asincrono para envio de email que recebe o objeto MailRequest
+        //metodo assincrono para envio de email que recebe MailRequest
         Task SendEmailAsync(MailRequest mailRequest);
+
     }
 }

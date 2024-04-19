@@ -15,9 +15,11 @@ public partial class Endereco
 
     public decimal? Longitude { get; set; }
 
+    public string? Cidade { get; set; }
+
     public decimal? Latitude { get; set; }
 
-    public string? Cidade { get; set; }
+    public string? Estado { get; set; }
 
     public virtual ICollection<Clinica> Clinicas { get; set; } = new List<Clinica>();
 
