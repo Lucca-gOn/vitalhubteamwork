@@ -10,93 +10,65 @@ import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 
 export default function Profile({ navigation }) {
+  const [formEdit, setFormEdit] = useState(false);
   const [user, setUser] = useState();
   const [tokenUser, setTokenUser] = useState();
-  const [editForm, setEditForm] = useState(false);
-  const [endereco, setEndereco] = useState('');
-  const [cep, setCep] = useState('');
-  const [cidade, setCidade] = useState('');
 
-  const nome = user?.idNavigation.nome;
-  const email = user?.idNavigation.email;
-
-  const crm = user?.crm;
-  const especialidade = user?.especialidade?.especialidade1;
-
-  const dataNascimento = user?.dataNascimento;
-  const cpf = user?.cpf;
-  const rg = user?.rg;
-
-  async function userProfile() {
+  async function Profileload() {
     try {
       const token = await userDecodeToken();
-      if (!token) {
-        console.error('Falha ao decodificar o token');
-        return;
-      }
+      // Verifique o token decodificado
+      console.log("Token Decoded:", token);
+
       setTokenUser(token);
-      await AsyncStorage.setItem('token', JSON.stringify(token));
+      const id = token.id;
+      console.log("User ID:", id);
 
-      const endpoint = token.role === 'Paciente' ? '/Pacientes/BuscarPorID' : '/Medicos/BuscarPorID';
-      const response = await api.get(`${endpoint}?id=${token.id}`);
-      if (response.data) {
-        setUser(response.data);
-        setEndereco(response.data.endereco.logradouro || '');
-        setCep(response.data.endereco.cep || '');
-        setCidade(response.data.endereco.cidade || '');
-      } else {
-        console.error('Dados não encontrados para o usuário com ID:', token.id);
+      let profile;
+      if (token.role === 'Paciente') {
+        profile = await api.get(`/Pacientes/BuscarPorID?id=${id}`);
+      } else if (token.role === 'Medico') {
+        profile = await api.get(`/Medicos/BuscarPorID?id=${id}`);
       }
+      console.log(profile);
+      if (profile) setUser(profile.data);
     } catch (error) {
-      console.error('Erro ao buscar perfil do usuário:', error);
+      console.log(error);
     }
   }
 
-
-  async function updateProfile() {
-    const storedToken = await AsyncStorage.getItem('token');
-    const parsedToken = JSON.parse(storedToken);
-    const tokenJWT = parsedToken.token;
-
-    const updatedData = {
-      cep: cep,
-      endereco: endereco,
-      cidade: cidade,
-    };
-
+  const updateUser = async () => {
     try {
-      const endpoint = tokenUser.role === 'Medico' ? '/Medicos/Atualizar' : '/Pacientes/Atualizar';
-      const response = await api.put(endpoint, updatedData, {
+      // Endpoint conforme a role do usuário
+      const endpoint = `/api/${tokenUser.role === 'Paciente' ? 'Pacientes' : 'Medicos'}/Atualizar`;
+  
+      // Preparando os dados para atualização
+      const updatedUser = { 
+        cep: user.endereco?.cep,
+        logradouro: user.endereco?.logradouro,
+        cidade: user.endereco?.cidade,
+      };
+  
+      // Enviando a requisição PUT com os dados atualizados
+      const response = await api.put(`${endpoint}?id=${user.id}`, updatedUser, {
         headers: {
-          'Authorization': `Bearer ${tokenJWT}`,
           'Content-Type': 'application/json',
-        }
+        },
       });
-
+  
+      // Verificando o resultado da atualização
       if (response.status === 200) {
-        console.log('Perfil atualizado com sucesso');
-        userProfile();
+        console.log('User updated successfully');
+        Profileload(); // Recarrega os dados do perfil após a atualização
+      } else {
+        console.log('Failed to update user:', response.status);
       }
     } catch (error) {
-      console.log('Erro ao atualizar perfil:', error);
-      if (error.response) {
-        console.log('Dados da resposta:', error.response.data);
-      }
+      console.error('Error updating user:', error);
     }
-  }
-
-
-  const handleEdit = () => {
-    setEndereco(user.endereco.logradouro || '');
-    setCep(user.endereco.cep || '');
-    setCidade(user.endereco.cidade || '');
-    setEditForm(true);
   };
-
-  const handleSave = async () => {
-    await updateProfile();
-    setEditForm(false);
-  };
+  
+  
 
   const Logout = async () => {
     try {
@@ -110,8 +82,8 @@ export default function Profile({ navigation }) {
     }
   };
   useEffect(() => {
-    userProfile();
-  }, [tokenUser?.id]);
+    Profileload();
+  }, []);
 
   return (
     <Container>
@@ -120,11 +92,11 @@ export default function Profile({ navigation }) {
 
       <ContainerScrollView showsVerticalScrollIndicator={false}>
         <ContainerMargin $mt={20} $width="100%">
-          <Title>{nome}</Title>
+          <Title>{user?.idNavigation?.nome}</Title>
         </ContainerMargin>
 
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-          <Description2>{email}</Description2>
+          <Description2>{user?.idNavigation?.email}</Description2>
         </ContainerMargin>
 
         {tokenUser?.role === "Medico" && (
@@ -134,7 +106,9 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Número do CRM"
                 inputMode="numeric"
-                value={crm} />
+                editable={formEdit}
+                value={user?.crm || ''}
+              />
             </ContainerMargin>
 
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
@@ -142,7 +116,8 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
-                value={especialidade}
+                editable={formEdit}
+                value={user?.especialidade.especialidade1 || ''}
               />
             </ContainerMargin>
           </>
@@ -153,39 +128,44 @@ export default function Profile({ navigation }) {
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
               <TextLabel>Data de nascimento:</TextLabel>
               <InputGray
-                editable={editForm}
+                editable={formEdit}
                 placeholder="DD/MM/AAAA"
                 inputMode="decimal"
                 autoComplete="birthdate-full"
-                value={new Date(dataNascimento).toLocaleDateString('pt-BR')}
+                value={user?.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : ''}
               />
             </ContainerMargin>
 
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>CPF</TextLabel>
+              <TextLabel>CPF:</TextLabel>
               <InputGray
                 placeholder="xxx.xxx.xxx-xx"
                 inputMode="decimal"
-                value={cpf}
+                editable={formEdit}
+                value={user?.cpf || ''}
               />
             </ContainerMargin>
 
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>RG</TextLabel>
+              <TextLabel>RG:</TextLabel>
               <InputGray
                 placeholder="xx.xxx.xxx-x"
                 inputMode="decimal"
-                value={rg}
+                editable={formEdit}
+                value={user?.rg || ''}
               />
             </ContainerMargin>
 
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
               <TextLabel>Cidade:</TextLabel>
               <InputGray
-                editable={editForm}
+                editable={formEdit}
                 placeholder="Cidade"
-                value={cidade}
-                onChangeText={text => setCidade(text)}
+                value={user?.endereco?.cidade || ''}
+                onChangeText={text => setUser(prevState => ({
+                  ...prevState,
+                  endereco: { ...prevState.endereco, cidade: text }
+                }))}
               />
             </ContainerMargin>
           </>
@@ -194,29 +174,32 @@ export default function Profile({ navigation }) {
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
           <TextLabel>Endereço:</TextLabel>
           <InputGray
-            editable={editForm}
+            editable={formEdit}
             placeholder="Endereço"
-            value={endereco}
-            onChangeText={text => setEndereco(text)}
+            value={user?.endereco?.logradouro || ''}
+            onChangeText={text => setUser(prevState => ({
+              ...prevState,
+              endereco: { ...prevState.endereco, logradouro: text }
+            }))}
           />
         </ContainerMargin>
 
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
           <TextLabel>CEP:</TextLabel>
           <InputGray
-            editable={editForm}
+            editable={formEdit}
             placeholder="CEP"
-            value={cep}
-            onChangeText={text => setCep(text)}
+            value={user?.endereco?.cep || ''}
+            onChangeText={text => setUser(prevState => ({
+              ...prevState,
+              endereco: { ...prevState.endereco, cep: text }
+            }))}
           />
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          {editForm ? (
-            <ButtonDefault textButton="Salvar" onPress={handleSave} />
-          ) : (
-            <ButtonDefault textButton="Editar" onPress={handleEdit} />
-          )}
+          <ButtonDefault textButton="Salvar" onPress={() => { setFormEdit(false); updateUser(); }} />
+          <ButtonDefault textButton="Editar" onPress={() => { setFormEdit(true); }} />
           <ButtonGray textButton="Sair do app" onPress={Logout} />
         </ContainerMargin>
       </ContainerScrollView>

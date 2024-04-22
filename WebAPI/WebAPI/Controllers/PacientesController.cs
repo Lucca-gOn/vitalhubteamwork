@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("Atualizar")]
         public IActionResult UpdateProfile(Guid idUsuario, PacienteViewModel paciente)
         {
             try

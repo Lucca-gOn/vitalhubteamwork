@@ -11,45 +11,56 @@ namespace WebAPI.Repositories
     {
         VitalContext ctx = new VitalContext();
 
-        public Paciente AtualizarPerfil(Guid Id, PacienteViewModel paciente)
+        public Paciente AtualizarPerfil(Guid usuarioId, PacienteViewModel paciente)
         {
             try
             {
-                Paciente pacienteBuscado = ctx.Pacientes
-                .Include(x => x.Endereco)
-                .FirstOrDefault(x => x.Id == Id)!;
+                // Encontre o usuário com base no ID
+                Usuario usuarioBuscado = ctx.Usuarios
+                    .Include(u => u.Paciente) 
+                    .FirstOrDefault(u => u.Id == usuarioId)!;
 
-                //if (paciente.Foto != null)
-                //    pacienteBuscado!.IdNavigation.Foto = paciente.Foto;
+                if (usuarioBuscado != null && usuarioBuscado.Paciente != null)
+                {
+                    Paciente pacienteBuscado = usuarioBuscado.Paciente;
 
-                if (paciente.DataNascimento != null)
-                    pacienteBuscado!.DataNascimento = paciente.DataNascimento;
+                    // Atualize os campos do paciente conforme necessário
+                    if (paciente.DataNascimento != null)
+                        pacienteBuscado.DataNascimento = paciente.DataNascimento;
 
-                if (paciente.Cpf != null)
-                    pacienteBuscado!.Cpf = paciente.Cpf;
+                    if (paciente.Cpf != null)
+                        pacienteBuscado.Cpf = paciente.Cpf;
 
-                if (paciente.Logradouro != null)
-                    pacienteBuscado!.Endereco!.Logradouro = paciente.Logradouro;
+                    if (paciente.Logradouro != null && pacienteBuscado.Endereco != null)
+                        pacienteBuscado.Endereco.Logradouro = paciente.Logradouro;
 
-                if (paciente.Numero != null)
-                    pacienteBuscado!.Endereco!.Numero = paciente.Numero;
+                    if (paciente.Numero != null && pacienteBuscado.Endereco != null)
+                        pacienteBuscado.Endereco.Numero = paciente.Numero;
 
-                if (paciente.Cep != null)
-                    pacienteBuscado!.Endereco!.Cep = paciente.Cep;
+                    if (paciente.Cep != null && pacienteBuscado.Endereco != null)
+                        pacienteBuscado.Endereco.Cep = paciente.Cep;
 
-                if (paciente.Cidade != null)
-                  pacienteBuscado!.Endereco!.Cidade = paciente.Cidade;
+                    if (paciente.Cidade != null && pacienteBuscado.Endereco != null)
+                        pacienteBuscado.Endereco.Cidade = paciente.Cidade;
 
-                ctx.Pacientes.Update(pacienteBuscado!);
-                ctx.SaveChanges();
+                    // Salve as alterações no banco de dados
+                    ctx.Pacientes.Update(pacienteBuscado);
+                    ctx.SaveChanges();
 
-                return pacienteBuscado!;
+                    return pacienteBuscado;
+                }
+                else
+                {
+                    throw new Exception("Usuário ou paciente não encontrado");
+                }
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+
 
         public List<Consulta> BuscarPorData(DateTime dataConsulta, Guid idPaciente)
         {
