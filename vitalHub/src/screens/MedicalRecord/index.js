@@ -23,6 +23,8 @@ export default function MedicalRecord({
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
   
+  console.log(route.params)
+
   const [descricaoConsulta, setDescricaoConsulta] = useState(route.params.dadosConsulta.descricao ? route.params.dadosConsulta.descricao : '');
   const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params.dadosConsulta.diagnostico ? route.params.dadosConsulta.diagnostico : '' );
   const [prescricaoMedica, setPrescricaoMedica] = useState(route.params.dadosConsulta.receita ? route.params.dadosConsulta.receita.medicamento : '');
@@ -43,7 +45,7 @@ export default function MedicalRecord({
   function encontraIdConsultaRealizada(){
     for (const item of dadosSituações) {
       if (item.situacao === 'Realizadas') {
-        return idSituacaoRealizadas = item.id;
+        return item.id;
       }
     }
   }  
@@ -182,7 +184,7 @@ export default function MedicalRecord({
           <ButtonDefault textButton="Editar" disabled={!disabledInput} disabledInput={!disabledInput} onPress={() => setDisableInput(false)} />
 
           <LinkUnderlineDefault 
-            onPress={() => { navigation.replace('Home',{dateConsulta : moment(route.params.dadosConsulta.dataConsulta).format('YYYY-MM-DD')}) 
+            onPress={() => { navigation.replace('Main',{dateConsulta : moment(route.params.dadosConsulta.dataConsulta).format('YYYY-MM-DD'), situacaoSelecionada: route.params.dadosConsulta.situacao.situacao}) 
             }}>Cancelar</LinkUnderlineDefault>
 
         </ContainerMargin>
