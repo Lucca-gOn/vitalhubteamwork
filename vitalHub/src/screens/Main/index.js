@@ -12,7 +12,10 @@ import Profile from '../Profile'
 
 
 
-export const Main = () => {
+export const Main = ({
+  route
+}) => {
+  console.log(route.params)
   return (
     <BottomTab.Navigator
       // Definir a rota inicial
@@ -53,13 +56,18 @@ export const Main = () => {
       <BottomTab.Screen 
         name="Home"
         component={ Home }
+        initialParams={{
+          dateConsulta: route.params && route.params.dateConsulta? route.params.dateConsulta : null,
+          situacaoSelecionada: route.params && route.params.situacaoSelecionada? route.params.situacaoSelecionada : 'Agendadas'          
+          }}
       />
-
 
       <BottomTab.Screen 
         name="Perfil"
         component={ Profile }
+        
       />
     </BottomTab.Navigator>
   )
 }
+//{"dateConsulta": "2024-04-03", "situacaoSelecionada": "Realizadas"}
