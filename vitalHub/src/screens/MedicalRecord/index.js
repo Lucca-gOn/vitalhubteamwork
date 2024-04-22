@@ -58,13 +58,10 @@ export default function MedicalRecord({
     let idSituacaoRealizadas = encontraIdConsultaRealizada();
     try {
       await api.put('/Consultas/Prontuario', {
-        id: idConsulta,
-        situacaoId: idSituacaoRealizadas,
+        consultaId: idConsulta,
+        medicamento:prescricaoMedica,
         descricao: descricaoConsulta,
-        diagnostico: diagnosticoPaciente,        
-        receita:{
-          medicamento:prescricaoMedica,
-        } ,
+        diagnostico: diagnosticoPaciente,
       })
       setDisableInput(true);
       console.log('Relizado alteracao')

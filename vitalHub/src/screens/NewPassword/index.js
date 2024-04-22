@@ -7,10 +7,48 @@ import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { IconX } from "../../components/Icons/style";
 import { ButtonIcon } from "../../components/Buttons/style";
+import { useState } from "react";
+import api from "../../service/Service";
 
 export default function NewPassword({
-  navigation
+  navigation,
+  route
 }) {
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  async function updatePassword(){
+    if(newPassword === confirmPassword){
+      await api.put(`/Usuario/AlterarSenha?email=${route.params.emailRecuperacao}`,{
+        senhaNova: newPassword
+      }).then( async () =>{
+        //navigation.replace('Login')
+        try {
+          const response = await api.post('/Login', {            
+            email: route.params.emailRecuperacao,
+            senha: newPassword            
+          })
+          //console.log(response.data)
+          await AsyncStorage.setItem('token', JSON.stringify(response.data))
+  
+          navigation.navigate('Main')
+            setTimeout(()=>{
+              setStatusResponseLogin(false),
+              setStatusResponseLoginGoogle(false),
+              setButtonDisable(false)
+            },250)  
+        } catch (error) {
+          console.log(error)
+          alert('Problema ao tentar conectar com o servidor, favor acionar o suporte');
+          
+        }
+      }).catch(error => {
+        alert(`Erro ao atualizar a senha : `, error);
+      })
+    }
+  }
+
   return (
     <ContainerMarginStatusBar>
 
@@ -43,6 +81,8 @@ export default function NewPassword({
             placeholder="Nova Senha"
             enterKeyHint="next"
             keyboardType="default"
+            value={newPassword}
+            onChangeText={(text)=> setNewPassword(text)}
             maxLength={50}
             secureTextEntry={true}
           />
@@ -50,13 +90,15 @@ export default function NewPassword({
             placeholder="Confirmar nova senha"
             enterKeyHint="enter"
             keyboardType="default"
+            value={confirmPassword}
             maxLength={50}
             secureTextEntry={true}
+            onChangeText={(text) => setConfirmPassword(text)}
           />
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={15} $mb={30}>
-          <ButtonDefault textButton="Confirmar nova senha" onPress={() => navigation.replace('Login')} />
+          <ButtonDefault textButton="Confirmar nova senha" onPress={() => updatePassword()} />
         </ContainerMargin>
 
       </ContainerScrollView>
