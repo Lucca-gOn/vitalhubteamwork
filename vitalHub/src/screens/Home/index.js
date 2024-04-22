@@ -18,59 +18,52 @@ export default function Home(
     route
   }
 ) {
-
-  const [select, setSelect] = useState('Agendadas');
-  const [consultas, setConsultas] = useState({})
-  const [dateConsult, setDateConsult] = useState('');
-  const [dadosSituacoes, setDadosSituacoes] = useState({})
+  
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
-  const [consultSelect, setConsultSelect] = useState({});
   const [renderizaDados, setRenderizaDados]= useState(false);
-
-  const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
-
-  const [situacao, setSituacao] = useState("");
-
-  // Definindo UseState para armazenar os dados do perfil
+  const [consultas, setConsultas] = useState({})
+  const [dadosSituacoes, setDadosSituacoes] = useState({})
+  const [consultSelect, setConsultSelect] = useState({});
   const [profile, setProfile] = useState({})
-  // console.log('Profile : ', profile)
-
+  const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada :'Agendadas');
+  const [dateConsult, setDateConsult] = useState('');
+  const [situacao, setSituacao] = useState("");
+  
+  const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
+  const { name, foto,  role } = profile;
+  
+  
   // Função para obter os dados descriptografados do token
   async function profileLoad() {
+    console.log('execultou ProfileLoad')
     const token = await userDecodeToken();
     setProfile(token);
-    setDateConsult(moment().format('YYYY-MM-DD'))
+    setDateConsult(route.params && route.params.dateConsulta ? route.params.dateConsulta : moment().format('YYYY-MM-DD'))
   }
-
-
+  
   async function ListaSituacoes() {
     await api.get('/Situacao/ListarTodas')
-      .then(response => {
-        setDadosSituacoes(response.data)
-      })
-      .catch(error => {
-        console.log('Erro ao listar dados de Situações : ,', error)
-      })
+    .then(response => {
+      setDadosSituacoes(response.data)
+    })
+    .catch(error => {
+      console.log('Erro ao listar dados de Situações : ,', error)
+    })
   }
-
-  async function ListarConsultas() {
-        //console.log(renderizaDados)
-        const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
   
-        await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
-          .then(response => {
-            setConsultas(response.data);
-            // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
-          }).catch(error => {
-            console.log('Erro ao listar Consultas: ', error);
-          })
+  async function ListarConsultas() {    
+    const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')    
+    await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
+    .then(response => {
+      setConsultas(response.data);
+      // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
+    }).catch(error => {
+      console.log('Erro ao listar Consultas: ', error);
+    })
     
   }
-
-  // Desestruturando apenas os dados a serem utilizados no momento
-  const { name, foto,  role } = profile;
 
   //Executando a função ProfileLoad
   useEffect(() => {
@@ -93,7 +86,7 @@ export default function Home(
       <Header navigation={navigation} name={name} foto={foto} />
 
       <ContainerMargin $mt={20}>
-        <CalendarListWeek setDateConsult={setDateConsult} />
+        <CalendarListWeek dateConsult={dateConsult} setDateConsult={setDateConsult} />
       </ContainerMargin>
 
       <ContainerMargin $fd="row" $justContent="space-between" $mt={38}>
