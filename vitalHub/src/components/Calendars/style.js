@@ -26,9 +26,9 @@ const startingDate = new Date(currentDate.getFullYear(), currentDate.getMonth(),
 const endingDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
 
 export const CalendarListStyle = styled(CalendarStrip).attrs((props) => ({
-  selectedDate: currentDate,
+  selectedDate: props.dateConsult,
 
-  startingDate: currentDate,
+  startingDate: props.dateConsult,
 
   minDate: startingDate,
 
