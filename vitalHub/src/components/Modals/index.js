@@ -40,17 +40,14 @@ export const ModalCancel = ({
   function encontraIdConsultaCancelada() {
     for (const item of dadosSituações) {
       if (item.situacao === 'Canceladas') {
-        return idSituacaoCancelada = item.id;
+        return item.id;
       }
     }
   }
 
   async function alterarDadosConsulta() {
-    let idSituacaoCancelada = encontraIdConsultaCancelada();
-
-    
-    console.log('valor de consultSelect no modal: ', consultSelect)
-    console.log('valor de idSituacaoCancelada no modal: ', idSituacaoCancelada)
+    let idSituacaoCancelada = encontraIdConsultaCancelada();    
+   
     try {
       await api.put(`/Consultas/Status?idConsulta=${consultSelect}&status=${idSituacaoCancelada}`)
       handleCallNotifications();
@@ -58,8 +55,7 @@ export const ModalCancel = ({
         setRenderizaDados(false)
       } else {
         setRenderizaDados(true)
-      }
-      //alert('Relizado cancelamento')
+      }      
     } catch (error) {
       alert('Erro ao fazer alteração nos dados: ', error)
     }
