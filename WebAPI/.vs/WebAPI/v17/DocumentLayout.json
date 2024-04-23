@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\domains\\paciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,11 +34,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "UsuarioRepository.cs",
               "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
               "RelativeDocumentMoniker": "WebAPI\\Repositories\\UsuarioRepository.cs",
@@ -64,7 +64,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Medico.cs",
               "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Medico.cs",
               "RelativeDocumentMoniker": "WebAPI\\Domains\\Medico.cs",
