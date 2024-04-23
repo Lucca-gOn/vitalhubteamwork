@@ -11,6 +11,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ExameController : ControllerBase
     {
+       
+
+
         // Declaração de uma interface de repositório para manipulação de dados de exame
         private readonly IExameRepository _exameRepository;
 
@@ -31,14 +34,14 @@ namespace WebAPI.Controllers
             try
             {
                 // Verifica se o modelo recebido é nulo ou se a imagem no modelo é nula
-                if (exameViewModel.Imagem == null || exameViewModel.Imagem == null)
+                if (exameViewModel.File == null || exameViewModel.File == null)
                 {
                     // Retorna um erro 400 (BadRequest) se não houver imagem fornecida
                     return BadRequest("Nenhuma imagem fornecida.");
                 }
 
                 // Abre um fluxo de leitura para a imagem fornecida
-                using (var stream = exameViewModel.Imagem.OpenReadStream())
+                using (var stream = exameViewModel.File.OpenReadStream())
                 {
                     // Chama o método RecognizeTextAsync do serviço OCR para reconhecer o texto na imagem
                     var result = await _ocrService.RecognizeTextAsync(stream);

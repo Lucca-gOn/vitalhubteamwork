@@ -16,6 +16,7 @@ namespace WebAPI.Controllers
     public class PacientesController : ControllerBase
     {
         private IPacienteRepository pacienteRepository { get; set; }
+
         private readonly EmailSendingService _emailSendingService;
 
         public PacientesController(EmailSendingService emailSendingService)
@@ -52,19 +53,18 @@ namespace WebAPI.Controllers
         {
             try
             {
-
                 Usuario user = new Usuario();
 
                 user.Nome = pacienteModel.Nome;
                 user.Email = pacienteModel.Email;
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
-                user.Senha = pacienteModel.Senha;
 
-                //Insere a foto de perfil
-                var connectionString =
-                "";
-                var containerName = "";
-                user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo!, connectionString, containerName);
+                var conatainerName = "blobvitalcontainerallan";
+                var connectioString = "";
+                user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo, connectioString, conatainerName);
+
+
+                user.Senha = pacienteModel.Senha;
 
                 user.Paciente = new Paciente();
 
@@ -89,6 +89,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            
         }
 
         [HttpGet("BuscarPorData")]
@@ -104,7 +105,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("Atualizar")]
+        [HttpPut("UpdateProfile")]
         public IActionResult UpdateProfile(Guid idUsuario, PacienteViewModel paciente)
         {
             try

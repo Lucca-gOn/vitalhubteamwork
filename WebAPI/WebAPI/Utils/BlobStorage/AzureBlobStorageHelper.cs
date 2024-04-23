@@ -2,59 +2,52 @@
 
 namespace WebAPI.Utils.BlobStorage
 {
-
     public static class AzureBlobStorageHelper
     {
         public static async Task<string> UploadImageBlobAsync(IFormFile arquivo, string stringConexao, string nomeContainer)
         {
-            try
-            {
-                //verifica se existe o arquivo 
-                if (arquivo != null)
-                {
-                    //gerar um nome unico para a imagem 
-                    var blobName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(arquivo.FileName);
-                    //cria um instancia do blob service client passando a string fde conexao com a blob azure 
-                    var blobServiceClient = new BlobServiceClient(stringConexao);
-                    //obtem dadosdo container client 
-                    var blobContainerClient = blobServiceClient.GetBlobContainerClient(nomeContainer);
-                    //obtem um blob client usando o blob name 
-                    var blobClient = blobContainerClient.GetBlobClient(blobName);
-                    //abre o fluxo de entrada do arquivo (foto)
-                    using (var stream = arquivo.OpenReadStream())
-                    {
-                        //carrega o arquivo (foto) para o blob de forma assincrona 
-                        await blobClient.UploadAsync(stream, true);
-                    }
-                    //retorna a uri do blob como uma string 
-                    return blobClient.Uri.ToString();   
+			try
+			{
+				//Verifica se existe o arquivo
+				if (arquivo != null)
+				{
+					//Retorna a uri
+					//Gerar nome unico para a imagem
+					var blobName = Guid.NewGuid().ToString().Replace("-","") + Path.GetExtension(arquivo.FileName);
+
+					//Cria uma instancia do blobServiceCliente passando a string de conexao com o blob da azure.
+					var blobServiceClient = new BlobServiceClient(stringConexao);
+
+					//Obtem dados do container client 
+					var blobContainerClient = blobServiceClient.GetBlobContainerClient(nomeContainer);
+
+					//Obtaer o nome do container
+					var blobClient = blobContainerClient.GetBlobClient(blobName);
+
+					//Abre o fluxo de entrada do arquivo (foto)
+					using(var stream = arquivo.OpenReadStream())
+					{
+						//Carrega o arquivo para o blob de forma assincrona
+						await blobClient.UploadAsync(stream, true);
+					}
+					//Retorna a uri do blob como um string
+					return blobClient.Uri.ToString();
+
+
+
+				}
+				else
+				{
+					//Retorna a uri padrao (Imagem)
+					return "https://blobvitalhub3dmallan.blob.core.windows.net/blobvitalcontainerallan/NotImage.svg";
+
                 }
-                else
-                {
-                    //retorna a uri e uma imagem padrao caso nenhuma imagem seja enviada na requisicao
-                    return "https://blobstoragevitalhub.blob.core.windows.net/blobvitalhubcontainer/125275514.png";
-                }
+			}
+			catch (Exception)
+			{
 
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-
-
-
-
-
-
-
+				throw;
+			}
         }
-           
-
-
-
-
-
     }
 }

@@ -1,11 +1,9 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace WebAPI.Utils.Mail
+﻿namespace WebAPI.Utils.Mail
 {
     public class EmailSendingService
     {
         private readonly IEmailService emailService;
-        public EmailSendingService(IEmailService service)
+        public EmailSendingService(IEmailService service) 
         {
             emailService = service;
         }
@@ -17,15 +15,33 @@ namespace WebAPI.Utils.Mail
                 MailRequest request = new MailRequest
                 {
                     ToEmail = email,
-                    Subject = "Email de boas vindas",
+                    Subject = "Bem vindo ao VitalHub",
                     Body = GetHtmlContent(userName)
                 };
-
                 await emailService.SendEmailAsync(request);
-
             }
-            catch (Exception) 
+            catch (Exception)
             {
+
+                throw;
+            }
+        }
+
+        public async Task SendRecoveryPassword(string email, int codigo)
+        {
+            try
+            {
+                MailRequest request = new MailRequest
+                {
+                    ToEmail = email,
+                    Subject = "Bem vindo ao VitalHub",
+                    Body = GetHtmlContentRecovery(codigo)
+                };
+                await emailService.SendEmailAsync(request);
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
@@ -48,26 +64,6 @@ namespace WebAPI.Utils.Mail
 
             // Retorna o conteúdo HTML do e-mail
             return Response;
-        }
-
-        public async Task SendRecoveryPassword(string email, int codigo)
-        {
-            try
-            {
-                MailRequest request = new MailRequest
-                {
-                    ToEmail = email,
-                    Subject = "Email de boas vindas",
-                    Body = GetHtmlContentRecovery(codigo)
-                };
-
-                await emailService.SendEmailAsync(request); 
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
         private string GetHtmlContentRecovery(int codigo)

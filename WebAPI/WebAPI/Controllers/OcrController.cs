@@ -10,10 +10,10 @@ namespace WebAPI.Controllers
     public class OcrController : ControllerBase
     {
         private readonly OcrService _ocrService;
-        public OcrController(OcrService ocrService)
-        {
-            _ocrService = ocrService;
 
+        public OcrController()
+        {
+            _ocrService = new OcrService();
         }
 
         [HttpPost]
@@ -21,22 +21,19 @@ namespace WebAPI.Controllers
         {
             try
             {
-                //verifica se a imagem foi recebida 
+                //Verifca se a imgagem foi recebida
                 if (fileUploadModel == null || fileUploadModel.Image == null)
                 {
-                    return BadRequest("Nenhuma imagem foi fornecida");
+                    return BadRequest("Nenhuma imagem foi fornecida.");
                 }
-
-                //abre conexao com o recurso 
+                //Abre a conexão com o recurso
                 using (var stream = fileUploadModel.Image.OpenReadStream())
                 {
-                    //chama o metodo para reconhecer a imagem 
-                    var result = await _ocrService.RecognizeTextAsync(stream);
-
-                    //retorna o resultado 
-                    return Ok(result);  
+                    //chama o método para reconhecer a imagem
+                   var result =  await _ocrService.RecognizeTextAsync(stream);
+                    //retorna o resultado
+                return Ok(result);
                 }
-
             }
             catch (Exception ex)
             {

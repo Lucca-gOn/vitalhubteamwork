@@ -29,7 +29,7 @@ export default function ConsultationAddress({
       .catch(error => {
         'Erro ao buscar clinica por id = ', error
       })
-  }
+  }  
 
   useEffect(() => {
     if (clinica == null) {
@@ -44,79 +44,79 @@ export default function ConsultationAddress({
       {
         clinica !== null ? (
 
-          <>
+        <>
 
 
-            <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
+      <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
 
-            <MapLocation latitudeClinica={latitudeClinica} longitudeClinica={longitudeClinica} nomeClinica={nomeClinica} />
+      <MapLocation latitudeClinica={latitudeClinica} longitudeClinica={longitudeClinica} nomeClinica={nomeClinica} />
+      
 
-
-            <ContainerScrollView style={{ borderTopLeftRadius: 10, borderTopRightRadius: 10, position: "absolute", bottom: 0, backgroundColor: '#FFF', height: '51%' }}
-              showsVerticalScrollIndicator={false}
-            >
-
-
-              <ContainerMargin $mt={20} $width="100%">
-                <Title>
-                  {nomeClinica}
-                </Title>
-              </ContainerMargin>
-              <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-                <TextAdress>
-                  {cidadeClinica}
-                </TextAdress>
-
-              </ContainerMargin>
+      <ContainerScrollView style={{borderTopLeftRadius:10,borderTopRightRadius:10, position:"absolute", bottom:0, backgroundColor:'#FFF', height:'51%'}}
+        showsVerticalScrollIndicator={false}
+      >
 
 
-              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-                <TextLabel>Endereço</TextLabel>
-                <InputGray
-                  value={enderecoClinica}
-                  autoComplete="address-line1"
-                  autoCapitalize="words"
-                  inputMode="text"
-                  readOnly
-                />
+        <ContainerMargin $mt={20} $width="100%">
+          <Title>
+            {nomeClinica}
+          </Title>
+        </ContainerMargin>
+        <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
+          <TextAdress>
+            {cidadeClinica}
+          </TextAdress>
 
-              </ContainerMargin>
+        </ContainerMargin>
 
-              <ContainerMargin $fd="row" $gap={32}>
+        
+        <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+          <TextLabel>Endereço</TextLabel>
+          <InputGray 
+            value={enderecoClinica} 
+            autoComplete="address-line1"
+            autoCapitalize="words"
+            inputMode="text"
+            readOnly
+            />
 
-                <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
-                  <TextLabel>Cep</TextLabel>
-                  <InputGray
-                    value={cepClinica}
-                    inputMode="decimal"
-                    autoComplete="postal-code"
-                    readOnly
-                  />
-                </ContainerMargin>
-                <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
-                  <TextLabel>Cidade</TextLabel>
-                  <InputGray
-                    value={cidadeClinica}
-                    inputMode="text"
-                    autoCapitalize="words"
-                    readOnly
-                  />
-                </ContainerMargin>
-              </ContainerMargin>
+        </ContainerMargin>
 
-              <ContainerMargin $mt={30} $gap={30} $mb={30}>
-                <LinkUnderlineDefault onPress={() => navigation.goBack()}>
-                  Voltar
-                </LinkUnderlineDefault>
-              </ContainerMargin>
-            </ContainerScrollView>
-          </>
-        ) : (
-          <ActivityIndicator />
-        )
+        <ContainerMargin $fd="row" $gap={32}>
+
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{flex:1}}>
+            <TextLabel>Cep</TextLabel>
+            <InputGray 
+              value={cepClinica} 
+              inputMode="decimal"
+              autoComplete="postal-code"
+              readOnly
+              />
+          </ContainerMargin> 
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{flex:2}}>
+            <TextLabel>Cidade</TextLabel>
+            <InputGray 
+              value={cidadeClinica} 
+              inputMode="text"
+              autoCapitalize="words"
+              readOnly
+              />
+          </ContainerMargin>
+        </ContainerMargin>
+
+        <ContainerMargin $mt={30} $gap={30} $mb={30}>
+        <LinkUnderlineDefault onPress={()=> navigation.goBack()}>
+          Voltar
+        </LinkUnderlineDefault>
+        </ContainerMargin>
+      </ContainerScrollView>
+      </>
+      ) : (
+        <ActivityIndicator/>
+      )
       }
 
-
+     
     </Container>
   )
 }

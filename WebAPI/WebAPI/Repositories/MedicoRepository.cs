@@ -43,7 +43,7 @@ namespace WebAPI.Repositories
                     medicoBuscado.Endereco!.Cep = medico.Cep;
 
                 if (medico.Cidade != null)
-                   medicoBuscado.Endereco!.Cidade = medico.Cidade;
+                    medicoBuscado.Endereco!.Cidade = medico.Cidade;
 
                 ctx.Medicos.Update(medicoBuscado);
                 ctx.SaveChanges();
@@ -64,6 +64,7 @@ namespace WebAPI.Repositories
                      .Include(x => x.Situacao)
                      .Include(x => x.Prioridade)
                      .Include(x => x.MedicoClinica)
+                     .Include(x => x.Receita)
                      .Include(x => x.Paciente!.IdNavigation)
 
                      // diferença em dias entre a Data da Consulta e a dataConsulta é igual a 0.
@@ -83,8 +84,8 @@ namespace WebAPI.Repositories
             {
                 Medico medicoBuscado = ctx.Medicos
                     .Include(m => m.IdNavigation)
-                    .Include(m => m.Endereco)
                     .Include(m => m.Especialidade)
+                    .Include(m => m.Endereco)
                     .FirstOrDefault(m => m.Id == Id)!;
 
                 return medicoBuscado;
@@ -173,5 +174,3 @@ namespace WebAPI.Repositories
         }
     }
 }
-
-

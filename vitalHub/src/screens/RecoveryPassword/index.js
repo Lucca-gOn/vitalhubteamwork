@@ -7,10 +7,27 @@ import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { IconBack } from "../../components/Icons/style";
 import { ButtonIcon } from "../../components/Buttons/style";
+import { useState } from "react";
+import api from '../../service/Service'
 
 export default function RecoveryPassWord({
   navigation
 }) {
+
+  const [email,setEmail] = useState('allanrodrigues1991.ar@gmail.com');
+  
+  async function enviarEmail(){
+    await api.post(`/RecuperarSenha?email=${email}`)
+    .then(() => {
+      navigation.replace('CheckEmail', {emailRecuperacao: email});
+    }).catch(
+      error =>
+      {
+        alert(`Erro ao fazer requisiçao de recuperar senha: `, error);
+      }
+      )
+  }
+  
   return (
     <ContainerMarginStatusBar>
 
@@ -36,12 +53,14 @@ export default function RecoveryPassWord({
             placeholder="Usuário ou E-mail"
             enterKeyHint="next"
             keyboardType="email-address"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
             maxLength={50}
           />
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={15} $mb={30}>
-          <ButtonDefault textButton="Continuar" onPress={()=>navigation.navigate('CheckEmail')} />
+          <ButtonDefault textButton="Continuar" onPress={()=>enviarEmail()} />
         </ContainerMargin>
 
       </ContainerScrollView>

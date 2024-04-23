@@ -51,6 +51,7 @@ namespace WebAPI.Repositories
                 if (buscada.ReceitaId != null)
                 {
                     buscada.Receita = consulta.Receita;
+
                 }
                 else
                 {
@@ -67,11 +68,12 @@ namespace WebAPI.Repositories
             }
         }
 
+
         public void EditarStatus(Guid idConsulta, string status)
         {
             try
             {
-                SituacaoConsulta situacao = ctx.Situacoes.FirstOrDefault(x => x.Situacao == status)!;
+                SituacaoConsulta situacao = ctx.Situacoes.FirstOrDefault(x => x.Id.ToString() == status )!;
 
                 Consulta buscada = ctx.Consultas.Find(idConsulta)!;
 

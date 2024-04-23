@@ -19,12 +19,14 @@ export default function MedicalRecord({
   route
 }) {
 
-
+  
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
+  
+  console.log(route.params)
 
   const [descricaoConsulta, setDescricaoConsulta] = useState(route.params.dadosConsulta.descricao ? route.params.dadosConsulta.descricao : '');
-  const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params.dadosConsulta.diagnostico ? route.params.dadosConsulta.diagnostico : '');
+  const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params.dadosConsulta.diagnostico ? route.params.dadosConsulta.diagnostico : '' );
   const [prescricaoMedica, setPrescricaoMedica] = useState(route.params.dadosConsulta.receita ? route.params.dadosConsulta.receita.medicamento : '');
 
   const dadosSituações = route.params.dadosSituacoes;
@@ -40,31 +42,28 @@ export default function MedicalRecord({
   const situacaoConsulta = route.params.dadosConsulta.situacao.situacao
 
   //console.log(route.params.dadosConsulta)
-  function encontraIdConsultaRealizada() {
+  function encontraIdConsultaRealizada(){
     for (const item of dadosSituações) {
       if (item.situacao === 'Realizadas') {
-        return idSituacaoRealizadas = item.id;
+        return item.id;
       }
     }
-  }
-
+  }  
+  
   function verificaProntuario() {
     diagnosticoPaciente !== undefined || diagnosticoPaciente !== undefined || prescricaoMedica !== undefined ?
-      setDisableInput(true) :
-      setDisableInput(false)
+    setDisableInput(true) :
+    setDisableInput(false)
   }
   //console.log(route.params.dadosConsulta.id)
   async function alterarDadosConsulta() {
     let idSituacaoRealizadas = encontraIdConsultaRealizada();
     try {
       await api.put('/Consultas/Prontuario', {
-        id: idConsulta,
-        situacaoId: idSituacaoRealizadas,
+        consultaId: idConsulta,
+        medicamento:prescricaoMedica,
         descricao: descricaoConsulta,
         diagnostico: diagnosticoPaciente,
-        receita: {
-          medicamento: prescricaoMedica,
-        },
       })
       setDisableInput(true);
       console.log('Relizado alteracao')
@@ -75,7 +74,7 @@ export default function MedicalRecord({
 
   useEffect(() => {
     verificaProntuario()
-
+    
   }, [])
   return (
     <Container>
@@ -116,7 +115,7 @@ export default function MedicalRecord({
 
           <TextLabel>Descrição da consulta</TextLabel>
 
-          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} onChangeText={(txt) => { setDescricaoConsulta(txt) }} />
+          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} onChangeText={(txt)=>{setDescricaoConsulta(txt)}}/>
 
         </ContainerMargin>
 
@@ -124,7 +123,7 @@ export default function MedicalRecord({
 
           <TextLabel>Diagnóstico do paciente</TextLabel>
 
-          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} onChangeText={(txt) => { setDiagnosticoPaciente(txt) }} />
+          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} onChangeText={(txt)=>{setDiagnosticoPaciente(txt)}}/>
 
         </ContainerMargin>
 
@@ -132,7 +131,7 @@ export default function MedicalRecord({
 
           <TextLabel>Prescrição médica</TextLabel>
 
-          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
+          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} onChangeText={(txt)=>{setPrescricaoMedica(txt)}}/>
 
         </ContainerMargin>
 
@@ -178,15 +177,14 @@ export default function MedicalRecord({
 
           <ButtonDefault textButton="Salvar"
             onPress={() => {
-              alterarDadosConsulta();
-
+                alterarDadosConsulta();
+                             
             }} />
 
           <ButtonDefault textButton="Editar" disabled={!disabledInput} disabledInput={!disabledInput} onPress={() => setDisableInput(false)} />
 
-          <LinkUnderlineDefault
-            onPress={() => {
-              navigation.replace('Home', { dateConsulta: moment(route.params.dadosConsulta.dataConsulta).format('YYYY-MM-DD') })
+          <LinkUnderlineDefault 
+            onPress={() => { navigation.replace('Main',{dateConsulta : moment(route.params.dadosConsulta.dataConsulta).format('YYYY-MM-DD'), situacaoSelecionada: route.params.dadosConsulta.situacao.situacao}) 
             }}>Cancelar</LinkUnderlineDefault>
 
         </ContainerMargin>

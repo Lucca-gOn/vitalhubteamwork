@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, Touchable, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userDecodeToken } from '../../utils/Auth';
 import api from "../../service/Service";
@@ -8,67 +8,53 @@ import { ImageUser } from "../../components/Images/style";
 import { Description2, TextLabel, Title } from "../../components/Texts/style";
 import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import moment from "moment";
+import { ModalCamera } from "../../components/Modals";
 
 export default function Profile({ navigation }) {
-  const [formEdit, setFormEdit] = useState(false);
-  const [user, setUser] = useState();
-  const [tokenUser, setTokenUser] = useState();
+  const [profile, setProfile] = useState({});
+  const [user, setUser] = useState({});
+  const [crm, setCRM] = useState('');
+  const [especialidade, setEspecialidade] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [cep, setCep] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [showModalCamera, setShowModalCamera] = useState(false)
 
-  async function Profileload() {
-    try {
-      const token = await userDecodeToken();
-      // Verifique o token decodificado
-      console.log("Token Decoded:", token);
 
-      setTokenUser(token);
-      const id = token.id;
-      console.log("User ID:", id);
+  const { role } = profile
 
-      let profile;
-      if (token.role === 'Paciente') {
-        profile = await api.get(`/Pacientes/BuscarPorID?id=${id}`);
-      } else if (token.role === 'Medico') {
-        profile = await api.get(`/Medicos/BuscarPorID?id=${id}`);
-      }
-      console.log(profile);
-      if (profile) setUser(profile.data);
-    } catch (error) {
-      console.log(error);
-    }
+  async function profileLoad() {
+
+    await userDecodeToken()
+      .then(async (token) => {
+        if (token.id) {
+          await api.get(`/Usuario/BuscarPorId?id=${token.id}`)
+            .then(userSearched => {
+              setUser(userSearched.data);
+              setProfile(token);
+              console.log(userSearched.data)
+              if (token.role === 'Medico') {
+                setCRM(userSearched.data.medico.crm)
+                setEspecialidade(userSearched.data.medico.especialidade.especialidade1)
+
+              } else {
+                setDataNascimento(moment(userSearched.data.paciente.dataNascimento).format('DD/MM/YYYY'))
+                setCpf(userSearched.data.paciente.cpf)
+              }
+              setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
+              setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
+              setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
+
+            }
+            ).catch(error => alert(`Erro ao BuscarPorID : ${error}`))
+        }
+      }).catch(error => alert(`Erro ao fazer o decode do token, erro : ${error}`))
+
   }
-
-  const updateUser = async () => {
-    try {
-      // Endpoint conforme a role do usuário
-      const endpoint = `/api/${tokenUser.role === 'Paciente' ? 'Pacientes' : 'Medicos'}/Atualizar`;
-  
-      // Preparando os dados para atualização
-      const updatedUser = { 
-        cep: user.endereco?.cep,
-        logradouro: user.endereco?.logradouro,
-        cidade: user.endereco?.cidade,
-      };
-  
-      // Enviando a requisição PUT com os dados atualizados
-      const response = await api.put(`${endpoint}?id=${user.id}`, updatedUser, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      // Verificando o resultado da atualização
-      if (response.status === 200) {
-        console.log('User updated successfully');
-        Profileload(); // Recarrega os dados do perfil após a atualização
-      } else {
-        console.log('Failed to update user:', response.status);
-      }
-    } catch (error) {
-      console.error('Error updating user:', error);
-    }
-  };
-  
-  
 
   const Logout = async () => {
     try {
@@ -81,33 +67,42 @@ export default function Profile({ navigation }) {
       console.error("Erro ao ListarUsuario:", error.response);
     }
   };
+
   useEffect(() => {
-    Profileload();
+    profileLoad();
   }, []);
 
   return (
     <Container>
-      <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
-      <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
+      <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
+      <ContainerMargin style={{ position: "relative" }}>
+        <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
+        <TouchableOpacity onPress={() => setShowModalCamera(true)} activeOpacity={0.8} style={{ position: "absolute", backgroundColor: '#496BBA', bottom: -10, right: 30, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: "white" }}>
+          <MaterialCommunityIcons name="camera-plus" size={20} color="#fbfbfb" />
+        </TouchableOpacity>
+      </ContainerMargin>
 
       <ContainerScrollView showsVerticalScrollIndicator={false}>
+
         <ContainerMargin $mt={20} $width="100%">
-          <Title>{user?.idNavigation?.nome}</Title>
+          <Title>{user?.nome}</Title>
         </ContainerMargin>
 
         <ContainerMargin $width="80%" $mt={18} $mb={24} $fd="row" $justContent="space-around">
-          <Description2>{user?.idNavigation?.email}</Description2>
+          <Description2>{user?.email}</Description2>
         </ContainerMargin>
 
-        {tokenUser?.role === "Medico" && (
+        {role == 'Medico' ? (
           <>
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
               <TextLabel>CRM:</TextLabel>
               <InputGray
                 placeholder="Número do CRM"
                 inputMode="numeric"
-                editable={formEdit}
-                value={user?.crm || ''}
+                value={crm}
+                onChangeText={(text) => {
+                  setCRM(text);
+                }}
               />
             </ContainerMargin>
 
@@ -116,93 +111,102 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
-                editable={formEdit}
-                value={user?.especialidade.especialidade1 || ''}
+                value={especialidade}
+                onChangeText={(text) => {
+                  setEspecialidade(text);
+                }}
+
               />
             </ContainerMargin>
           </>
-        )}
+        )
+          :
 
-        {tokenUser?.role !== "Medico" && (
-          <>
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Data de nascimento:</TextLabel>
-              <InputGray
-                editable={formEdit}
-                placeholder="DD/MM/AAAA"
-                inputMode="decimal"
-                autoComplete="birthdate-full"
-                value={user?.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : ''}
-              />
-            </ContainerMargin>
+          (
+            <>
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+                <TextLabel>Data de nascimento:</TextLabel>
+                <InputGray
+                  placeholder="DD/MM/AAAA"
+                  inputMode="decimal"
+                  autoComplete="birthdate-full"
+                  value={dataNascimento}
+                  onChangeText={(text) => {
+                    setDataNascimento(text);
+                  }}
+                />
+              </ContainerMargin>
 
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>CPF:</TextLabel>
-              <InputGray
-                placeholder="xxx.xxx.xxx-xx"
-                inputMode="decimal"
-                editable={formEdit}
-                value={user?.cpf || ''}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>RG:</TextLabel>
-              <InputGray
-                placeholder="xx.xxx.xxx-x"
-                inputMode="decimal"
-                editable={formEdit}
-                value={user?.rg || ''}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Cidade:</TextLabel>
-              <InputGray
-                editable={formEdit}
-                placeholder="Cidade"
-                value={user?.endereco?.cidade || ''}
-                onChangeText={text => setUser(prevState => ({
-                  ...prevState,
-                  endereco: { ...prevState.endereco, cidade: text }
-                }))}
-              />
-            </ContainerMargin>
-          </>
-        )}
-
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+                <TextLabel>CPF</TextLabel>
+                <InputGray
+                  placeholder="xxx.xxx.xxx-xx"
+                  //inputMode="decimal"
+                  value={cpf}
+                  onChangeText={(text) => {
+                    setCpf(text);
+                  }}
+                />
+              </ContainerMargin>
+            </>
+          )}
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-          <TextLabel>Endereço:</TextLabel>
+          <TextLabel>Endereço</TextLabel>
           <InputGray
-            editable={formEdit}
-            placeholder="Endereço"
-            value={user?.endereco?.logradouro || ''}
-            onChangeText={text => setUser(prevState => ({
-              ...prevState,
-              endereco: { ...prevState.endereco, logradouro: text }
-            }))}
+            placeholder="Rua niteroi, 80"
+            autoComplete="address-line1"
+            autoCapitalize="words"
+            inputMode="text"
+            value={endereco}
+            onChangeText={(text) => {
+              setEndereco(text);
+            }}
           />
         </ContainerMargin>
 
-        <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-          <TextLabel>CEP:</TextLabel>
-          <InputGray
-            editable={formEdit}
-            placeholder="CEP"
-            value={user?.endereco?.cep || ''}
-            onChangeText={text => setUser(prevState => ({
-              ...prevState,
-              endereco: { ...prevState.endereco, cep: text }
-            }))}
-          />
+        <ContainerMargin $fd="row" $gap={32}>
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
+            <TextLabel>Cep</TextLabel>
+            <InputGray
+              placeholder="XXXXX-XXX"
+              inputMode="decimal"
+              autoComplete="postal-code"
+              value={cep}
+              onChangeText={(text) => {
+                setCep(text);
+              }}
+            />
+          </ContainerMargin>
+
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
+            <TextLabel>Cidade</TextLabel>
+            <InputGray
+              placeholder="Moema-SP"
+              inputMode="text"
+              autoCapitalize="words"
+              value={cidade}
+              onChangeText={(text) => {
+                setCidade(text);
+              }}
+            />
+          </ContainerMargin>
+
         </ContainerMargin>
+
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Salvar" onPress={() => { setFormEdit(false); updateUser(); }} />
-          <ButtonDefault textButton="Editar" onPress={() => { setFormEdit(true); }} />
+          <ButtonDefault textButton="Salvar" />
+          <ButtonDefault textButton="Editar" />
           <ButtonGray textButton="Sair do app" onPress={Logout} />
         </ContainerMargin>
       </ContainerScrollView>
-    </Container>
+
+      <ModalCamera 
+      showModalCamera={showModalCamera} 
+      setShowModalCamera={setShowModalCamera} 
+      navigation={navigation} 
+      getMediaLibrary={true}
+      />
+    </Container >
   );
 }

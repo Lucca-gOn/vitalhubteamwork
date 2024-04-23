@@ -43,9 +43,11 @@ public partial class VitalContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-N33B0CD\\SQLEXPRESS; initial catalog=VitalHub_G09M; Integrated Security=true; TrustServerCertificate=True;");
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;");
 
+    //"Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; user Id = sa; pwd = Senai@134; TrustServerCertificate=true;"
+    //"Data Source=ALLANRS1991\\SQLEXPRESS; initial catalog=VitalHub_G09M; user Id = sa; pwd = Senai@134; TrustServerCertificate=true;"
     //Lucas Casa - > "Server=DESKTOP-OO85A2H\SQLEXPRESS; initial catalog=VitalHub_G09M; Integrated Security=true; TrustServerCertificate=True;"
     //Lucas Senai - > "Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;"
 
@@ -270,8 +272,6 @@ public partial class VitalContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasIndex(e => e.Email, "UQ_Usuarios_Email").IsUnique();
-
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");

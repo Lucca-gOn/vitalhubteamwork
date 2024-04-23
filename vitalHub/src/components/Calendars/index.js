@@ -7,11 +7,12 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 
 export const CalendarListWeek = ({
-  setDateConsult
+  setDateConsult,
+  dateConsult
 }) => {
   return (
     <View style={{ width: '100%' }}>
-      <CalendarListStyle setDateConsult={setDateConsult} />
+      <CalendarListStyle dateConsult={dateConsult} setDateConsult={setDateConsult} />
     </View>
   )
 };

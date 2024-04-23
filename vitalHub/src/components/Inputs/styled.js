@@ -78,8 +78,9 @@ export const InputGreenCode = styled.TextInput.attrs({
   maxLength: 1,
   placeholder: '0',
   inputMode: "numeric",
-  keyboardType: "decimal-pad",
+  keyboardType: "numeric",
   selectTextOnFocus: true,
+  caretHidden: true,
 })`
   width:20%;
 
