@@ -87,7 +87,15 @@ namespace WebAPI.Repositories
         {
             try
             {
-                return ctx.Usuarios.FirstOrDefault(x => x.Id == id)!;
+                var usuario = ctx.Usuarios
+                    .Include(u => u.Paciente)
+                    .Include(u => u.Paciente!.Endereco)
+                    .Include(u => u.Medico)
+                    .Include(u => u.Medico!.Endereco)
+                    .Include(u => u.Medico!.Especialidade)
+                    .FirstOrDefault(x => x.Id == id)!;
+
+                return usuario;
             }
             catch (Exception)
             {

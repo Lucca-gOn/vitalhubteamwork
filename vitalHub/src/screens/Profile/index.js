@@ -8,38 +8,49 @@ import { ImageUser } from "../../components/Images/style";
 import { Description2, TextLabel, Title } from "../../components/Texts/style";
 import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
+import moment from "moment";
 
 export default function Profile({ navigation }) {
   const [profile, setProfile] = useState({});
-  const [user, setUser] = useState(null);
-
-  async function profileLoad() {
-    try {
-      const token = await userDecodeToken();
-      if (token.id) {
-        const response = await api.get(`/Usuario/BuscarUsuarioPorId/${token.id}`);
-        setUser(response.data);
-        setProfile(token);
-
-        console.log(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-
-  async function ListarUsuario(userId) {
-    try {
-      const response = await api.get(`/Usuario/BuscarUsuarioPorId/${userId}`);
-      setUser(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const [user, setUser] = useState({});
+  const [crm, setCRM] = useState('');
+  const [especialidade, setEspecialidade] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [cep, setCep] = useState('');
+  const [cidade, setCidade] = useState('');
 
   const { role } = profile
+
+  async function profileLoad() {
+
+    await userDecodeToken()
+      .then(async (token) => {
+        if (token.id) {
+          await api.get(`/Usuario/BuscarPorId?id=${token.id}`)
+            .then(userSearched => {
+              setUser(userSearched.data);
+              setProfile(token);
+              console.log(userSearched.data)
+              if (token.role === 'Medico') {
+                setCRM(userSearched.data.medico.crm)
+                setEspecialidade(userSearched.data.medico.especialidade.especialidade1)
+
+              } else {
+                setDataNascimento(moment(userSearched.data.paciente.dataNascimento).format('DD/MM/YYYY'))
+                setCpf(userSearched.data.paciente.cpf)
+              }
+              setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
+              setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
+              setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
+
+            }
+            ).catch(error => alert(`Erro ao BuscarPorID : ${error}`))
+        }
+      }).catch(error => alert(`Erro ao fazer o decode do token, erro : ${error}`))
+
+  }
 
   const Logout = async () => {
     try {
@@ -52,6 +63,7 @@ export default function Profile({ navigation }) {
       console.error("Erro ao ListarUsuario:", error.response);
     }
   };
+
   useEffect(() => {
     profileLoad();
   }, []);
@@ -72,14 +84,17 @@ export default function Profile({ navigation }) {
           <Description2>{user?.email}</Description2>
         </ContainerMargin>
 
-        {user?.medico && (
+        {role == 'Medico' ? (
           <>
             <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
               <TextLabel>CRM:</TextLabel>
               <InputGray
                 placeholder="Número do CRM"
                 inputMode="numeric"
-                value={user.medico.crm}
+                value={crm}
+                onChangeText={(text) => {
+                  setCRM(text);
+                }}
               />
             </ContainerMargin>
 
@@ -88,96 +103,88 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
-                value={user.medico.especialidade.especialidade1}
-              />
-            </ContainerMargin>
+                value={especialidade}
+                onChangeText={(text) => {
+                  setEspecialidade(text);
+                }}
 
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Endereço:</TextLabel>
-              <InputGray
-                placeholder="Endereço do consultório"
-                inputMode="text"
-                value={user.medico.endereco.logradouro}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Número:</TextLabel>
-              <InputGray
-                placeholder="Número do consultório"
-                inputMode="numeric"
-                value={user.medico.endereco.numero.toString()}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>CEP:</TextLabel>
-              <InputGray
-                placeholder="CEP do consultório"
-                inputMode="numeric"
-                value={user.medico.endereco.cep}
               />
             </ContainerMargin>
           </>
+        )
+          :
 
-        )}
-
-        {user?.paciente && (
-          <>
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Data de nascimento:</TextLabel>
-              <InputGray
-                placeholder="DD/MM/AAAA"
-                inputMode="decimal"
-                autoComplete="birthdate-full"
-                value={user.paciente.dataNascimento ? new Date(user.paciente.dataNascimento).toLocaleDateString() : ''}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>CPF</TextLabel>
-              <InputGray
-                placeholder="xxx.xxx.xxx-xx"
-                inputMode="decimal"
-              //value={user.paciente.cpf}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
-              <TextLabel>Endereço</TextLabel>
-              <InputGray
-                placeholder="Rua niteroi, 80"
-                autoComplete="address-line1"
-                autoCapitalize="words"
-                inputMode="text"
-              //value={user.paciente.endereco?.logradouro}
-              />
-            </ContainerMargin>
-
-            <ContainerMargin $fd="row" $gap={32}>
-              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
-                <TextLabel>Cep</TextLabel>
+          (
+            <>
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+                <TextLabel>Data de nascimento:</TextLabel>
                 <InputGray
-                  placeholder="XXXXX-XXX"
+                  placeholder="DD/MM/AAAA"
                   inputMode="decimal"
-                  autoComplete="postal-code"
-                //value={user.paciente.endereco?.cep}
+                  autoComplete="birthdate-full"
+                  value={dataNascimento}
+                  onChangeText={(text) => {
+                    setDataNascimento(text);
+                  }}
                 />
               </ContainerMargin>
 
-              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
-                <TextLabel>Cidade</TextLabel>
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+                <TextLabel>CPF</TextLabel>
                 <InputGray
-                  placeholder="Moema-SP"
-                  inputMode="text"
-                  autoCapitalize="words"
-                //value={user.paciente.endereco?.cidade}
+                  placeholder="xxx.xxx.xxx-xx"
+                  //inputMode="decimal"
+                  value={cpf}
+                  onChangeText={(text) => {
+                    setCpf(text);
+                  }}
                 />
               </ContainerMargin>
+            </>
+          )}
+        <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+          <TextLabel>Endereço</TextLabel>
+          <InputGray
+            placeholder="Rua niteroi, 80"
+            autoComplete="address-line1"
+            autoCapitalize="words"
+            inputMode="text"
+            value={endereco}
+            onChangeText={(text) => {
+              setEndereco(text);
+            }}
+          />
+        </ContainerMargin>
 
-            </ContainerMargin>
-          </>
-        )}
+        <ContainerMargin $fd="row" $gap={32}>
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
+            <TextLabel>Cep</TextLabel>
+            <InputGray
+              placeholder="XXXXX-XXX"
+              inputMode="decimal"
+              autoComplete="postal-code"
+              value={cep}
+              onChangeText={(text) => {
+                setCep(text);
+              }}
+            />
+          </ContainerMargin>
+
+          <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 2 }}>
+            <TextLabel>Cidade</TextLabel>
+            <InputGray
+              placeholder="Moema-SP"
+              inputMode="text"
+              autoCapitalize="words"
+              value={cidade}
+              onChangeText={(text) => {
+                setCidade(text);
+              }}
+            />
+          </ContainerMargin>
+
+        </ContainerMargin>
+
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
@@ -187,6 +194,6 @@ export default function Profile({ navigation }) {
 
         </ContainerMargin>
       </ContainerScrollView>
-    </Container>
+    </Container >
   );
 }
