@@ -10,6 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { AutoFocus, Camera, CameraType, FlashMode } from 'expo-camera';
 import { useEffect, useRef, useState } from 'react';
 import * as MediaLibary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
 
 import { FontAwesome } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -405,7 +406,8 @@ export const ModalDataConsult = ({
 export const ModalCamera = ({
   showModalCamera,
   setShowModalCamera,
-  navigation
+  navigation,
+  getMediaLibary = false
 }) => {
 
   const cameraRef = useRef(null);
@@ -415,6 +417,7 @@ export const ModalCamera = ({
   const [openModal, setOpenModal] = useState(false);
 
   const [tipoCamera, setTipoCamera] = useState(Camera.Constants.Type.front);
+  const [latestPhoto, setLatestPhoto] = useState(null);
 
   const clearPhoto = () => {
     setPhotoCam(null);
@@ -442,12 +445,43 @@ export const ModalCamera = ({
     }
   }
 
+  // useEffect(() => {
+  //   async () => {
+  //     const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+  //     //const { status: mediaStatus } = await MediaLibary.requestPermissionsAsync();
+  //     if(cameraStatus !== 'granted'){
+  //       alert('Erro')
+  //     }
+  //   }
+  // },[])
+
   useEffect(() => {
     (async () => {
-      const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-      const { status: mediaStatus } = await MediaLibary.requestPermissionsAsync();
-    })
-  })
+        const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+        if (cameraStatus !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work');
+        }
+        await MediaLibary.requestPermissionsAsync();
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+    })();
+}, []);
+
+
+
+
+
+
+  async function getLastPhoto(){
+    const assets = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
+    console.log(assets);
+  }
+
+  useEffect(() => {
+    setPhotoCam(null)
+    if(getMediaLibary){
+      getLastPhoto();
+    }
+  },[showModalCamera])
 
   return (
     <Modal
@@ -517,7 +551,7 @@ export const ModalCamera = ({
 
         </ContainerMargin>
       </Container>
-    </Modal >
+    </Modal>
   )
 }
 

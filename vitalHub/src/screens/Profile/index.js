@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userDecodeToken } from '../../utils/Auth';
 import api from "../../service/Service";
@@ -8,7 +8,9 @@ import { ImageUser } from "../../components/Images/style";
 import { Description2, TextLabel, Title } from "../../components/Texts/style";
 import { InputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from "moment";
+import { ModalCamera } from "../../components/Modals";
 
 export default function Profile({ navigation }) {
   const [profile, setProfile] = useState({});
@@ -20,6 +22,7 @@ export default function Profile({ navigation }) {
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
+  const [showModalCamera,setShowModalCamera]= useState(false)
 
   const { role } = profile
 
@@ -71,9 +74,16 @@ export default function Profile({ navigation }) {
   return (
     <Container>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
-
-      <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
-
+      <ContainerMargin style={{ position: "relative" }}>
+        <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
+        <TouchableOpacity 
+        activeOpacity={0.8} 
+        style={{backgroundColor:'#496BBA',position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white'}}
+        onPress={()=> setShowModalCamera(true)}
+        >
+          <MaterialCommunityIcons name="camera-plus" size={24} color="white" />
+        </TouchableOpacity>
+      </ContainerMargin>
       <ContainerScrollView showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
@@ -194,6 +204,8 @@ export default function Profile({ navigation }) {
 
         </ContainerMargin>
       </ContainerScrollView>
-    </Container >
+      <ModalCamera getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+    </Container>    
   );
+  
 }

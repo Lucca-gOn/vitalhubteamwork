@@ -1,29 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\",
+  "WorkspaceRootPath": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\contexts\\vitalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\contexts\\vitalcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\domains\\paciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\paciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\domains\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\allan\\documents\\projetos\\vitalhubteamwork\\webapi\\webapi\\repositories\\pacienterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\medico.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\domains\\paciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\paciente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\domains\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\domains\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\41017653836\\desktop\\vitalhubteamwork\\webapi\\webapi\\repositories\\pacienterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\pacienterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -34,15 +42,41 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "VitalContext.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Contexts\\VitalContext.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Contexts\\VitalContext.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Contexts\\VitalContext.cs*",
+              "RelativeToolTip": "WebAPI\\Contexts\\VitalContext.cs*",
+              "ViewState": "AQIAACgAAAAAAAAAAAA8wC4AAABKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-23T11:00:14.937Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "WebAPI\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Properties\\launchSettings.json*",
+              "RelativeToolTip": "WebAPI\\Properties\\launchSettings.json*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-04-23T11:00:09.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "UsuarioRepository.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
               "RelativeDocumentMoniker": "WebAPI\\Repositories\\UsuarioRepository.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\UsuarioRepository.cs",
               "RelativeToolTip": "WebAPI\\Repositories\\UsuarioRepository.cs",
               "ViewState": "AQIAAEIAAAAAAAAAAAAiwF4AAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -51,11 +85,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "LoginController.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
               "RelativeDocumentMoniker": "WebAPI\\Controllers\\LoginController.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
               "RelativeToolTip": "WebAPI\\Controllers\\LoginController.cs",
               "ViewState": "AQIAACEAAAAAAAAAAAAAADEAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -64,11 +98,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Medico.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Medico.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Medico.cs",
               "RelativeDocumentMoniker": "WebAPI\\Domains\\Medico.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Medico.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Medico.cs",
               "RelativeToolTip": "WebAPI\\Domains\\Medico.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -77,42 +111,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Usuario.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Usuario.cs",
               "RelativeDocumentMoniker": "WebAPI\\Domains\\Usuario.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Usuario.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Usuario.cs",
               "RelativeToolTip": "WebAPI\\Domains\\Usuario.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-22T18:59:39.559Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Paciente.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Paciente.cs",
-              "RelativeDocumentMoniker": "WebAPI\\Domains\\Paciente.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Paciente.cs",
-              "RelativeToolTip": "WebAPI\\Domains\\Paciente.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-22T18:59:21.439Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-22T18:59:39.559Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "Paciente.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Paciente.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Domains\\Paciente.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Domains\\Paciente.cs",
+              "RelativeToolTip": "WebAPI\\Domains\\Paciente.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-22T18:59:21.439Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "PacienteRepository.cs",
-              "DocumentMoniker": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\PacienteRepository.cs",
+              "DocumentMoniker": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\PacienteRepository.cs",
               "RelativeDocumentMoniker": "WebAPI\\Repositories\\PacienteRepository.cs",
-              "ToolTip": "C:\\Users\\allan\\Documents\\Projetos\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\PacienteRepository.cs",
+              "ToolTip": "C:\\Users\\41017653836\\Desktop\\vitalhubteamwork\\WebAPI\\WebAPI\\Repositories\\PacienteRepository.cs",
               "RelativeToolTip": "WebAPI\\Repositories\\PacienteRepository.cs",
               "ViewState": "AQIAAC4AAAAAAAAAAAAgwDwAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-22T18:47:21.377Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-22T18:47:21.377Z"
             }
           ]
         }
