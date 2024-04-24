@@ -407,6 +407,7 @@ export const ModalCamera = ({
   showModalCamera,
   setShowModalCamera,
   navigation,
+  setFoto,
   getMediaLibary = false
 }) => {
 
@@ -437,7 +438,8 @@ export const ModalCamera = ({
     if (photoCam) {
       await MediaLibary.createAssetAsync(photoCam)
         .then(() => {
-          alert('Sucesso', 'Foto Salva na Galeria');
+          alert('Sucesso, Foto Salva na Galeria');
+          setFoto(photoCam)
         })
         .catch(error => {
           alert("Erro ao salvar foto. Detalhe : ", error);
@@ -467,13 +469,29 @@ export const ModalCamera = ({
 }, []);
 
 
+  async function selectImageGallery(){
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes : ImagePicker.MediaTypeOptions.Images,
+      quality: 1
+    })
 
+    if(!result.canceled){
+      //setPhotoCam(result.assets[0].uri);
+      setFoto(result.assets[0].uri);
+      setOpenModal(false)
+      setShowModalCamera(false)
+
+    }
+  }
 
 
 
   async function getLastPhoto(){
-    const assets = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
+    const {assets} = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
     console.log(assets);
+    if(assets.length > 0){
+      setLatestPhoto(assets[0].uri)
+    }
   }
 
   useEffect(() => {
@@ -511,8 +529,16 @@ export const ModalCamera = ({
           >
 
           </Camera>
-          <ContainerMargin $fd="row">
-
+          <ContainerMargin $fd="row" $justContent="space-between" $mt={30}>
+            <TouchableOpacity onPress={()=> selectImageGallery()} style={{padding:12, backgroundColor: 'black',borderRadius: 15}}>
+              {
+                latestPhoto !== null 
+                ? (
+                  <Image source={{uri: latestPhoto}} style={{width:40,height:40,borderRadius:5,borderWidth: 1, borderColor: 'white'}} ></Image>
+                )
+                : null
+              }
+            </TouchableOpacity>
             <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
               <FontAwesome name='camera' size={23} color={'#FFF'} />
             </TouchableOpacity>
@@ -521,8 +547,8 @@ export const ModalCamera = ({
             </TouchableOpacity>
           </ContainerMargin>
 
-
-          <Modal animationType='slide' transparent={true} visible={openModal} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
+              
+          <Modal animationType='slide' transparent={true} visible={photoCam!== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
             <Container $justContent="center"
               $bgColor="rgba(0,0,0,0.3)">
               <View style={{ alignItems: 'center', justifyContent: 'center', padding: 30, backgroundColor: '#FFF', width: '90%', borderRadius: 10 }}>
@@ -533,10 +559,7 @@ export const ModalCamera = ({
                   </TouchableOpacity>
 
                   <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
-                    savePhoto()
-                    navigation.navigate(
-                      "MedicalRecord", { fotoCam: { photoCam } }
-                    )
+                    savePhoto()                    
                     setOpenModal(false)
                     setShowModalCamera(false)
                   }}>
@@ -587,17 +610,15 @@ const stylesCamera = StyleSheet.create({
     fontSize: 20,
     color: '#FFF',
   },
-  btnCaptura: {
-    margin: 20,
+  btnCaptura: {    
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 50,
     backgroundColor: '#121212',
 
     alignItems: 'center',
     justifyContent: 'center'
   },
-  btnSwitch: {
-    margin: 20,
+  btnSwitch: {    
     padding: 20,
     borderRadius: 15,
     backgroundColor: '#121212',
