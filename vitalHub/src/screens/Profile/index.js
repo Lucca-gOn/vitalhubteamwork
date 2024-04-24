@@ -19,11 +19,11 @@ export default function Profile({ navigation }) {
   const [especialidade, setEspecialidade] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [cpf, setCpf] = useState('');
+  const [foto, setFoto] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false)
-
 
   const { role } = profile
 
@@ -45,6 +45,7 @@ export default function Profile({ navigation }) {
                 setDataNascimento(moment(userSearched.data.paciente.dataNascimento).format('DD/MM/YYYY'))
                 setCpf(userSearched.data.paciente.cpf)
               }
+              setFoto(userSearched.data.foto)
               setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
               setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
               setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
@@ -72,11 +73,36 @@ export default function Profile({ navigation }) {
     profileLoad();
   }, []);
 
+  useEffect(() => {
+    if (foto) {
+      alterarFotoPerfil()
+    }
+  },[foto])
+
+  async function alterarFotoPerfil() {
+    const formData = new FormData();
+    formData.append("Arquivo", {
+      uri : foto,
+      name : `image.${foto.split(".")[1]}`,
+      type : `image/${foto.split(".")[1]}`
+    })
+    await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, FormData,{
+      headers: {
+        "Content-Type" : "multipart/form-data"
+      }
+    }).then( response =>{
+      console.log("Resposta correta:" , response);
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
+  console.log(profile);
   return (
     <Container>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
       <ContainerMargin style={{ position: "relative" }}>
-        <ImageUser source={require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
+        <ImageUser source={uri = foto} $width="100%" $height="280px" />
         <TouchableOpacity onPress={() => setShowModalCamera(true)} activeOpacity={0.8} style={{ position: "absolute", backgroundColor: '#496BBA', bottom: -10, right: 30, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: "white" }}>
           <MaterialCommunityIcons name="camera-plus" size={20} color="#fbfbfb" />
         </TouchableOpacity>
@@ -206,6 +232,7 @@ export default function Profile({ navigation }) {
       setShowModalCamera={setShowModalCamera} 
       navigation={navigation} 
       getMediaLibrary={true}
+      setFoto={setFoto}
       />
     </Container >
   );

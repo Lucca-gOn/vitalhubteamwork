@@ -16,6 +16,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image"
 import api from "../../service/Service"
+import { LastPhoto } from "./style"
 
 
 Notifications.requestPermissionsAsync();
@@ -409,6 +410,7 @@ export const ModalCamera = ({
   setShowModalCamera,
   navigation,
   getMediaLibrary = false,
+  setFoto,
   ...rest
 }) => {
 
@@ -438,6 +440,7 @@ export const ModalCamera = ({
         .then(() => {
           alert('Sucesso', 'Foto Salva na Galeria');
         })
+        setFoto(photoCam)
         .catch(error => {
           alert("Erro ao salvar foto. Detalhe : ", error);
         })
@@ -458,8 +461,26 @@ export const ModalCamera = ({
 }, []);
 
 async function getLastPhoto() {
-  const assets = await MediaLibary.getAssetsAsync({sortBy: [[MediaLibary.SortBy.creationTime, false]], first: 1})
+  const {assets} = await MediaLibary.getAssetsAsync({sortBy: [[MediaLibary.SortBy.creationTime, false]], first: 1})
+  
   console.log(assets);
+  //Salva o caminho da foto
+  if (assets.length > 0) {
+    setLatestPhoto(assets[0].uri)
+  }
+}
+
+async function SelectImageGallery() {
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes : ImagePicker.MediaTypeOptions.Images,
+    quality : 1
+  });
+
+  if (!result.canceled) {
+    setFoto( result.assets[0].uri)
+    setOpenModal(false);
+    setShowModalCamera(false);
+  }
 }
 
 useEffect(() => {
@@ -498,9 +519,21 @@ useEffect(() => {
 
           </Camera>
           <ContainerMargin $fd="row">
+            {/* Mostra a ultima foto na galeria */}
+            <TouchableOpacity onPress={() => SelectImageGallery()} style={{backgroundColor:"black", borderRadius:15, padding:12}}>
+              {
+                latestPhoto !== null
+                ? (
+                    <LastPhoto
+                      source={{uri : latestPhoto}}
+                    />
+                )
+                : <LastPhoto/>
+              }
+            </TouchableOpacity>
 
             <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
-              <FontAwesome name='camera' size={23} color={'#FFF'} />
+              <FontAwesome name='camera' size={24} color={'#FFF'} />
             </TouchableOpacity>
             <TouchableOpacity style={stylesCamera.btnSwitch} onPress={() => { setTipoCamera(tipoCamera === CameraType.front ? CameraType.back : CameraType.front) }}>
               <MaterialIcons name="cameraswitch" size={24} color="#FFF" />
@@ -508,7 +541,7 @@ useEffect(() => {
           </ContainerMargin>
 
 
-          <Modal animationType='slide' transparent={true} visible={openModal} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
+          <Modal animationType='slide' transparent={true} visible={photoCam !== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
             <Container $justContent="center"
               $bgColor="rgba(0,0,0,0.3)">
               <View style={{ alignItems: 'center', justifyContent: 'center', padding: 30, backgroundColor: '#FFF', width: '90%', borderRadius: 10 }}>
@@ -520,9 +553,10 @@ useEffect(() => {
 
                   <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
                     savePhoto()
-                    navigation.navigate(
-                      "MedicalRecord", { fotoCam: { photoCam } }
-                    )
+                    // navigation.navigate(
+                    //   "MedicalRecord", { fotoCam: { photoCam } }
+                    // )
+                    
                     setOpenModal(false)
                     setShowModalCamera(false)
                   }}>
@@ -533,7 +567,6 @@ useEffect(() => {
             </Container>
           </Modal>
           {/* </View> */}
-
 
         </ContainerMargin>
       </Container>
@@ -604,7 +637,8 @@ const stylesCamera = StyleSheet.create({
 
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
+  
 
 
 });
