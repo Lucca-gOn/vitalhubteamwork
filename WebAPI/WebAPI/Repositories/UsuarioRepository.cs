@@ -46,9 +46,9 @@ namespace WebAPI.Repositories
 
                 ctx.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception e )
             {
-                throw;
+                Console.WriteLine(e.InnerException.ToString());
             }
         }
 

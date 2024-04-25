@@ -19,11 +19,12 @@ export default function Profile({ navigation }) {
   const [especialidade, setEspecialidade] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [cpf, setCpf] = useState('');
-  const [foto, setFoto] = useState('');
+  const [foto,setFoto] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
   const [showModalCamera,setShowModalCamera]= useState(false)
+  //const [uriFotoCam, setUriFotoCam] = useState('');
 
   const { role } = profile
 
@@ -74,18 +75,22 @@ export default function Profile({ navigation }) {
     const formData = new FormData();
 
     formData.append("Arquivo", {
-      uri: foto,
-      name: `image.${ foto.split('.')[1]}`,
-      type: `image/${ foto.split('.')[1]}`,
+      uri: uriFotoCam,
+      name: `image.jpg`,
+      type: `image/jpg`,
     })
-    console.log()
-    await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, FormData, {
+    //formData.append("Foto", 'teste.png')
+    console.log(`
+    profileID: ${profile.id}
+    uriFotoCam: ${uriFotoCam}
+    `)
+    await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, formData, {
       headers:{
         'Content-Type' : 'multipart/form-data'
       }
     }).then(response => {
       console.log('resposta de alterar foto : ',response)
-    }).catch(error =>{console.log('Erro ao alterar a foto : ',error)})
+    }).catch(error =>{console.log('Erro ao alterar a foto : ',error.request)})
   }
 
   useEffect(() => {
@@ -94,11 +99,11 @@ export default function Profile({ navigation }) {
 
   useEffect(()=>{
     if(foto){
-      alterarFotoPerfil()
+      alterarFotoPerfil()      
     }
   },[foto]);
 
-  console.log(foto)
+  
 
   return (
     <Container>

@@ -413,7 +413,6 @@ export const ModalCamera = ({
 
   const cameraRef = useRef(null);
 
-
   const [photoCam, setPhotoCam] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
@@ -429,7 +428,6 @@ export const ModalCamera = ({
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoCam(photo.uri);
-
       setOpenModal(true);
     }
   }
@@ -479,8 +477,7 @@ export const ModalCamera = ({
       //setPhotoCam(result.assets[0].uri);
       setFoto(result.assets[0].uri);
       setOpenModal(false)
-      setShowModalCamera(false)
-
+      setShowModalCamera(false)            
     }
   }
 
@@ -488,7 +485,7 @@ export const ModalCamera = ({
 
   async function getLastPhoto(){
     const {assets} = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
-    console.log(assets);
+    //console.log(assets);
     if(assets.length > 0){
       setLatestPhoto(assets[0].uri)
     }
