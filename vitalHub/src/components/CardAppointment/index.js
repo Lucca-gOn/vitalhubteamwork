@@ -82,7 +82,7 @@ export default CardAppointment = (
                 </TextCancelAppointment>
                 : selectStatus === 'Realizadas' ?
                   <TextPontuarioAppointment
-                    onPress={() => {
+                    onPress={() => {                      
                       setShowModalMedicalRecord(true)
                       setConsultSelect(data)
                     }}

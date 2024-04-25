@@ -24,8 +24,8 @@ export default function Profile({ navigation }) {
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
   const [showModalCamera,setShowModalCamera]= useState(false)
-  //const [uriFotoCam, setUriFotoCam] = useState('');
-
+  const [disabledInput, setDisableInput] = useState(false)
+  
   const { role } = profile
 
   async function profileLoad() {
@@ -50,7 +50,6 @@ export default function Profile({ navigation }) {
               setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
               setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
               setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
-
             }
             ).catch(error => alert(`Erro ao BuscarPorID : ${error}`))
         }
@@ -75,22 +74,40 @@ export default function Profile({ navigation }) {
     const formData = new FormData();
 
     formData.append("Arquivo", {
-      uri: uriFotoCam,
+      uri: foto,
       name: `image.jpg`,
       type: `image/jpg`,
     })
-    //formData.append("Foto", 'teste.png')
-    console.log(`
-    profileID: ${profile.id}
-    uriFotoCam: ${uriFotoCam}
-    `)
+   
     await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, formData, {
       headers:{
         'Content-Type' : 'multipart/form-data'
       }
     }).then(response => {
-      console.log('resposta de alterar foto : ',response)
+      //console.log('resposta de alterar foto : ',response)
     }).catch(error =>{console.log('Erro ao alterar a foto : ',error.request)})
+  }
+
+  async function alterarDadosProfile(){
+    console.log('Acessou alterar');
+    if(profile.role == 'Medico'){
+
+      console.log(profile.id)
+      await api.put(`/Medicos/UpdateProfile?idUsuario=${profile.id}`,{
+        cep: cep,
+        logradouro: endereco,
+        cidade: cidade,
+      })
+      .then(
+        alert(`Dados salvo com sucesso`)
+      )
+      .catch(
+        (error) =>{
+          alert(`Erro ao fazer alteraçao dos dados : ${error}`)
+          console.log(`Erro ao fazer alteraçao dos dados : ${error}`)
+        }
+      )
+    }    
   }
 
   useEffect(() => {
@@ -136,6 +153,7 @@ export default function Profile({ navigation }) {
                 placeholder="Número do CRM"
                 inputMode="numeric"
                 value={crm}
+                editable={false}                
                 onChangeText={(text) => {
                   setCRM(text);
                 }}
@@ -147,7 +165,8 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
-                value={especialidade}
+                editable={false}
+                value={especialidade}                
                 onChangeText={(text) => {
                   setEspecialidade(text);
                 }}
@@ -166,6 +185,7 @@ export default function Profile({ navigation }) {
                   placeholder="DD/MM/AAAA"
                   inputMode="decimal"
                   autoComplete="birthdate-full"
+                  editable={false}
                   value={dataNascimento}
                   onChangeText={(text) => {
                     setDataNascimento(text);
@@ -177,8 +197,9 @@ export default function Profile({ navigation }) {
                 <TextLabel>CPF</TextLabel>
                 <InputGray
                   placeholder="xxx.xxx.xxx-xx"
-                  //inputMode="decimal"
+                  inputMode="decimal"
                   value={cpf}
+                  editable={false}
                   onChangeText={(text) => {
                     setCpf(text);
                   }}
@@ -193,6 +214,8 @@ export default function Profile({ navigation }) {
             autoComplete="address-line1"
             autoCapitalize="words"
             inputMode="text"
+            editable={disabledInput}
+            disabledInput={disabledInput}
             value={endereco}
             onChangeText={(text) => {
               setEndereco(text);
@@ -208,6 +231,8 @@ export default function Profile({ navigation }) {
               inputMode="decimal"
               autoComplete="postal-code"
               value={cep}
+              editable={disabledInput}
+              disabledInput={disabledInput}
               onChangeText={(text) => {
                 setCep(text);
               }}
@@ -220,7 +245,9 @@ export default function Profile({ navigation }) {
               placeholder="Moema-SP"
               inputMode="text"
               autoCapitalize="words"
-              value={cidade}
+              value={cidade}      
+              editable={disabledInput}
+              disabledInput={disabledInput}   
               onChangeText={(text) => {
                 setCidade(text);
               }}
@@ -232,8 +259,8 @@ export default function Profile({ navigation }) {
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
-          <ButtonDefault textButton="Salvar" />
-          <ButtonDefault textButton="Editar" />
+          <ButtonDefault textButton="Salvar" onPress={()=>{alterarDadosProfile()}}/>
+          <ButtonDefault textButton="Editar" onPress={()=>setDisableInput(true)}/>
           <ButtonGray textButton="Sair do app" onPress={Logout} />
 
         </ContainerMargin>
