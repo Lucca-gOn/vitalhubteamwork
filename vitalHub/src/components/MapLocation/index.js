@@ -64,6 +64,8 @@ export const MapLocation = ({
     }
   }
 
+
+
   useEffect(() => {
     CurrentLocation();
     //Monitora a posição em tempo real
@@ -85,7 +87,9 @@ export const MapLocation = ({
 
   useEffect(() => {
     reloadPreviewMap()
-  }, [mapRendered])
+  }, [initialPosition,mapRendered])
+  
+console.log(clinica)
 
   return (
     <View style={styles.container}>
@@ -108,7 +112,8 @@ export const MapLocation = ({
                 height: '100%',
                 width: '100%',
               }}
-              onLayout={()=> {setMapRendered(true)}}
+              //Espera carregar o mapa para depois ajustar
+              on={()=> {setMapRendered(true)}}
             >
               <Marker
                 coordinate={{

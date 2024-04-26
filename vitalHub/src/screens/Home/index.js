@@ -5,7 +5,7 @@ import { CalendarListWeek } from "../../components/Calendars";
 import { ButtonNotSelect, ButtonSelect } from "../../components/Buttons";
 import { useEffect, useState } from "react";
 import CardAppointment from "../../components/CardAppointment";
-import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment } from "../../components/Modals";
+import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment, ModalShowLocalConsult } from "../../components/Modals";
 import { Stethoscope } from "../../components/Stethoscope";
 import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
@@ -22,13 +22,14 @@ export default function Home(
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
-  const [renderizaDados, setRenderizaDados]= useState(false);
+  const [showModalShowLocalConsult,setShowModalShowLocalConsult]= useState(false);
+  const [consultSelect, setConsultSelect] = useState({});
   const [consultas, setConsultas] = useState({})
   const [dadosSituacoes, setDadosSituacoes] = useState({})
-  const [consultSelect, setConsultSelect] = useState({});
+  const [dateConsult, setDateConsult] = useState('');  
   const [profile, setProfile] = useState({})
+  const [renderizaDados, setRenderizaDados]= useState(false);
   const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada :'Agendadas');
-  const [dateConsult, setDateConsult] = useState('');
   const [situacao, setSituacao] = useState("");
   
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
@@ -108,6 +109,7 @@ export default function Home(
                 selectStatus={select}
                 setShowModalCancel={setShowModalCancel}
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
+                setShowModalShowLocalConsult={setShowModalShowLocalConsult}
                 setConsultSelect={setConsultSelect}
                 dadosSituacoes={dadosSituacoes}
               />
@@ -151,7 +153,12 @@ export default function Home(
         navigation={navigation}
       />
 
-      <ModalDataConsult />
+      <ModalShowLocalConsult 
+        consultSelect={consultSelect}
+        navigation={navigation}
+        showModalShowLocalConsult={showModalShowLocalConsult}
+        setShowModalShowLocalConsult={setShowModalShowLocalConsult}
+      />
 
     </Container>
 

@@ -349,14 +349,18 @@ export const SummaryMedicalAgenda = ({
   )
 }
 
-export const ModalDataConsult = ({
+export const ModalShowLocalConsult = ({
   navigation,
+  showModalShowLocalConsult,
+  setShowModalShowLocalConsult,
+  consultSelect
 }) => {
 
+  console.log(consultSelect)
   return (
     <Modal
       transparent={true}
-      visible={false}
+      visible={showModalShowLocalConsult}
       statusBarTranslucent={true}
     // onRequestClose={() => { setShowModalMedicalRecord(false) }}
     >
@@ -388,10 +392,15 @@ export const ModalDataConsult = ({
           </ContainerMargin>
 
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
-            <ButtonDefault textButton="Ver local da consulta" />
+            <ButtonDefault 
+            textButton="Ver local da consulta" 
+            onPress={()=>{
+              navigation.navigate('ConsultationAddress', {modalLocal: consultSelect})
+              setShowModalShowLocalConsult(false)
+            }} />
 
             <LinkUnderlineDefault onPress={() => {
-              setShowModalMedicalRecord(false)
+              setShowModalShowLocalConsult(false)
             }}>
               Cancelar
             </LinkUnderlineDefault>

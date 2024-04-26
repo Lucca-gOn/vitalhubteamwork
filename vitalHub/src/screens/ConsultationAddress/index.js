@@ -12,30 +12,41 @@ export default function ConsultationAddress({
   navigation,
   route
 }) {
-  const [clinica, setClinica] = useState(null)
+  const [clinica, setClinica] = useState({})
 
-  const latitudeClinica = clinica ? clinica.endereco.latitude : null;
-  const longitudeClinica = clinica ? clinica.endereco.longitude : null;
+  const latitudeClinica = clinica ? clinica.endereco?.latitude : null;
+  const longitudeClinica = clinica ? clinica.endereco?.longitude : null;
   const nomeClinica = clinica ? clinica.nomeFantasia : null;
-  const cidadeClinica = clinica ? clinica.endereco.cidade : null;
-  const enderecoClinica = clinica ? clinica.endereco.logradouro : null;
-  const cepClinica = clinica ? clinica.endereco.cep : null;
+  const cidadeClinica = clinica ? clinica.endereco?.cidade : null;
+  const enderecoClinica = clinica ? clinica.endereco?.logradouro : null;
+  const cepClinica = clinica ? clinica.endereco?.cep : null;
 
   async function BuscarClinica() {
-    await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
-      .then(response => {
+
+    
+
+    await api.get(`/Clinica/BuscarPorId?id=${route.params.modalLocal.medicoClinica.clinicaId}`)
+      .then((response) => {
         setClinica(response.data)
+        console.log(`Dados obtidos a fazer buscaPorID em Clinica: `, response.request);
       })
       .catch(error => {
         'Erro ao buscar clinica por id = ', error
       })
   }  
 
-  useEffect(() => {
-    if (clinica == null) {
+  useEffect(() => {    
       BuscarClinica()
-    }
-  }, [clinica])
+  }, [])
+
+  console.log(`
+  latitudeClinica = ${latitudeClinica}
+  longitudeClinica = ${longitudeClinica}
+  nomeClinica = ${nomeClinica}
+  cidadeClinica = ${cidadeClinica}
+  enderecoClinica = ${enderecoClinica}
+  cepClinica = ${cepClinica}
+  `)
 
   return (
 
