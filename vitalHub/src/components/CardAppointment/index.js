@@ -15,6 +15,7 @@ export default CardAppointment = (
     setShowModalMedicalRecord,
     setConsultSelect,
     selectStatus,
+    setRolesConsultaSelect,
     data,
     setShowModalShowLocalConsult,
     dadosSituacoes,
@@ -22,9 +23,9 @@ export default CardAppointment = (
   }
 ) => {
   const [idade, setIdade] = useState();
-  
+
   const roles = role == 'Medico' ? data.paciente : data.medicoClinica.medico;
-  
+
   const dataNascimento = roles.dataNascimento
   const foto = roles.idNavigation.foto
   const tipoConsulta = data.prioridade.prioridade
@@ -41,21 +42,29 @@ export default CardAppointment = (
     calculateAge();
   }, [])
 
+  console.log('Card : ', data)
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
-    <TouchableOpacity 
-      style={{ width: '100%', height: "auto", flexDirection: "row", gap: 10}} 
-      activeOpacity={0.7} 
-      onPress={()=>{
-        role == 'Medico'? 
-          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role, dadosSituacoes:dadosSituacoes}) 
-          :
-          //navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
-          setShowModalShowLocalConsult(true)
-          setConsultSelect(data)
+      <TouchableOpacity
+        style={{ width: '100%', height: "auto", flexDirection: "row", gap: 10 }}
+        activeOpacity={0.7}
+        onPress={() => {
+          role == 'Medico' && data.situacao.situacao == 'Agendadas' ?
+            (
+              setShowModalMedicalRecord(true),
+              setConsultSelect(data)
+            )
+            :
+            role == 'Medico' && data.situacao.situacao == 'Realizadas' ?
+              navigation.navigate('MedicalRecord', { dadosConsulta: data, idade: idade, role: role, dadosSituacoes: dadosSituacoes }) :
 
-      }}  
-    >
+              //navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
+              setShowModalShowLocalConsult(true)
+          setConsultSelect(data)
+          setRolesConsultaSelect(roles)
+
+        }}
+      >
         <ImageUser $width="77px" $height="80px" source={foto !== undefined && foto !== 'string' ? { uri: foto } : require('../../assets/images/NotImage.svg')} />
 
         <ContainerMargin $width='none' $alingItens="flex-start" style={{ flex: 1 }} >
@@ -85,9 +94,8 @@ export default CardAppointment = (
                 </TextCancelAppointment>
                 : selectStatus === 'Realizadas' ?
                   <TextPontuarioAppointment
-                    onPress={() => {                      
-                      setShowModalMedicalRecord(true)
-                      setConsultSelect(data)
+                    onPress={() => {
+                      navigation.navigate('MedicalRecord', { dadosConsulta: data })
                     }}
                   >
                     Ver Prontuario</TextPontuarioAppointment>
@@ -97,7 +105,7 @@ export default CardAppointment = (
         </ContainerMargin>
 
 
-    </TouchableOpacity>
-      </ContainerMargin>
+      </TouchableOpacity>
+    </ContainerMargin>
   )
 }

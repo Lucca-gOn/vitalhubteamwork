@@ -68,6 +68,7 @@ namespace WebAPI.Controllers
 
 
                 var containerName = "blobvitalcontainerallan";
+                
 
 
                 string fotoUrl = await AzureBlobStorageHelper.UploadImageBlobAsync(form.Arquivo!, connectionString!, containerName!);

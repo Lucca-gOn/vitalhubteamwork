@@ -16,6 +16,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image"
 import api from "../../service/Service"
+import moment from "moment"
 
 Notifications.requestPermissionsAsync();
 
@@ -138,6 +139,24 @@ export const ModalMedicalRecord = ({
   setShowModalMedicalRecord,
   showModalMedicalRecord,
 }) => {
+  console.log('ModalMedicalRecord',consultSelect.paciente?.idNavigation?.foto)
+  const [idade, setIdade] = useState('');
+  
+  
+  let foto
+  
+  const calculateAge = () => {
+    const dataNascimento = consultSelect.paciente?.dataNascimento
+    const dob = moment(dataNascimento, 'YYYY-MM-DD');
+    const today = moment();
+    const years = today.diff(dob, 'years');
+    setIdade(years);
+  };
+  
+  useEffect(() => {
+    foto = consultSelect.paciente?.idNavigation?.foto
+    calculateAge();
+  }, [])
 
   return (
     <Modal
@@ -156,7 +175,7 @@ export const ModalMedicalRecord = ({
           $bgColor="#FFF"
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={consultSelect.photo !== undefined ? { uri: consultSelect.photo } : require('../../assets/images/NotImage.svg')} $width="90%" $height="181px" />
+            <ImageUser source={{ uri: foto }} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
@@ -165,7 +184,7 @@ export const ModalMedicalRecord = ({
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-              {consultSelect.age}
+              {idade}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
               {consultSelect.email}
@@ -353,16 +372,17 @@ export const ModalShowLocalConsult = ({
   navigation,
   showModalShowLocalConsult,
   setShowModalShowLocalConsult,
-  consultSelect
+  consultSelect,
+  rolesConsultaSelect
 }) => {
 
-  console.log(consultSelect)
+  console.log('roles modal: ',rolesConsultaSelect)
   return (
     <Modal
       transparent={true}
       visible={showModalShowLocalConsult}
       statusBarTranslucent={true}
-    // onRequestClose={() => { setShowModalMedicalRecord(false) }}
+      onRequestClose={() => { setShowModalShowLocalConsult(false) }}
     >
       <Container
         $justContent="center"
@@ -375,19 +395,19 @@ export const ModalShowLocalConsult = ({
 
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={require('../../assets/images/NotImage.svg')} $width="90%" $height="181px" />
+            <ImageUser source={{uri: rolesConsultaSelect.idNavigation?.foto}} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
-              Dr Claudio
+              Dr(ª) {rolesConsultaSelect.idNavigation?.nome}
             </Title>
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-              Clinico Geral
+            {rolesConsultaSelect.especialidade?.especialidade1}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
-              CRM-123456
+              CRM-{rolesConsultaSelect.crm}
             </TextQuickSandRegular>
           </ContainerMargin>
 
