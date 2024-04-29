@@ -24,6 +24,7 @@ export default function Home(
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [showModalShowLocalConsult,setShowModalShowLocalConsult]= useState(false);
   const [consultSelect, setConsultSelect] = useState({});
+  const [rolesConsultaSelect,setRolesConsultaSelect] = useState({})
   const [consultas, setConsultas] = useState({})
   const [dadosSituacoes, setDadosSituacoes] = useState({})
   const [dateConsult, setDateConsult] = useState('');  
@@ -111,6 +112,7 @@ export default function Home(
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setShowModalShowLocalConsult={setShowModalShowLocalConsult}
                 setConsultSelect={setConsultSelect}
+                setRolesConsultaSelect={setRolesConsultaSelect}
                 dadosSituacoes={dadosSituacoes}
               />
             )
@@ -158,6 +160,7 @@ export default function Home(
         navigation={navigation}
         showModalShowLocalConsult={showModalShowLocalConsult}
         setShowModalShowLocalConsult={setShowModalShowLocalConsult}
+        rolesConsultaSelect={rolesConsultaSelect}
       />
 
     </Container>

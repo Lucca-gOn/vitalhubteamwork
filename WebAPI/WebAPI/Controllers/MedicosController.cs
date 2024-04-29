@@ -103,12 +103,22 @@ namespace WebAPI.Controllers
 
         //[Authorize]
         [HttpPut("UpdateProfile")]
+<<<<<<< HEAD
         public IActionResult UpdateProfile(Guid idUsuario, MedicoViewModel medico)
+=======
+        public IActionResult UpdateProfile(Guid idUsuario,MedicoViewModel medico)
+>>>>>>> origin/allan
         {
             try
             {
                 //Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+<<<<<<< HEAD
                 return Ok(_medicoRepository.AtualizarPerfil(idUsuario, medico));
+=======
+
+                return Ok(_medicoRepository.AtualizarPerfil(idUsuario, medico));
+
+>>>>>>> origin/allan
             }
             catch (Exception ex)
             {
