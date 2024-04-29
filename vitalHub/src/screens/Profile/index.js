@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, Touchable, TouchableOpacity } from "react-native";
+import { StatusBar, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { userDecodeToken } from '../../utils/Auth';
 import api from "../../service/Service";
@@ -24,6 +24,7 @@ export default function Profile({ navigation }) {
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false)
+  const [disabledInput, setDisableInput] = useState(false)
 
   const { role } = profile
 
@@ -49,7 +50,6 @@ export default function Profile({ navigation }) {
               setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
               setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
               setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
-
             }
             ).catch(error => alert(`Erro ao BuscarPorID : ${error}`))
         }
@@ -69,6 +69,46 @@ export default function Profile({ navigation }) {
     }
   };
 
+  async function alterarFotoPerfil() {
+
+    const formData = new FormData();
+
+    formData.append("Arquivo", {
+      uri: foto,
+      name: `image.jpg`,
+      type: `image/jpg`,
+    })
+
+    await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }).then(response => {
+      //console.log('resposta de alterar foto : ',response)
+    }).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
+  }
+
+  async function alterarDadosProfile() {
+    console.log('Acessou alterar');
+    const userType = profile.role === 'Medico' ? 'Medicos' : 'Pacientes';
+    const url = `/${userType}/UpdateProfile?idUsuario=${profile.id}`;
+
+    console.log(profile.id);
+    await api.put(url, {
+      cep: cep,
+      logradouro: endereco,
+      cidade: cidade,
+    })
+      .then(() => {
+        alert('Dados salvos com sucesso');
+        navigation.replace("Home");
+      })
+      .catch((error) => {
+        alert(`Erro ao fazer alteração dos dados: ${error}`);
+        console.log(`Erro ao fazer alteração dos dados: ${error}`);
+      });
+  }
+
   useEffect(() => {
     profileLoad();
   }, []);
@@ -77,37 +117,23 @@ export default function Profile({ navigation }) {
     if (foto) {
       alterarFotoPerfil()
     }
-  },[foto])
+  }, [foto]);
 
-  async function alterarFotoPerfil() {
-    const formData = new FormData();
-    formData.append("Arquivo", {
-      uri : foto,
-      name : `image.${foto.split(".")[1]}`,
-      type : `image/${foto.split(".")[1]}`
-    })
-    await api.put(`/Usuario/AlterarFotoPerfil?id=${profile.id}`, FormData,{
-      headers: {
-        "Content-Type" : "multipart/form-data"
-      }
-    }).then( response =>{
-      console.log("Resposta correta:" , response);
-    }).catch(error => {
-      console.log(error);
-    })
-  }
 
-  console.log(profile);
+
   return (
     <Container>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
       <ContainerMargin style={{ position: "relative" }}>
         <ImageUser source={uri = foto} $width="100%" $height="280px" />
-        <TouchableOpacity onPress={() => setShowModalCamera(true)} activeOpacity={0.8} style={{ position: "absolute", backgroundColor: '#496BBA', bottom: -10, right: 30, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: "white" }}>
-          <MaterialCommunityIcons name="camera-plus" size={20} color="#fbfbfb" />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ backgroundColor: '#496BBA', position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white' }}
+          onPress={() => setShowModalCamera(true)}
+        >
+          <MaterialCommunityIcons name="camera-plus" size={24} color="white" />
         </TouchableOpacity>
       </ContainerMargin>
-
       <ContainerScrollView showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
@@ -126,6 +152,7 @@ export default function Profile({ navigation }) {
                 placeholder="Número do CRM"
                 inputMode="numeric"
                 value={crm}
+                editable={false}
                 onChangeText={(text) => {
                   setCRM(text);
                 }}
@@ -137,6 +164,7 @@ export default function Profile({ navigation }) {
               <InputGray
                 placeholder="Especialidade"
                 inputMode="text"
+                editable={false}
                 value={especialidade}
                 onChangeText={(text) => {
                   setEspecialidade(text);
@@ -156,6 +184,7 @@ export default function Profile({ navigation }) {
                   placeholder="DD/MM/AAAA"
                   inputMode="decimal"
                   autoComplete="birthdate-full"
+                  editable={false}
                   value={dataNascimento}
                   onChangeText={(text) => {
                     setDataNascimento(text);
@@ -167,8 +196,9 @@ export default function Profile({ navigation }) {
                 <TextLabel>CPF</TextLabel>
                 <InputGray
                   placeholder="xxx.xxx.xxx-xx"
-                  //inputMode="decimal"
+                  inputMode="decimal"
                   value={cpf}
+                  editable={false}
                   onChangeText={(text) => {
                     setCpf(text);
                   }}
@@ -183,6 +213,8 @@ export default function Profile({ navigation }) {
             autoComplete="address-line1"
             autoCapitalize="words"
             inputMode="text"
+            editable={disabledInput}
+            disabledInput={disabledInput}
             value={endereco}
             onChangeText={(text) => {
               setEndereco(text);
@@ -198,6 +230,8 @@ export default function Profile({ navigation }) {
               inputMode="decimal"
               autoComplete="postal-code"
               value={cep}
+              editable={disabledInput}
+              disabledInput={disabledInput}
               onChangeText={(text) => {
                 setCep(text);
               }}
@@ -211,6 +245,8 @@ export default function Profile({ navigation }) {
               inputMode="text"
               autoCapitalize="words"
               value={cidade}
+              editable={disabledInput}
+              disabledInput={disabledInput}
               onChangeText={(text) => {
                 setCidade(text);
               }}
@@ -221,19 +257,15 @@ export default function Profile({ navigation }) {
 
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Salvar" />
-          <ButtonDefault textButton="Editar" />
+
+          <ButtonDefault textButton="Salvar" onPress={() => { alterarDadosProfile() }} />
+          <ButtonDefault textButton="Editar" onPress={() => setDisableInput(true)} />
           <ButtonGray textButton="Sair do app" onPress={Logout} />
+
         </ContainerMargin>
       </ContainerScrollView>
-
-      <ModalCamera 
-      showModalCamera={showModalCamera} 
-      setShowModalCamera={setShowModalCamera} 
-      navigation={navigation} 
-      getMediaLibrary={true}
-      setFoto={setFoto}
-      />
-    </Container >
+      <ModalCamera setFoto={setFoto} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+    </Container>
   );
+
 }

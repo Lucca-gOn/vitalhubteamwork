@@ -22,26 +22,26 @@ export default function MedicalRecord({
   
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
+ //const [foto, setFoto] = useState('')
   
   console.log(route.params)
 
-  const [descricaoConsulta, setDescricaoConsulta] = useState(route.params.dadosConsulta.descricao ? route.params.dadosConsulta.descricao : '');
-  const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params.dadosConsulta.diagnostico ? route.params.dadosConsulta.diagnostico : '' );
-  const [prescricaoMedica, setPrescricaoMedica] = useState(route.params.dadosConsulta.receita ? route.params.dadosConsulta.receita.medicamento : '');
+  const [descricaoConsulta, setDescricaoConsulta] = useState(route.params?.dadosConsulta?.descricao ? route.params.dadosConsulta.descricao : '');
+  const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params?.dadosConsulta?.diagnostico ? route.params.dadosConsulta.diagnostico : '' );
+  const [prescricaoMedica, setPrescricaoMedica] = useState(route.params?.dadosConsulta?.receita ? route.params.dadosConsulta.receita.medicamento : '');
+  const [descricaoExame,setDescricaoExame] = useState('');
 
   const dadosSituações = route.params.dadosSituacoes;
 
-  //console.log(route.params.dadosConsulta)
-  const idConsulta = route.params.dadosConsulta.id
-  const nomePaciente = route.params.dadosConsulta.paciente.idNavigation.nome;
-  const email = route.params.dadosConsulta.paciente.idNavigation.email;
+  const idConsulta = route.params?.dadosConsulta?.id
+  const nomePaciente = route.params.dadosConsulta?.paciente?.idNavigation?.nome;
+  const email = route.params.dadosConsulta?.paciente?.idNavigation?.email;
   const idade = route.params.idade
-  const foto = route.params.dadosConsulta.paciente.idNavigation.foto;
+  const fotoUser = route.params.dadosConsulta?.paciente?.idNavigation?.foto;
   const role = route.params.role;
   const fotoCam = route.params.fotoCam
-  const situacaoConsulta = route.params.dadosConsulta.situacao.situacao
-
-  //console.log(route.params.dadosConsulta)
+  const situacaoConsulta = route.params.dadosConsulta?.situacao?.situacao
+  
   function encontraIdConsultaRealizada(){
     for (const item of dadosSituações) {
       if (item.situacao === 'Realizadas') {
@@ -72,16 +72,42 @@ export default function MedicalRecord({
     }
   }
 
+  async function InserirExame(){
+    const formData = new FormData();
+    formData.append("ConsultaId", produtario)
+    formData.append("Imagem", {
+      uri: foto,
+      name: `image.${foto.split('.').pop()}`,
+      type: `image/${foto.split('.').pop()}`
+    })
+
+    await api.post(`/Exame/Cadastrar`, formData, {
+      headers : {
+        "Content-Type":"multipart/form-data"
+      }
+    }).then(
+      response => {
+        setDescricaoExame(descricaoExame + "\n" + response.data.descricao)
+      }
+    ).catch(
+      error => {
+        console.log('Erro ao fazer salvar exame, erro : ', error)
+      }
+    )
+  }
+
   useEffect(() => {
     verificaProntuario()
     
   }, [])
+
+
   return (
     <Container>
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <ImageUser source={foto !== undefined && foto !== 'string' ? { uri: foto } : require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
+      <ImageUser source={fotoUser !== undefined && fotoUser !== 'string' ? { uri: fotoUser } : require('../../assets/images/NotImage.svg')} $width="100%" $height="280px" />
 
       <ContainerScrollView
         showsVerticalScrollIndicator={false}
@@ -191,7 +217,7 @@ export default function MedicalRecord({
 
       </ContainerScrollView>
 
-      <ModalCamera showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera  showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
 
     </Container>
   )

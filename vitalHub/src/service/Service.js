@@ -6,7 +6,7 @@ const portaApi = '4466';
 //Declara o ip da maquina
 const ip = '192.168.21.126';
 
-//Allan Casa -> 192.168.15.15
+//Allan Casa -> 192.168.15.7
 //Allan Escola -> 192.168.21.50
 //Lucas Casa -> 192.168.0.11
 //Lucas Senai -> 192.168.21.126

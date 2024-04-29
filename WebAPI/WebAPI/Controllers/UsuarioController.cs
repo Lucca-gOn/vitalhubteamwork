@@ -64,10 +64,10 @@ namespace WebAPI.Controllers
                 }
 
 
-                var connectionString = "Data Source=NOTE05-S21; initial catalog=VitalHub_G09M; User Id= Sa; pwd = Senai@134; TrustServerCertificate=true;";
+                var connectionString = "";
 
 
-                var containerName = "blobvitalhub3dm";
+                var containerName = "";
 
 
                 string fotoUrl = await AzureBlobStorageHelper.UploadImageBlobAsync(form.Arquivo!, connectionString!, containerName!);
@@ -84,7 +84,6 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
 

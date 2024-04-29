@@ -40,10 +40,24 @@ export const InputGray = styled(InputGreen).attrs({
   placeholderTextColor: '#ACACAC',
   cursorColor: '#000',
 })`
-  border:none;
-  background-color:#f5f3f3;
-  font-family: 'MontserratAlternates_500Medium';
-  color: #000;
+${(props) => {
+    if (props.disabledInput) {
+      return css`
+        color: #34898F;        
+        background-color:transparent;
+        border: 2px solid #34898F;
+      `
+    } else {
+      return css`
+        background-color: #F5F3F3;                
+        color: #000;
+        border:none;
+      `
+    }
+  }
+  }
+    
+  font-family: 'MontserratAlternates_500Medium';  
 `
 
 

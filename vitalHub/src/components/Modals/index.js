@@ -16,8 +16,6 @@ import { FontAwesome } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image"
 import api from "../../service/Service"
-import { LastPhoto } from "./style"
-
 
 Notifications.requestPermissionsAsync();
 
@@ -351,14 +349,18 @@ export const SummaryMedicalAgenda = ({
   )
 }
 
-export const ModalDataConsult = ({
+export const ModalShowLocalConsult = ({
   navigation,
+  showModalShowLocalConsult,
+  setShowModalShowLocalConsult,
+  consultSelect
 }) => {
 
+  console.log(consultSelect)
   return (
     <Modal
       transparent={true}
-      visible={false}
+      visible={showModalShowLocalConsult}
       statusBarTranslucent={true}
     // onRequestClose={() => { setShowModalMedicalRecord(false) }}
     >
@@ -390,10 +392,15 @@ export const ModalDataConsult = ({
           </ContainerMargin>
 
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
-            <ButtonDefault textButton="Ver local da consulta" />
+            <ButtonDefault 
+            textButton="Ver local da consulta" 
+            onPress={()=>{
+              navigation.navigate('ConsultationAddress', {modalLocal: consultSelect})
+              setShowModalShowLocalConsult(false)
+            }} />
 
             <LinkUnderlineDefault onPress={() => {
-              setShowModalMedicalRecord(false)
+              setShowModalShowLocalConsult(false)
             }}>
               Cancelar
             </LinkUnderlineDefault>
@@ -409,16 +416,17 @@ export const ModalCamera = ({
   showModalCamera,
   setShowModalCamera,
   navigation,
-  getMediaLibrary = false,
   setFoto,
-  ...rest
+  getMediaLibary = false
 }) => {
 
   const cameraRef = useRef(null);
+
   const [photoCam, setPhotoCam] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+
   const [tipoCamera, setTipoCamera] = useState(Camera.Constants.Type.front);
-  const [latestPhoto, setLatestPhoto] = useState(null) //salva a ultima foto na galeria
+  const [latestPhoto, setLatestPhoto] = useState(null);
 
   const clearPhoto = () => {
     setPhotoCam(null);
@@ -429,7 +437,6 @@ export const ModalCamera = ({
     if (cameraRef) {
       const photo = await cameraRef.current.takePictureAsync();
       setPhotoCam(photo.uri);
-
       setOpenModal(true);
     }
   }
@@ -438,57 +445,67 @@ export const ModalCamera = ({
     if (photoCam) {
       await MediaLibary.createAssetAsync(photoCam)
         .then(() => {
-          alert('Sucesso', 'Foto Salva na Galeria');
+          alert('Sucesso, Foto Salva na Galeria');
+          setFoto(photoCam)
         })
-        setFoto(photoCam)
         .catch(error => {
           alert("Erro ao salvar foto. Detalhe : ", error);
         })
     }
   }
 
+  // useEffect(() => {
+  //   async () => {
+  //     const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+  //     //const { status: mediaStatus } = await MediaLibary.requestPermissionsAsync();
+  //     if(cameraStatus !== 'granted'){
+  //       alert('Erro')
+  //     }
+  //   }
+  // },[])
+
   useEffect(() => {
     (async () => {
         const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-
         if (cameraStatus !== 'granted') {
             alert('Sorry, we need camera permissions to make this work');
         }
-
         await MediaLibary.requestPermissionsAsync();
         await ImagePicker.requestMediaLibraryPermissionsAsync();
     })();
 }, []);
 
-async function getLastPhoto() {
-  const {assets} = await MediaLibary.getAssetsAsync({sortBy: [[MediaLibary.SortBy.creationTime, false]], first: 1})
-  
-  console.log(assets);
-  //Salva o caminho da foto
-  if (assets.length > 0) {
-    setLatestPhoto(assets[0].uri)
-  }
-}
 
-async function SelectImageGallery() {
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes : ImagePicker.MediaTypeOptions.Images,
-    quality : 1
-  });
+  async function selectImageGallery(){
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes : ImagePicker.MediaTypeOptions.Images,
+      quality: 1
+    })
 
-  if (!result.canceled) {
-    setFoto( result.assets[0].uri)
-    setOpenModal(false);
-    setShowModalCamera(false);
+    if(!result.canceled){
+      //setPhotoCam(result.assets[0].uri);
+      setFoto(result.assets[0].uri);
+      setOpenModal(false)
+      setShowModalCamera(false)            
+    }
   }
-}
 
-useEffect(() => {
-  setPhotoCam(null)
-  if (getMediaLibrary) {
-    getLastPhoto();
+
+
+  async function getLastPhoto(){
+    const {assets} = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
+    //console.log(assets);
+    if(assets.length > 0){
+      setLatestPhoto(assets[0].uri)
+    }
   }
-}, [showModalCamera])
+
+  useEffect(() => {
+    setPhotoCam(null)
+    if(getMediaLibary){
+      getLastPhoto();
+    }
+  },[showModalCamera])
 
   return (
     <Modal
@@ -518,30 +535,26 @@ useEffect(() => {
           >
 
           </Camera>
-          <ContainerMargin $fd="row">
-            {/* Mostra a ultima foto na galeria */}
-            <TouchableOpacity onPress={() => SelectImageGallery()} style={{backgroundColor:"black", borderRadius:15, padding:12}}>
+          <ContainerMargin $fd="row" $justContent="space-between" $mt={30}>
+            <TouchableOpacity onPress={()=> selectImageGallery()} style={{padding:12, backgroundColor: 'black',borderRadius: 15}}>
               {
-                latestPhoto !== null
+                latestPhoto !== null 
                 ? (
-                    <LastPhoto
-                      source={{uri : latestPhoto}}
-                    />
+                  <Image source={{uri: latestPhoto}} style={{width:40,height:40,borderRadius:5,borderWidth: 1, borderColor: 'white'}} ></Image>
                 )
-                : <LastPhoto/>
+                : null
               }
             </TouchableOpacity>
-
             <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
-              <FontAwesome name='camera' size={24} color={'#FFF'} />
+              <FontAwesome name='camera' size={23} color={'#FFF'} />
             </TouchableOpacity>
             <TouchableOpacity style={stylesCamera.btnSwitch} onPress={() => { setTipoCamera(tipoCamera === CameraType.front ? CameraType.back : CameraType.front) }}>
               <MaterialIcons name="cameraswitch" size={24} color="#FFF" />
             </TouchableOpacity>
           </ContainerMargin>
 
-
-          <Modal animationType='slide' transparent={true} visible={photoCam !== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
+              
+          <Modal animationType='slide' transparent={true} visible={photoCam!== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
             <Container $justContent="center"
               $bgColor="rgba(0,0,0,0.3)">
               <View style={{ alignItems: 'center', justifyContent: 'center', padding: 30, backgroundColor: '#FFF', width: '90%', borderRadius: 10 }}>
@@ -552,11 +565,7 @@ useEffect(() => {
                   </TouchableOpacity>
 
                   <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
-                    savePhoto()
-                    // navigation.navigate(
-                    //   "MedicalRecord", { fotoCam: { photoCam } }
-                    // )
-                    
+                    savePhoto()                    
                     setOpenModal(false)
                     setShowModalCamera(false)
                   }}>
@@ -568,9 +577,10 @@ useEffect(() => {
           </Modal>
           {/* </View> */}
 
+
         </ContainerMargin>
       </Container>
-    </Modal >
+    </Modal>
   )
 }
 
@@ -606,17 +616,15 @@ const stylesCamera = StyleSheet.create({
     fontSize: 20,
     color: '#FFF',
   },
-  btnCaptura: {
-    margin: 20,
+  btnCaptura: {    
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 50,
     backgroundColor: '#121212',
 
     alignItems: 'center',
     justifyContent: 'center'
   },
-  btnSwitch: {
-    margin: 20,
+  btnSwitch: {    
     padding: 20,
     borderRadius: 15,
     backgroundColor: '#121212',
@@ -637,8 +645,7 @@ const stylesCamera = StyleSheet.create({
 
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  
+  }
 
 
 });

@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Repositories;
+using WebAPI.Utils.BlobStorage;
 using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
@@ -46,14 +47,17 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(MedicoViewModel medicoModel)
+        public async Task<IActionResult> Post(MedicoViewModel medicoModel)
         {
             Usuario user = new Usuario();
             user.Nome = medicoModel.Nome;
             user.Email = medicoModel.Email;
             user.TipoUsuarioId = medicoModel.IdTipoUsuario;
-            user.Foto = medicoModel.Foto;
             user.Senha = medicoModel.Senha;
+
+            var conatainerName = "";
+            var connectioString = "";
+            user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(medicoModel.Arquivo, connectioString, conatainerName);
 
             user.Medico = new Medico();
             user.Medico.Crm = medicoModel.Crm;
@@ -99,14 +103,12 @@ namespace WebAPI.Controllers
 
         //[Authorize]
         [HttpPut("UpdateProfile")]
-        public IActionResult UpdateProfile(MedicoViewModel medico)
+        public IActionResult UpdateProfile(Guid idUsuario, MedicoViewModel medico)
         {
             try
             {
-                Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-
+                //Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
                 return Ok(_medicoRepository.AtualizarPerfil(idUsuario, medico));
-
             }
             catch (Exception ex)
             {

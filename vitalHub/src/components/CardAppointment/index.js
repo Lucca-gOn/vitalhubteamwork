@@ -16,18 +16,19 @@ export default CardAppointment = (
     setConsultSelect,
     selectStatus,
     data,
-    setStatusIdConsultCard,
+    setShowModalShowLocalConsult,
     dadosSituacoes,
     role
   }
 ) => {
+  const [idade, setIdade] = useState();
+  
   const roles = role == 'Medico' ? data.paciente : data.medicoClinica.medico;
   
   const dataNascimento = roles.dataNascimento
   const foto = roles.idNavigation.foto
   const tipoConsulta = data.prioridade.prioridade
   // console.log(dataNascimento)
-  const [idade, setIdade] = useState();
 
   const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
@@ -35,8 +36,6 @@ export default CardAppointment = (
     const years = today.diff(dob, 'years');
     setIdade(years);
   };
-
-  const [testeData,setTesteData] = useState(data)
 
   useEffect(() => {
     calculateAge();
@@ -49,8 +48,12 @@ export default CardAppointment = (
       activeOpacity={0.7} 
       onPress={()=>{
         role == 'Medico'? 
-          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role, dadosSituacoes:dadosSituacoes}) :
-          navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
+          navigation.navigate('MedicalRecord', {dadosConsulta: data, idade:idade, role:role, dadosSituacoes:dadosSituacoes}) 
+          :
+          //navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
+          setShowModalShowLocalConsult(true)
+          setConsultSelect(data)
+
       }}  
     >
         <ImageUser $width="77px" $height="80px" source={foto !== undefined && foto !== 'string' ? { uri: foto } : require('../../assets/images/NotImage.svg')} />
@@ -82,7 +85,7 @@ export default CardAppointment = (
                 </TextCancelAppointment>
                 : selectStatus === 'Realizadas' ?
                   <TextPontuarioAppointment
-                    onPress={() => {
+                    onPress={() => {                      
                       setShowModalMedicalRecord(true)
                       setConsultSelect(data)
                     }}

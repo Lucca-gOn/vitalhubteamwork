@@ -9,6 +9,7 @@ import { IconX } from "../../components/Icons/style";
 import { ButtonIcon } from "../../components/Buttons/style";
 import { useState } from "react";
 import api from "../../service/Service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NewPassword({
   navigation,
@@ -20,17 +21,17 @@ export default function NewPassword({
 
   async function updatePassword(){
     if(newPassword === confirmPassword){
-      await api.put(`/Usuario/AlterarSenha?email=${route.params.emailRecuperacao}`,{
+      await api.put(`/Usuario/AlterarSenha?email=${route.params.email}`,{
         senhaNova: newPassword
       }).then( async () =>{
         //navigation.replace('Login')
         try {
           const response = await api.post('/Login', {            
-            email: route.params.emailRecuperacao,
+            email: route.params.email,
             senha: newPassword            
           })
           //console.log(response.data)
-          await AsyncStorage.setItem('token', JSON.stringify(response.data))
+          //await AsyncStorage.setItem('token', JSON.stringify(response.data))
   
           navigation.navigate('Main')
             setTimeout(()=>{

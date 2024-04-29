@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
                 user.Email = pacienteModel.Email;
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
 
-                var conatainerName = "blobvitalcontainerallan";
+                var conatainerName = "";
                 var connectioString = "";
                 user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo, connectioString, conatainerName);
 
@@ -89,7 +89,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            
+
         }
 
         [HttpGet("BuscarPorData")]
@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("UpdateProfile")]
-        public IActionResult UpdateProfile(Guid idUsuario, PacienteViewModel paciente)
+        public IActionResult UpdateProfile(  Guid idUsuario, [FromBody]PacienteViewModel paciente)
         {
             try
             {
