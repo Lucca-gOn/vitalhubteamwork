@@ -48,8 +48,8 @@ export const ModalCancel = ({
   }
 
   async function alterarDadosConsulta() {
-    let idSituacaoCancelada = encontraIdConsultaCancelada();    
-   
+    let idSituacaoCancelada = encontraIdConsultaCancelada();
+
     try {
       await api.put(`/Consultas/Status?idConsulta=${consultSelect}&status=${idSituacaoCancelada}`)
       handleCallNotifications();
@@ -57,7 +57,7 @@ export const ModalCancel = ({
         setRenderizaDados(false)
       } else {
         setRenderizaDados(true)
-      }      
+      }
     } catch (error) {
       alert('Erro ao fazer alteração nos dados: ', error)
     }
@@ -139,12 +139,12 @@ export const ModalMedicalRecord = ({
   setShowModalMedicalRecord,
   showModalMedicalRecord,
 }) => {
-  console.log('ModalMedicalRecord',consultSelect.paciente?.idNavigation?.foto)
+  console.log('ModalMedicalRecord', consultSelect.paciente?.idNavigation?.foto)
   const [idade, setIdade] = useState('');
-  
-  
+
+
   let foto
-  
+
   const calculateAge = () => {
     const dataNascimento = consultSelect.paciente?.dataNascimento
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
@@ -152,7 +152,7 @@ export const ModalMedicalRecord = ({
     const years = today.diff(dob, 'years');
     setIdade(years);
   };
-  
+
   useEffect(() => {
     foto = consultSelect.paciente?.idNavigation?.foto
     calculateAge();
@@ -215,6 +215,22 @@ export const ModalScheduleAppointment = ({
   showModalScheduleAppointment,
   navigation
 }) => {
+
+  const [agendamento, setAgendamento] = useState(null)
+  const [isSelected, setIsSelected] = useState(false)
+  const [tipoConsulta, setTipoConsulta] = useState("")
+
+  const niveisConsulta = [
+    { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
+    { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Exame' },
+    { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Urgência' },
+  ];
+
+  function handleContinue() {
+    setShowModalScheduleAppointment(false);
+    navigation.navigate("SelectClinic", {agendamento: agendamento});
+  }
+
   return (
     <Modal
       transparent={true}
@@ -251,24 +267,46 @@ export const ModalScheduleAppointment = ({
               <TextLabelBlack>Qual o nível da consulta</TextLabelBlack>
 
               <ContainerMargin $fd="row" $justContent="space-between" $mt={10} $width="100%">
-                <ButtonSelectGreen texto={'Rotina'} />
-                <ButtonSelectGreen texto={'Exame'} />
-                <ButtonSelectGreen texto={'Urgência'} />
+                {
+                  niveisConsulta.map((item) => (
+                    <ButtonSelectGreen
+                      key={item.id}
+                      texto={item.tipo}
+                      selectStatus={tipoConsulta == item.tipo ? true : false}
+                      onPress={() => {
+                        setAgendamento({
+                          ...agendamento,
+                          prioridadeId: item.id,
+                          prioridadeLabel: item.tipo
+                        });
+                        setTipoConsulta(item.tipo)
+                        console.log(agendamento);
+                      }}
+                    />
+                  ))
+                }
               </ContainerMargin>
+
+
             </ContainerMargin>
 
             <ContainerMargin $width="80%" $mt={20} $alingItens="flex-start">
               <TextLabelBlack>Informe a localização desejada</TextLabelBlack>
-              <InputGreen placeholder="Informe a localização"></InputGreen>
+              <InputGreen
+                placeholder="Informe a localização"
+                
+                value={agendamento ? agendamento.localizacao : null}
+
+                onChangeText={(txt) => setAgendamento({
+                  ...agendamento,
+                  localizacao: txt
+                })} />
             </ContainerMargin>
 
 
 
             <ContainerMargin $mt={143} $mb={35} $gap={30} $width="80%">
-              <ButtonDefault textButton="Continuar" onPress={() => {
-                navigation.navigate('SelectClinic')
-                setShowModalScheduleAppointment(false)
-              }} />
+              <ButtonDefault textButton="Continuar" onPress={() => handleContinue()} />
 
               <LinkUnderlineDefault
                 onPress={() => setShowModalScheduleAppointment(false)}
@@ -376,7 +414,7 @@ export const ModalShowLocalConsult = ({
   rolesConsultaSelect
 }) => {
 
-  console.log('roles modal: ',rolesConsultaSelect)
+  console.log('roles modal: ', rolesConsultaSelect)
   return (
     <Modal
       transparent={true}
@@ -395,7 +433,7 @@ export const ModalShowLocalConsult = ({
 
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={{uri: rolesConsultaSelect.idNavigation?.foto}} $width="90%" $height="181px" />
+            <ImageUser source={{ uri: rolesConsultaSelect.idNavigation?.foto }} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
@@ -404,7 +442,7 @@ export const ModalShowLocalConsult = ({
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-            {rolesConsultaSelect.especialidade?.especialidade1}
+              {rolesConsultaSelect.especialidade?.especialidade1}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
               CRM-{rolesConsultaSelect.crm}
@@ -412,12 +450,12 @@ export const ModalShowLocalConsult = ({
           </ContainerMargin>
 
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
-            <ButtonDefault 
-            textButton="Ver local da consulta" 
-            onPress={()=>{
-              navigation.navigate('ConsultationAddress', {modalLocal: consultSelect})
-              setShowModalShowLocalConsult(false)
-            }} />
+            <ButtonDefault
+              textButton="Ver local da consulta"
+              onPress={() => {
+                navigation.navigate('ConsultationAddress', { modalLocal: consultSelect })
+                setShowModalShowLocalConsult(false)
+              }} />
 
             <LinkUnderlineDefault onPress={() => {
               setShowModalShowLocalConsult(false)
@@ -486,46 +524,46 @@ export const ModalCamera = ({
 
   useEffect(() => {
     (async () => {
-        const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-        if (cameraStatus !== 'granted') {
-            alert('Sorry, we need camera permissions to make this work');
-        }
-        await MediaLibary.requestPermissionsAsync();
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+      if (cameraStatus !== 'granted') {
+        alert('Sorry, we need camera permissions to make this work');
+      }
+      await MediaLibary.requestPermissionsAsync();
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     })();
-}, []);
+  }, []);
 
 
-  async function selectImageGallery(){
+  async function selectImageGallery() {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes : ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1
     })
 
-    if(!result.canceled){
+    if (!result.canceled) {
       //setPhotoCam(result.assets[0].uri);
       setFoto(result.assets[0].uri);
       setOpenModal(false)
-      setShowModalCamera(false)            
+      setShowModalCamera(false)
     }
   }
 
 
 
-  async function getLastPhoto(){
-    const {assets} = await MediaLibary.getAssetsAsync({ sortBy : [[MediaLibary.SortBy.creationTime, false]], first:1})
+  async function getLastPhoto() {
+    const { assets } = await MediaLibary.getAssetsAsync({ sortBy: [[MediaLibary.SortBy.creationTime, false]], first: 1 })
     //console.log(assets);
-    if(assets.length > 0){
+    if (assets.length > 0) {
       setLatestPhoto(assets[0].uri)
     }
   }
 
   useEffect(() => {
     setPhotoCam(null)
-    if(getMediaLibary){
+    if (getMediaLibary) {
       getLastPhoto();
     }
-  },[showModalCamera])
+  }, [showModalCamera])
 
   return (
     <Modal
@@ -556,13 +594,13 @@ export const ModalCamera = ({
 
           </Camera>
           <ContainerMargin $fd="row" $justContent="space-between" $mt={30}>
-            <TouchableOpacity onPress={()=> selectImageGallery()} style={{padding:12, backgroundColor: 'black',borderRadius: 15}}>
+            <TouchableOpacity onPress={() => selectImageGallery()} style={{ padding: 12, backgroundColor: 'black', borderRadius: 15 }}>
               {
-                latestPhoto !== null 
-                ? (
-                  <Image source={{uri: latestPhoto}} style={{width:40,height:40,borderRadius:5,borderWidth: 1, borderColor: 'white'}} ></Image>
-                )
-                : null
+                latestPhoto !== null
+                  ? (
+                    <Image source={{ uri: latestPhoto }} style={{ width: 40, height: 40, borderRadius: 5, borderWidth: 1, borderColor: 'white' }} ></Image>
+                  )
+                  : null
               }
             </TouchableOpacity>
             <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
@@ -573,8 +611,8 @@ export const ModalCamera = ({
             </TouchableOpacity>
           </ContainerMargin>
 
-              
-          <Modal animationType='slide' transparent={true} visible={photoCam!== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
+
+          <Modal animationType='slide' transparent={true} visible={photoCam !== null} onRequestClose={() => setOpenModal(false)} style={{ justifyContent: "center", alignItems: "center" }}>
             <Container $justContent="center"
               $bgColor="rgba(0,0,0,0.3)">
               <View style={{ alignItems: 'center', justifyContent: 'center', padding: 30, backgroundColor: '#FFF', width: '90%', borderRadius: 10 }}>
@@ -585,7 +623,7 @@ export const ModalCamera = ({
                   </TouchableOpacity>
 
                   <TouchableOpacity style={stylesCamera.btnUpload} onPress={() => {
-                    savePhoto()                    
+                    savePhoto()
                     setOpenModal(false)
                     setShowModalCamera(false)
                   }}>
@@ -636,7 +674,7 @@ const stylesCamera = StyleSheet.create({
     fontSize: 20,
     color: '#FFF',
   },
-  btnCaptura: {    
+  btnCaptura: {
     padding: 20,
     borderRadius: 50,
     backgroundColor: '#121212',
@@ -644,7 +682,7 @@ const stylesCamera = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  btnSwitch: {    
+  btnSwitch: {
     padding: 20,
     borderRadius: 15,
     backgroundColor: '#121212',

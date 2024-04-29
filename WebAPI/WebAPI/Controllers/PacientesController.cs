@@ -59,11 +59,7 @@ namespace WebAPI.Controllers
                 user.Email = pacienteModel.Email;
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
 
-<<<<<<< HEAD
                 var conatainerName = "";
-=======
-                var conatainerName = "blobvitalcontainerallan";
->>>>>>> origin/allan
                 var connectioString = "";
                 user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo, connectioString, conatainerName);
 
@@ -75,7 +71,6 @@ namespace WebAPI.Controllers
                 user.Paciente.DataNascimento = pacienteModel.DataNascimento;
                 user.Paciente.Rg = pacienteModel.Rg;
                 user.Paciente.Cpf = pacienteModel.Cpf;
-<<<<<<< HEAD
 
                 user.Paciente.Endereco = new Endereco();
 
@@ -95,27 +90,6 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
 
-=======
-
-                user.Paciente.Endereco = new Endereco();
-
-                user.Paciente.Endereco.Logradouro = pacienteModel.Logradouro;
-                user.Paciente.Endereco.Numero = pacienteModel.Numero;
-                user.Paciente.Endereco.Cep = pacienteModel.Cep;
-                user.Paciente.Endereco.Cidade = pacienteModel.Cidade;
-
-                pacienteRepository.Cadastrar(user);
-
-                await _emailSendingService.SendWelcomeEmail(user.Email!, user.Nome!);
-
-                return Ok(user);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            
->>>>>>> origin/allan
         }
 
         [HttpGet("BuscarPorData")]
@@ -132,11 +106,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("UpdateProfile")]
-<<<<<<< HEAD
-        public IActionResult UpdateProfile(  Guid idUsuario, [FromBody]PacienteViewModel paciente)
-=======
-        public IActionResult UpdateProfile(Guid idUsuario, PacienteViewModel paciente)
->>>>>>> origin/allan
+        public IActionResult UpdateProfile(Guid idUsuario, [FromBody] PacienteViewModel paciente)
         {
             try
             {
@@ -149,4 +119,3 @@ namespace WebAPI.Controllers
         }
     }
 }
-

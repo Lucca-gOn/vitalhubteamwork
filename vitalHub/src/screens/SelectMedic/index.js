@@ -9,7 +9,8 @@ import { MedicCardData } from "../../components/MedicCardData";
 import api from "../../service/Service";
 
 export default function SelectMedic({
-  navigation
+  navigation,
+  route
 }) {
 
   const [select, setSelect] = useState(null)
@@ -17,11 +18,21 @@ export default function SelectMedic({
 
   async function ListarMedicos(){
     //Instanciar a chamada da api
-    api.get('/Medicos')
+    api.get(`/Medicos/BuscarPorIdClinica?id=${route.params.agendamento.clinicaId}`)
     .then( response => {
-      setMedicosLista(response.data)
+      setMedicosLista(medicosLista)
+      console.log(data);
     }).catch( error =>{
       console.log(error);
+    })
+  }
+
+  function handleContinue() {
+    navigation.replace("SelectDate", {
+      agendamento: {
+        ...route.params.agendamento,
+        ...medicosLista
+      }
     })
   }
 
@@ -56,7 +67,7 @@ export default function SelectMedic({
       </FlatList>
 
       <ContainerMargin $mt={30} $mb={35} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" onPress={()=>{ navigation.navigate('SelectDate')}} />
+        <ButtonDefault textButton="Continuar" onPress={handleContinue()} />
 
         <LinkUnderlineDefault
           onPress={() => {

@@ -9,7 +9,8 @@ import api from "../../service/Service";
 
 
 export default function SelectClinic({
-  navigation
+  navigation,
+  route
 }) {
 
   const [select, setSelect] = useState(null)
@@ -17,13 +18,23 @@ export default function SelectClinic({
 
   async function ListarClinicas(){
     try {
-      const response = await api.get('/Clinica/ListarTodas');
+      const response = await api.get(`/Clinica/BuscarPorCidade?cidade=${route.params.agendamento.localizacao}`);
       setClinicList(response.data);
       console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   }
+
+  function handleContinue(){
+    navigation.replace("SelectMedic",{
+      agendamento : {
+        ...route.params.agendamento,
+        ...clinicList
+      }
+    }
+    
+  )}
 
   useEffect(() => {
     ListarClinicas()
@@ -56,7 +67,7 @@ export default function SelectClinic({
       </FlatList>
 
       <ContainerMargin $mt={30} $mb={35} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" onPress={() => navigation.navigate('SelectMedic')} />
+        <ButtonDefault textButton="Continuar" onPress={() => handleContinue()} />
 
         <LinkUnderlineDefault onPress={() => {
           navigation.reset({

@@ -61,7 +61,7 @@ export const ButtonSelectGreenStyle = styled(ButtonSelectStyle)`
     if (selectStatus) {
       return css`
         border:none;
-        background-color: #60BFC5;      
+        background-color: #60BFC5;   
       `
     }else{
       return css`

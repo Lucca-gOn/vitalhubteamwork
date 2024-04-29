@@ -23,19 +23,11 @@ namespace WebAPI.ViewModels
         public string? Nome { get; set; }
 
         public string? Email { get; set; }
-       
+
         public string? Senha { get; set; }
 
         public Guid IdTipoUsuario { get; set; }
-<<<<<<< HEAD
-        
-=======
 
-        [NotMapped]
-        [JsonIgnore]
-        public IFormFile? Arquivo { get; set; }
-
->>>>>>> origin/allan
         public string? Foto { get; set; }
 
         [JsonIgnore]
