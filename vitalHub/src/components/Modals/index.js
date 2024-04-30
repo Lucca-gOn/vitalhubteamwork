@@ -17,6 +17,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image"
 import api from "../../service/Service"
 import moment from "moment"
+import { userDecodeToken } from '../../utils/Auth';
+
 
 Notifications.requestPermissionsAsync();
 
@@ -139,7 +141,7 @@ export const ModalMedicalRecord = ({
   setShowModalMedicalRecord,
   showModalMedicalRecord,
 }) => {
-  console.log('ModalMedicalRecord', consultSelect.paciente?.idNavigation?.foto)
+  //console.log('ModalMedicalRecord', consultSelect.paciente?.idNavigation?.foto)
   const [idade, setIdade] = useState('');
 
 
@@ -326,9 +328,40 @@ export const SummaryMedicalAgenda = ({
   data,
   setShowSummaryMedicalAgenda,
   showSummaryMedicalAgenda,
-  navigation
+  navigation,
+  agendamento,
+  ...rest
 }) => {
 
+  const [profile, setProfile] = useState(null);
+
+  async function profileLoad() {
+    const token = await userDecodeToken();
+    console.log(token);
+    if (token) {
+      setProfile(token);
+    }
+  }
+
+  async function ConfirmarConsulta() {
+    await api.post('/Consultas/Cadastrar', {
+      ...agendamento,
+      pacienteId : profile.id,
+      situacaoId : 'DBCAE12A-D2B0-4317-8D37-AFF292B4017C',
+    }).then( async response => {
+      await setShowSummaryMedicalAgenda(false)
+
+      navigation.replace("Main");
+    }).catch(error => {
+      console.log(error);
+    })
+    console.log("Agendamento aqui:", agendamento);
+
+  }
+
+  useEffect(() => {
+    profileLoad();
+  },[])
   return (
 
     <Modal
@@ -361,32 +394,26 @@ export const SummaryMedicalAgenda = ({
           <ContainerMargin $alingItens="flex-start" $gap={20} >
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Data da consulta</TextLabel>
-              <TextData>1 de Novembro de 2023</TextData>
+              <TextData>{ moment(agendamento.dataConsulta).format('DD/MM/YYYY HH:mm')}</TextData>
             </ContainerMargin>
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Médico(a) da consulta</TextLabel>
-              <TextData>Dra Alessandra</TextData>
-              <TextData>Demartologa, Esteticista</TextData>
+              <TextData>{agendamento.medicoLabel}</TextData>
+              {/* <TextData>Demartologa, Esteticista</TextData> */}
             </ContainerMargin>
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Local da consulta</TextLabel>
-              <TextData>São Paulo, SP</TextData>
+              <TextData>{agendamento.localizacao}</TextData>
             </ContainerMargin>
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Tipo da consulta</TextLabel>
-              <TextData>Rotina</TextData>
+              <TextData>{agendamento.prioridadeLabel}</TextData>
             </ContainerMargin>
           </ContainerMargin>
 
 
           <ContainerMargin $mt={30} $mb={30} $gap={30} $width="90%">
-            <ButtonDefault textButton="Confirmar" onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Main' }]
-              })
-              setShowSummaryMedicalAgenda(false)
-            }} />
+            <ButtonDefault textButton="Confirmar" onPress={ConfirmarConsulta}/>
 
             <LinkUnderlineDefault onPress={() => {
               navigation.reset({
@@ -414,7 +441,7 @@ export const ModalShowLocalConsult = ({
   rolesConsultaSelect
 }) => {
 
-  console.log('roles modal: ', rolesConsultaSelect)
+  //console.log('roles modal: ', rolesConsultaSelect)
   return (
     <Modal
       transparent={true}
