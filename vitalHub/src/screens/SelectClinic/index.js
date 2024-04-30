@@ -15,6 +15,7 @@ export default function SelectClinic({
 
   const [select, setSelect] = useState(null)
   const [clinicList, setClinicList] = useState([]);
+  const [clinica, setClinica] = useState(null)
 
   async function ListarClinicas(){
     try {
@@ -30,10 +31,9 @@ export default function SelectClinic({
     navigation.replace("SelectMedic",{
       agendamento : {
         ...route.params.agendamento,
-        ...clinicList
+        ...clinica
       }
     }
-    
   )}
 
   useEffect(() => {
@@ -54,7 +54,17 @@ export default function SelectClinic({
         renderItem={({ item }) => (
           <ClinicCardData
             data={item}
-            onPress={() => setSelect(item.id)}
+            onPress={() => {
+              setSelect(item.id)
+              setClinica({
+                ...clinica,
+                clinicaId : item.id,
+                clinicaLabel: item.nomeFantasia
+                
+              })
+              console.log(clinica);
+            }}
+            
             select={select === item.id}
           />
         )}
@@ -67,7 +77,7 @@ export default function SelectClinic({
       </FlatList>
 
       <ContainerMargin $mt={30} $mb={35} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" onPress={() => handleContinue()} />
+        <ButtonDefault textButton="Continuar" onPress={handleContinue} />
 
         <LinkUnderlineDefault onPress={() => {
           navigation.reset({
