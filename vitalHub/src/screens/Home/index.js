@@ -1,11 +1,11 @@
-import { ActivityIndicator, FlatList, StatusBar, View } from "react-native";
-import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer";
+import { FlatList, StatusBar } from "react-native";
+import { Container, ContainerMargin } from "../../components/Conatainer";
 import { Header } from "../../components/Header";
 import { CalendarListWeek } from "../../components/Calendars";
-import { ButtonNotSelect, ButtonSelect } from "../../components/Buttons";
+import { ButtonSelect } from "../../components/Buttons";
 import { useEffect, useState } from "react";
 import CardAppointment from "../../components/CardAppointment";
-import { ModalCancel, ModalDataConsult, ModalMedicalRecord, ModalScheduleAppointment, ModalShowLocalConsult } from "../../components/Modals";
+import { ModalCancel, ModalMedicalRecord, ModalScheduleAppointment, ModalShowLocalConsult } from "../../components/Modals";
 import { Stethoscope } from "../../components/Stethoscope";
 import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
@@ -24,22 +24,21 @@ export default function Home(
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
   const [showModalShowLocalConsult,setShowModalShowLocalConsult]= useState(false);
   const [consultSelect, setConsultSelect] = useState({});
-  const [rolesConsultaSelect,setRolesConsultaSelect] = useState({})
-  const [consultas, setConsultas] = useState({})
-  const [dadosSituacoes, setDadosSituacoes] = useState({})
+  const [dadosCard,setDadosCard] = useState({});
+  const [consultas, setConsultas] = useState({});
+  const [dadosSituacoes, setDadosSituacoes] = useState({});
   const [dateConsult, setDateConsult] = useState('');  
-  const [profile, setProfile] = useState({})
+  const [profile, setProfile] = useState({});
   const [renderizaDados, setRenderizaDados]= useState(false);
   const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada :'Agendadas');
   const [situacao, setSituacao] = useState("");
   
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   const { name, foto,  role } = profile;
-  
-  
+    
+  console.log(profile)
   // Função para obter os dados descriptografados do token
-  async function profileLoad() {
-    console.log('execultou ProfileLoad')
+  async function profileLoad() {    
     const token = await userDecodeToken();
     setProfile(token);
     setDateConsult(route.params && route.params.dateConsulta ? route.params.dateConsulta : moment().format('YYYY-MM-DD'))
@@ -63,8 +62,7 @@ export default function Home(
       // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
     }).catch(error => {
       console.log('Erro ao listar Consultas: ', error);
-    })
-    
+    })    
   }
 
   //Executando a função ProfileLoad
@@ -80,7 +78,6 @@ export default function Home(
   }, [dateConsult, useIsFocused(), renderizaDados])
 
   return (
-
     <Container $bgColor="#fbfbfb">
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
@@ -112,8 +109,7 @@ export default function Home(
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setShowModalShowLocalConsult={setShowModalShowLocalConsult}
                 setConsultSelect={setConsultSelect}
-                setRolesConsultaSelect={setRolesConsultaSelect}
-                dadosSituacoes={dadosSituacoes}
+                setDadosCard={setDadosCard}                
               />
             )
           }
@@ -143,9 +139,12 @@ export default function Home(
       />
       <ModalMedicalRecord
         navigation={navigation}
-        consultSelect={consultSelect}
+        consultSelect={consultSelect}     
+        profile={profile}   
+        dadosSituacoes={dadosSituacoes}
         setShowModalMedicalRecord={setShowModalMedicalRecord}
         showModalMedicalRecord={showModalMedicalRecord}
+        role={role}
       />
 
       {/* Modal Agendar Consulta */}
@@ -160,12 +159,10 @@ export default function Home(
         navigation={navigation}
         showModalShowLocalConsult={showModalShowLocalConsult}
         setShowModalShowLocalConsult={setShowModalShowLocalConsult}
-        rolesConsultaSelect={rolesConsultaSelect}
+        dadosCard={dadosCard}
       />
 
     </Container>
-
-
   )
 }
 

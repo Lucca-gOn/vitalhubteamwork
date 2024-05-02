@@ -14,8 +14,7 @@ import Profile from '../Profile'
 
 export const Main = ({
   route
-}) => {
-  console.log(route.params)
+}) => {  
   return (
     <BottomTab.Navigator
       // Definir a rota inicial

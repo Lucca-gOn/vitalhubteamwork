@@ -25,6 +25,8 @@ export default function Profile({ navigation }) {
   const [cidade, setCidade] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
+  const [uriFotoCam,setUriFotoCam] = useState(null);
+  
 
   const { role } = profile
 
@@ -69,12 +71,12 @@ export default function Profile({ navigation }) {
     }
   };
 
-  async function alterarFotoPerfil() {
-
+  async function alterarFotoPerfil(){
+    alert('Chamou a função alterarFotoPerfil')
     const formData = new FormData();
 
     formData.append("Arquivo", {
-      uri: foto,
+      uri: uriFotoCam,
       name: `image.jpg`,
       type: `image/jpg`,
     })
@@ -83,9 +85,11 @@ export default function Profile({ navigation }) {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    }).then(response => {
-      //console.log('resposta de alterar foto : ',response)
-    }).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
+    }).then( () => {
+
+      setFoto(uriFotoCam)
+    }
+    ).catch(error =>{console.log('Erro ao alterar a foto : ',error.request)})
   }
 
   async function alterarDadosProfile() {
@@ -113,28 +117,28 @@ export default function Profile({ navigation }) {
     profileLoad();
   }, []);
 
-  useEffect(() => {
-    if (foto) {
-      alterarFotoPerfil()
+  useEffect(()=>{
+    if(uriFotoCam){
+      alterarFotoPerfil()      
     }
-  }, [foto]);
+  },[uriFotoCam]);
 
-
+  
 
   return (
     <Container>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
       <ContainerMargin style={{ position: "relative" }}>
-        <ImageUser source={uri = foto} $width="100%" $height="280px" />
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ backgroundColor: '#496BBA', position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white' }}
-          onPress={() => setShowModalCamera(true)}
+        <ImageUser source={uri=foto} $width="100%" $height="280px" />
+        <TouchableOpacity 
+        activeOpacity={0.8} 
+        style={{backgroundColor:'#496BBA',position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white',zIndex: 1}}
+        onPress={()=> setShowModalCamera(true)}
         >
           <MaterialCommunityIcons name="camera-plus" size={24} color="white" />
         </TouchableOpacity>
       </ContainerMargin>
-      <ContainerScrollView showsVerticalScrollIndicator={false}>
+      <ContainerScrollView  showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>{user?.nome}</Title>
@@ -156,6 +160,7 @@ export default function Profile({ navigation }) {
                 onChangeText={(text) => {
                   setCRM(text);
                 }}
+                style={{zIndex:0}}
               />
             </ContainerMargin>
 
@@ -264,8 +269,8 @@ export default function Profile({ navigation }) {
 
         </ContainerMargin>
       </ContainerScrollView>
-      <ModalCamera setFoto={setFoto} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
-    </Container>
+      <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+    </Container>    
   );
 
 }

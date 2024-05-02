@@ -140,26 +140,24 @@ export const ModalMedicalRecord = ({
   consultSelect,
   setShowModalMedicalRecord,
   showModalMedicalRecord,
+  dadosSituacoes,
+  role,
+  profile
 }) => {
-  //console.log('ModalMedicalRecord', consultSelect.paciente?.idNavigation?.foto)
-  const [idade, setIdade] = useState('');
 
-
-  let foto
-
-  const calculateAge = () => {
-    const dataNascimento = consultSelect.paciente?.dataNascimento
+  const foto  = consultSelect.paciente?.idNavigation?.foto;
+  const nome = consultSelect.paciente?.idNavigation?.nome;
+  const email = consultSelect.paciente?.idNavigation?.email;
+  const dataNascimento = consultSelect.paciente?.dataNascimento;
+  
+  const calculateAge = () => {    
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
-    const years = today.diff(dob, 'years');
-    setIdade(years);
+    const years = today.diff(dob, 'years');    
+    
+    return years > 1 ? `${years} anos` : `${years} ano`
   };
-
-  useEffect(() => {
-    foto = consultSelect.paciente?.idNavigation?.foto
-    calculateAge();
-  }, [])
-
+  
   return (
     <Modal
       transparent={true}
@@ -181,22 +179,22 @@ export const ModalMedicalRecord = ({
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
-              {consultSelect.name}
+              {nome}
             </Title>
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-              {idade}
+              {calculateAge()}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
-              {consultSelect.email}
+              {email}
             </TextQuickSandRegular>
           </ContainerMargin>
 
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
             <ButtonDefault textButton="Inserir prontuário" onPress={() => {
               setShowModalMedicalRecord(false)
-              navigation.navigate('MedicalRecord', consultSelect);
+              navigation.navigate('MedicalRecord', {dadosConsulta:consultSelect, profile: profile, role: role, dadosSituacoes:dadosSituacoes});
             }} />
 
             <LinkUnderlineDefault onPress={() => {
@@ -438,10 +436,10 @@ export const ModalShowLocalConsult = ({
   showModalShowLocalConsult,
   setShowModalShowLocalConsult,
   consultSelect,
-  rolesConsultaSelect
+  dadosCard
 }) => {
 
-  //console.log('roles modal: ', rolesConsultaSelect)
+  
   return (
     <Modal
       transparent={true}
@@ -460,19 +458,19 @@ export const ModalShowLocalConsult = ({
 
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={{ uri: rolesConsultaSelect.idNavigation?.foto }} $width="90%" $height="181px" />
+            <ImageUser source={{uri: dadosCard.idNavigation?.foto}} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
-              Dr(ª) {rolesConsultaSelect.idNavigation?.nome}
+              Dr(ª) {dadosCard.idNavigation?.nome}
             </Title>
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-              {rolesConsultaSelect.especialidade?.especialidade1}
+            {dadosCard.especialidade?.especialidade1}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
-              CRM-{rolesConsultaSelect.crm}
+              CRM-{dadosCard.crm}
             </TextQuickSandRegular>
           </ContainerMargin>
 
@@ -501,7 +499,7 @@ export const ModalCamera = ({
   showModalCamera,
   setShowModalCamera,
   navigation,
-  setFoto,
+  setUriFotoCam,
   getMediaLibary = false
 }) => {
 
@@ -531,7 +529,7 @@ export const ModalCamera = ({
       await MediaLibary.createAssetAsync(photoCam)
         .then(() => {
           alert('Sucesso, Foto Salva na Galeria');
-          setFoto(photoCam)
+          setUriFotoCam(photoCam)
         })
         .catch(error => {
           alert("Erro ao salvar foto. Detalhe : ", error);
@@ -569,7 +567,7 @@ export const ModalCamera = ({
 
     if (!result.canceled) {
       //setPhotoCam(result.assets[0].uri);
-      setFoto(result.assets[0].uri);
+      setUriFotoCam(result.assets[0].uri);
       setOpenModal(false)
       setShowModalCamera(false)
     }
