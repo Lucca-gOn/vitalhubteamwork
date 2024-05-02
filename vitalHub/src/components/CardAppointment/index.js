@@ -15,17 +15,18 @@ export default CardAppointment = (
     setShowModalMedicalRecord,
     setConsultSelect,
     selectStatus,
-    setRolesConsultaSelect,
+    setDadosCard,
     data,
-    setShowModalShowLocalConsult,
-    dadosSituacoes,
+    setShowModalShowLocalConsult,    
     role
   }
 ) => {
   const [idade, setIdade] = useState();
 
+  //Roles traz os dados de paciente de for medico e de medico se for paciente.
   const roles = role == 'Medico' ? data.paciente : data.medicoClinica.medico;
 
+  //console.log(roles)
   const dataNascimento = roles.dataNascimento
   const foto = roles.idNavigation.foto
   const tipoConsulta = data.prioridade.prioridade
@@ -40,9 +41,7 @@ export default CardAppointment = (
 
   useEffect(() => {
     calculateAge();
-  }, [])
-
-  console.log('Card : ', data)
+  }, [])  
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
       <TouchableOpacity
@@ -52,16 +51,17 @@ export default CardAppointment = (
           role == 'Medico' && data.situacao.situacao == 'Agendadas' ?
             (
               setShowModalMedicalRecord(true),
-              setConsultSelect(data)
+              setConsultSelect(data),
+              setDadosCard(roles)
             )
             :
             role == 'Medico' && data.situacao.situacao == 'Realizadas' ?
-              navigation.navigate('MedicalRecord', { dadosConsulta: data, idade: idade, role: role, dadosSituacoes: dadosSituacoes }) :
+              navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role}) :
 
               //navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
               setShowModalShowLocalConsult(true)
           setConsultSelect(data)
-          setRolesConsultaSelect(roles)
+          setDadosCard(roles)
 
         }}
       >
@@ -95,7 +95,7 @@ export default CardAppointment = (
                 : selectStatus === 'Realizadas' ?
                   <TextPontuarioAppointment
                     onPress={() => {
-                      navigation.navigate('MedicalRecord', { dadosConsulta: data })
+                      navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role})
                     }}
                   >
                     Ver Prontuario</TextPontuarioAppointment>
