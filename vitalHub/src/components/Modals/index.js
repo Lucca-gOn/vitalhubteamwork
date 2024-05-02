@@ -518,7 +518,7 @@ export const ModalCamera = ({
 
   async function capturePhoto() {
     if (cameraRef) {
-      const photo = await cameraRef.current.takePictureAsync();
+      const photo = await cameraRef.current.takePictureAsync({quality:1});
       setPhotoCam(photo.uri);
       setOpenModal(true);
     }
@@ -526,6 +526,7 @@ export const ModalCamera = ({
 
   async function savePhoto() {
     if (photoCam) {
+      console.log(photoCam)
       await MediaLibary.createAssetAsync(photoCam)
         .then(() => {
           alert('Sucesso, Foto Salva na Galeria');

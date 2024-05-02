@@ -24,6 +24,7 @@ export default function MedicalRecord({
   const [descricaoExame, setDescricaoExame] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false);
   const [disabledInput, setDisableInput] = useState(false);
+  const [uriFotoCam,setUriFotoCam] = useState(null);
 
   const nome = route.params?.dadosConsulta?.paciente?.idNavigation?.nome || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.nome;
   const email = route.params?.dadosConsulta?.paciente?.idNavigation?.email || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.email;
@@ -32,7 +33,7 @@ export default function MedicalRecord({
 
   const dadosSituações = route.params?.dadosSituacoes;
 
-  const idConsulta = route.params?.dadosConsulta?.id;a
+  const idConsulta = route.params?.dadosConsulta?.id;
   const dataNascimento = route.params?.dadosConsulta?.paciente?.dataNascimento;
   const fotoCam = route.params?.fotoCam;
   const situacaoConsulta = route.params?.dadosConsulta?.situacao?.situacao;
@@ -95,9 +96,9 @@ export default function MedicalRecord({
     const formData = new FormData();
     formData.append("ConsultaId", produtario)
     formData.append("Imagem", {
-      uri: foto,
-      name: `image.${foto.split('.').pop()}`,
-      type: `image/${foto.split('.').pop()}`
+      uri: uriFotoCam,
+      name: `image.${uriFotoCam.split('.').pop()}`,
+      type: `image/${uriFotoCam.split('.').pop()}`
     })
 
     await api.post(`/Exame/Cadastrar`, formData, {
@@ -118,6 +119,12 @@ export default function MedicalRecord({
   useEffect(() => {
     verificaProntuario()
   }, [])
+
+  useEffect(()=>{
+    if(uriFotoCam != null) {
+      InserirExame();
+    }
+  }, [uriFotoCam])
   
   return (
     <Container>
@@ -186,9 +193,8 @@ export default function MedicalRecord({
                 <TextLabel>Exames médicos</TextLabel>
 
                 <ContainerMargin $width="100%" $height="111px" $bgColor="#F5F3F3" $borderRadius={5} $fd="row" $gap={9}>
-                  {fotoCam !== undefined ?
-
-                    <Image source={fotoCam !== undefined ? { uri: fotoCam.photoCam } : require('../../assets/images/NotImage.svg')} style={{ width: "100%", height: '100%', resizeMode: "cover" }} />
+                  {uriFotoCam !== null ?
+                    <Image source={{ uri: uriFotoCam }} style={{ width: "100%", height: '100%', contentfit: "cover" }} />
                     :
                     <>
                       <Image source={require('../../assets/images/ImageExclamation.svg')} style={{ width: 16, height: 18 }} />
@@ -248,7 +254,7 @@ export default function MedicalRecord({
 
       </ContainerScrollView>
 
-      <ModalCamera showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
 
     </Container>
   )

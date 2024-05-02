@@ -59,9 +59,9 @@ namespace WebAPI.Controllers
                 user.Email = pacienteModel.Email;
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
 
-                var conatainerName = "";
-                var connectioString = "";
-                user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo, connectioString, conatainerName);
+                var containerName = "";
+                var connectionString = "";
+                user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo, connectionString, containerName);
 
 
                 user.Senha = pacienteModel.Senha;

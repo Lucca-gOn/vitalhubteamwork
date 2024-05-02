@@ -27,7 +27,8 @@ namespace WebAPI.Controllers
             _ocrService = ocrService;
         }
 
-        // Método de ação do controlador que lida com solicitações POST na rota "Cadastrar"
+        // Método de ação do controlador que lida com solicitações POST na rota "Cadastrar"\
+        [RequestSizeLimit(100_000_000)]
         [HttpPost("Cadastrar")]
         public async Task<IActionResult> Post([FromForm] ExameViewModel exameViewModel)
         {
