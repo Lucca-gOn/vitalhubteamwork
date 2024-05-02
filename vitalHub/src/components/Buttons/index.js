@@ -78,7 +78,7 @@ export const ButtonSelectGreen = ({
   )
 }
 
-export const ButtonGreen = ({
+export const ButtonGreenCam = ({
   onPress
 }) => {
   return (
