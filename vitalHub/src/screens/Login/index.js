@@ -26,14 +26,13 @@ export default function Login({
   //Chamar a funcao de login
   async function Login() {
     // chamar a api de login 
-    if (isFocused) {
-      console.log('FIZ REQUISIÇÃO')
+    if (isFocused) {      
       try {
         const response = await api.post('/Login', {
-          // email: 'caio@caio.com',
-          // senha: 'caio'
-          email: 'lucas@lucas.com',
-          senha: 'lucas'
+          email: email,
+          senha: senha
+          // email: 'lucas@lucas.com',
+          // senha: 'lucas'
           // email: 'allan@allan.com',
           // senha: 'allan'
         })
