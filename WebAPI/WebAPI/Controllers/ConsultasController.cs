@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
             consultaRepository = new ConsultaRepository();
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("ConsultasPaciente")]
         public IActionResult GetByIdPatient()
         {
@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Medico")]
+        //[Authorize(Roles = "Medico")]
         [HttpGet("ConsultasMedico")]
         public IActionResult GetByIdDoctor()
         {

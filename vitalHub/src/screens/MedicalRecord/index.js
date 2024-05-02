@@ -32,7 +32,7 @@ export default function MedicalRecord({
 
   const dadosSituações = route.params?.dadosSituacoes;
 
-  const idConsulta = route.params?.dadosConsulta?.id;
+  const idConsulta = route.params?.dadosConsulta?.id;a
   const dataNascimento = route.params?.dadosConsulta?.paciente?.dataNascimento;
   const fotoCam = route.params?.fotoCam;
   const situacaoConsulta = route.params?.dadosConsulta?.situacao?.situacao;

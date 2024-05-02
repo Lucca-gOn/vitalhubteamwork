@@ -35,8 +35,8 @@ export default function Login({
           //senha: 'lucas'
           // email: 'allan@allan.com',
           // senha: 'allan'
-           email: 'caio@caio.com',
-           senha: 'caio'
+          email: 'caio@caio.com',
+          senha: 'caio'
         })
         //console.log(response.data)
         await AsyncStorage.setItem('token', JSON.stringify(response.data))

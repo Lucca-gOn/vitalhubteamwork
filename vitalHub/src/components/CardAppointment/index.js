@@ -17,7 +17,7 @@ export default CardAppointment = (
     selectStatus,
     setDadosCard,
     data,
-    setShowModalShowLocalConsult,    
+    setShowModalShowLocalConsult,
     role
   }
 ) => {
@@ -41,7 +41,7 @@ export default CardAppointment = (
 
   useEffect(() => {
     calculateAge();
-  }, [])  
+  }, [])
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
       <TouchableOpacity
@@ -56,7 +56,7 @@ export default CardAppointment = (
             )
             :
             role == 'Medico' && data.situacao.situacao == 'Realizadas' ?
-              navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role}) :
+              navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role }) :
 
               //navigation.navigate('ConsultationAddress', {clinica: data.medicoClinica.clinicaId })
               setShowModalShowLocalConsult(true)
@@ -95,7 +95,7 @@ export default CardAppointment = (
                 : selectStatus === 'Realizadas' ?
                   <TextPontuarioAppointment
                     onPress={() => {
-                      navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role})
+                      navigation.navigate('MedicalRecord', { dadosConsulta: data, role: role })
                     }}
                   >
                     Ver Prontuario</TextPontuarioAppointment>

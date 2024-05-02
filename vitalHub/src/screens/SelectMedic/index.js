@@ -65,7 +65,7 @@ export default function SelectMedic({ navigation, route }) {
               setSelect(item.id);
               setMedico({
                 ...medico,
-                medicoId: item.id,
+                medicoClinicaId: item.id,
                 medicoLabel: item.idNavigation.nome,
               });
             }}

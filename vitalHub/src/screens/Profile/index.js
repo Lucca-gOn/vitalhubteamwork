@@ -41,17 +41,17 @@ export default function Profile({ navigation }) {
               setProfile(token);
               console.log(userSearched.data)
               if (token.role === 'Medico') {
-                setCRM(userSearched.data.medico.crm)
-                setEspecialidade(userSearched.data.medico.especialidade.especialidade1)
+                setCRM(userSearched.data.medico?.crm)
+                setEspecialidade(userSearched.data.medico?.especialidade.especialidade1)
 
               } else {
                 setDataNascimento(moment(userSearched.data.paciente.dataNascimento).format('DD/MM/YYYY'))
                 setCpf(userSearched.data.paciente.cpf)
               }
               setFoto(userSearched.data.foto)
-              setEndereco(token.role == 'Medico' ? userSearched.data.medico.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
-              setCep(token.role == 'Medico' ? userSearched.data.medico.endereco.cep : userSearched.data.paciente.endereco.cep)
-              setCidade(token.role == 'Medico' ? userSearched.data.medico.endereco.cidade : userSearched.data.paciente.endereco.cidade)
+              setEndereco(token.role == 'Medico' ? userSearched.data.medico?.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
+              setCep(token.role == 'Medico' ? userSearched.data.medico?.endereco.cep : userSearched.data.paciente.endereco.cep)
+              setCidade(token.role == 'Medico' ? userSearched.data.medico?.endereco.cidade : userSearched.data.paciente.endereco.cidade)
             }
             ).catch(error => alert(`Erro ao BuscarPorID : ${error}`))
         }
