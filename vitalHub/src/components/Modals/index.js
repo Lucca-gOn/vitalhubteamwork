@@ -145,19 +145,19 @@ export const ModalMedicalRecord = ({
   profile
 }) => {
 
-  const foto  = consultSelect.paciente?.idNavigation?.foto;
+  const foto = consultSelect.paciente?.idNavigation?.foto;
   const nome = consultSelect.paciente?.idNavigation?.nome;
   const email = consultSelect.paciente?.idNavigation?.email;
   const dataNascimento = consultSelect.paciente?.dataNascimento;
-  
-  const calculateAge = () => {    
+
+  const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
-    const years = today.diff(dob, 'years');    
-    
+    const years = today.diff(dob, 'years');
+
     return years > 1 ? `${years} anos` : `${years} ano`
   };
-  
+
   return (
     <Modal
       transparent={true}
@@ -194,7 +194,7 @@ export const ModalMedicalRecord = ({
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
             <ButtonDefault textButton="Inserir prontuário" onPress={() => {
               setShowModalMedicalRecord(false)
-              navigation.navigate('MedicalRecord', {dadosConsulta:consultSelect, profile: profile, role: role, dadosSituacoes:dadosSituacoes});
+              navigation.navigate('MedicalRecord', { dadosConsulta: consultSelect, profile: profile, role: role, dadosSituacoes: dadosSituacoes });
             }} />
 
             <LinkUnderlineDefault onPress={() => {
@@ -216,7 +216,11 @@ export const ModalScheduleAppointment = ({
   navigation
 }) => {
 
-  const [agendamento, setAgendamento] = useState(null)
+  const [agendamento, setAgendamento] = useState({
+    prioridadeId: null,
+    prioridadeLabel: null,
+    localizacao: null
+  })
   const [isSelected, setIsSelected] = useState(false)
   const [tipoConsulta, setTipoConsulta] = useState("")
 
@@ -228,7 +232,7 @@ export const ModalScheduleAppointment = ({
 
   function handleContinue() {
     setShowModalScheduleAppointment(false);
-    navigation.navigate("SelectClinic", {agendamento: agendamento});
+    navigation.navigate("SelectClinic", { agendamento: agendamento });
   }
 
   return (
@@ -294,7 +298,7 @@ export const ModalScheduleAppointment = ({
               <TextLabelBlack>Informe a localização desejada</TextLabelBlack>
               <InputGreen
                 placeholder="Informe a localização"
-                
+
                 value={agendamento ? agendamento.localizacao : null}
 
                 onChangeText={(txt) => setAgendamento({
@@ -306,7 +310,14 @@ export const ModalScheduleAppointment = ({
 
 
             <ContainerMargin $mt={143} $mb={35} $gap={30} $width="80%">
-              <ButtonDefault textButton="Continuar" onPress={() => handleContinue()} />
+              <ButtonDefault
+                textButton="Continuar"
+                onPress={() => {
+                  console.log('agendamento: ', agendamento)
+                  if(agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel!== null){
+                    handleContinue()
+                  }
+                }} />
 
               <LinkUnderlineDefault
                 onPress={() => setShowModalScheduleAppointment(false)}
@@ -344,9 +355,9 @@ export const SummaryMedicalAgenda = ({
   async function ConfirmarConsulta() {
     await api.post('/Consultas/Cadastrar', {
       ...agendamento,
-      pacienteId : profile.id,
-      situacaoId : 'DBCAE12A-D2B0-4317-8D37-AFF292B4017C',
-    }).then( async response => {
+      pacienteId: profile.id,
+      situacaoId: 'DBCAE12A-D2B0-4317-8D37-AFF292B4017C',
+    }).then(async response => {
       await setShowSummaryMedicalAgenda(false)
 
       navigation.replace("Main");
@@ -359,7 +370,7 @@ export const SummaryMedicalAgenda = ({
 
   useEffect(() => {
     profileLoad();
-  },[])
+  }, [])
   return (
 
     <Modal
@@ -392,7 +403,7 @@ export const SummaryMedicalAgenda = ({
           <ContainerMargin $alingItens="flex-start" $gap={20} >
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Data da consulta</TextLabel>
-              <TextData>{ moment(agendamento.dataConsulta).format('DD/MM/YYYY HH:mm')}</TextData>
+              <TextData>{moment(agendamento.dataConsulta).format('DD/MM/YYYY HH:mm')}</TextData>
             </ContainerMargin>
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Médico(a) da consulta</TextLabel>
@@ -411,7 +422,7 @@ export const SummaryMedicalAgenda = ({
 
 
           <ContainerMargin $mt={30} $mb={30} $gap={30} $width="90%">
-            <ButtonDefault textButton="Confirmar" onPress={ConfirmarConsulta}/>
+            <ButtonDefault textButton="Confirmar" onPress={ConfirmarConsulta} />
 
             <LinkUnderlineDefault onPress={() => {
               navigation.reset({
@@ -439,7 +450,7 @@ export const ModalShowLocalConsult = ({
   dadosCard
 }) => {
 
-  
+
   return (
     <Modal
       transparent={true}
@@ -458,7 +469,7 @@ export const ModalShowLocalConsult = ({
 
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={{uri: dadosCard.idNavigation?.foto}} $width="90%" $height="181px" />
+            <ImageUser source={{ uri: dadosCard.idNavigation?.foto }} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
@@ -467,7 +478,7 @@ export const ModalShowLocalConsult = ({
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-            {dadosCard.especialidade?.especialidade1}
+              {dadosCard.especialidade?.especialidade1}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
               CRM-{dadosCard.crm}
@@ -518,7 +529,7 @@ export const ModalCamera = ({
 
   async function capturePhoto() {
     if (cameraRef) {
-      const photo = await cameraRef.current.takePictureAsync({quality:1});
+      const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
       setPhotoCam(photo.uri);
       setOpenModal(true);
     }

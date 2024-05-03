@@ -117,8 +117,23 @@ export default function MedicalRecord({
     )
   }
 
+  async function ExibeExame() {
+    await api.get(`/Exame/BuscarPorIdConsulta?idConsulta=${idConsulta}`)
+    .then(response => {
+      let descricao = '';
+      response.data.forEach(element => {
+        descricao+=element.descricao
+      });
+      setDescricaoExame(descricao);
+    })
+    .catch(error => {
+      alert(`Erro ao buscar exame: ${error}`)
+    })
+  }
+
   useEffect(() => {
     verificaProntuario()
+    ExibeExame()
   }, [])
 
   useEffect(()=>{
@@ -219,10 +234,10 @@ export default function MedicalRecord({
 
               <ContainerMargin>
               
-                <ScrollView style={{width:'100%', height:120}} showsVerticalScrollIndicator={true}>
-                <InputGreenMultiLine editable={!disabledInput}  placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} />
+                
+                <InputGreenMultiLine editable={!disabledInput}  placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} style={{maxHeight:250}} />
 
-                </ScrollView>
+              
               
                 {/* editable={!disabledInput} */}
               </ContainerMargin>
