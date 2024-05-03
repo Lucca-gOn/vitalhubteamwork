@@ -1,5 +1,5 @@
 
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
@@ -94,8 +94,9 @@ export default function MedicalRecord({
 
   async function InserirExame() {
     const formData = new FormData();
-    formData.append("ConsultaId", produtario)
-    formData.append("Imagem", {
+    console.log('Foto uriFotoCam',uriFotoCam)
+    formData.append("ConsultaId", idConsulta)
+    formData.append("File", {
       uri: uriFotoCam,
       name: `image.${uriFotoCam.split('.').pop()}`,
       type: `image/${uriFotoCam.split('.').pop()}`
@@ -217,7 +218,13 @@ export default function MedicalRecord({
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
 
               <ContainerMargin>
-                <InputGreenMultiLine editable={!disabledInput} placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
+              
+                <ScrollView style={{width:'100%', height:120}} showsVerticalScrollIndicator={true}>
+                <InputGreenMultiLine editable={!disabledInput}  placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} />
+
+                </ScrollView>
+              
+                {/* editable={!disabledInput} */}
               </ContainerMargin>
 
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
