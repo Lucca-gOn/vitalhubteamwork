@@ -1,7 +1,7 @@
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
 import { StatusBar } from "react-native";
-import { Description, Title } from "../../components/Texts/style";
+import { Description, TextLabel, Title } from "../../components/Texts/style";
 import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
@@ -15,12 +15,12 @@ export default function CreateAccount({
   navigation
 }) {
 
-  const [nome, setNome] = useState("teste");
-  const [cpf, setCpf] = useState("51021784826");
-  const [dataNascimento, setDataNascimento] = useState("22102001");
-  const [email, setEmail] = useState("teste@teste.com");
-  const [senha, setSenha] = useState("123");
-  const [confirmarSenha, setConfirmarSenha] = useState("123");
+  const [nome, setNome] = useState();
+  const [cpf, setCpf] = useState();
+  const [dataNascimento, setDataNascimento] = useState();
+  const [email, setEmail] = useState();
+  const [senha, setSenha] = useState();
+  const [confirmarSenha, setConfirmarSenha] = useState();
   const [validCpf, setValidCpf] = useState(true);
 
   // Handlers
@@ -95,6 +95,7 @@ export default function CreateAccount({
         </ContainerMargin>
 
         <ContainerMargin $gap={15} $mt={20}>
+
           <InputGreen
             placeholder="Nome"
             value={nome}
@@ -103,6 +104,7 @@ export default function CreateAccount({
             maxLength={50}
             enterKeyHint="next"
           />
+
 
           <InputGreen
             placeholder="CPF"
@@ -152,7 +154,7 @@ export default function CreateAccount({
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
           <ButtonDefault
-            textButton="Confirmar nova senha"
+            textButton="Cadastrar"
             onPress={() => account()}
           />
 

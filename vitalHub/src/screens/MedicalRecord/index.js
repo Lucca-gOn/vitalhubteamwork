@@ -235,7 +235,7 @@ export default function MedicalRecord({
               <ContainerMargin>
               
                 
-                <InputGreenMultiLine editable={!disabledInput}  placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} style={{maxHeight:250}} />
+                <InputGreenMultiLine placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} style={{maxHeight:250}} />
 
               
               

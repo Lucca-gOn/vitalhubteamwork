@@ -50,7 +50,9 @@ export default function Login({
       } catch (error) {
         console.log(error)
         alert('Problema ao tentar conectar com o servidor, favor acionar o suporte');
-        
+        setStatusResponseLogin(false),
+            setStatusResponseLoginGoogle(false),
+            setButtonDisable(false)
       }
     }
 
