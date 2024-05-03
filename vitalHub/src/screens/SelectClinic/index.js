@@ -17,7 +17,7 @@ export default function SelectClinic({
   const [clinicList, setClinicList] = useState([]);
   const [clinica, setClinica] = useState(null)
 
-  async function ListarClinicas(){
+  async function ListarClinicas() {
     try {
       const response = await api.get(`/Clinica/BuscarPorCidade?cidade=${route.params.agendamento.localizacao}`);
       setClinicList(response.data);
@@ -27,18 +27,19 @@ export default function SelectClinic({
     }
   }
 
-  function handleContinue(){
-    navigation.replace("SelectMedic",{
-      agendamento : {
+  function handleContinue() {
+    navigation.replace("SelectMedic", {
+      agendamento: {
         ...route.params.agendamento,
         ...clinica
       }
     }
-  )}
+    )
+  }
 
   useEffect(() => {
     ListarClinicas()
-  },[])
+  }, [])
 
   return (
     <ContainerMarginStatusBar
@@ -58,13 +59,13 @@ export default function SelectClinic({
               setSelect(item.id)
               setClinica({
                 ...clinica,
-                clinicaId : item.id,
+                clinicaId: item.id,
                 clinicaLabel: item.nomeFantasia
-                
+
               })
-              console.log(clinica);
+              //console.log(clinica);
             }}
-            
+
             select={select === item.id}
           />
         )}
@@ -77,7 +78,15 @@ export default function SelectClinic({
       </FlatList>
 
       <ContainerMargin $mt={30} $mb={35} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" onPress={handleContinue} />
+        <ButtonDefault
+          textButton="Continuar"
+          onPress={ () =>{
+            if(select !== null){
+              handleContinue()
+            }
+          }
+          }
+        />
 
         <LinkUnderlineDefault onPress={() => {
           navigation.reset({
