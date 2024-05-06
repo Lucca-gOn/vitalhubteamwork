@@ -1,6 +1,6 @@
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
-import { StatusBar } from "react-native";
+import { StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { Description, TextLabel, Title } from "../../components/Texts/style";
 import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
@@ -9,19 +9,31 @@ import { useState } from "react";
 import { validarCPF, formatarDataNascimento } from "../../utils/validForm/";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { createGlobalStyle } from "styled-components";
+import { validDataNasciemnto, validEmail, validName, validNewPassWord } from "../../utils/validForm";
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function CreateAccount({
   navigation
 }) {
 
-  const [nome, setNome] = useState();
-  const [cpf, setCpf] = useState();
-  const [dataNascimento, setDataNascimento] = useState();
-  const [email, setEmail] = useState();
-  const [senha, setSenha] = useState();
-  const [confirmarSenha, setConfirmarSenha] = useState();
+  const [nome, setNome] = useState('');
+  const [erroNome, setErroNome] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [erroCpf, setErroCpf] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [erroDataNacimento, setErroDataNacimento] = useState('');
+  const [email, setEmail] = useState('');
+  const [erroEmail, setErroEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erroSenha, setErroSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [erroConfirmarSenha, setErroConfirmarSenha] = useState('');
   const [validCpf, setValidCpf] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirPassword, setShowConfirPassword] = useState(false);
+
+  const [erroGeral, setErroGeral] = useState('');
 
   // Handlers
   const handleCPFChange = (text) => {
@@ -40,9 +52,10 @@ export default function CreateAccount({
 
   // Funções de API
   async function account() {
+    console.log('criando conta')
     const formData = new FormData();
     formData.append('Cpf', cpf.replace(/[^\d]/g, ""));
-    formData.append('DataNascimento', "");
+    formData.append('DataNascimento', dataNascimento);
     formData.append('Cep', "");
     formData.append('Logradouro', "");
     formData.append('Numero', "");
@@ -75,6 +88,7 @@ export default function CreateAccount({
       console.log(error);
     }
   }
+
   return (
     <ContainerMarginStatusBar>
 
@@ -103,7 +117,17 @@ export default function CreateAccount({
             keyboardType="default"
             maxLength={50}
             enterKeyHint="next"
+            onEndEditing={() => {
+                setNome(nome.trim())
+              if (!validName(nome.trim())) {
+                setErroNome('O campo deve ter no mínimo três caracteres!')
+              } else {
+                setErroNome('');
+              }
+            }}
           />
+
+          {erroNome !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroNome}</Text> : <></>}
 
 
           <InputGreen
@@ -112,7 +136,16 @@ export default function CreateAccount({
             onChangeText={handleCPFChange}
             keyboardType="numeric"
             maxLength={11}
+            onEndEditing={() => {
+              if (!validarCPF(cpf)) {
+                setErroCpf('Cpf digitado está inválido.')
+              } else {
+                setErroCpf('');
+              }
+            }}
           />
+
+          {erroCpf !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroCpf}</Text> : <></>}
 
           <InputGreen
             placeholder="Data nascimento"
@@ -121,7 +154,16 @@ export default function CreateAccount({
             keyboardType="numeric"
             maxLength={10}
             enterKeyHint="next"
+            onEndEditing={() => {
+              if (!validDataNasciemnto(dataNascimento)) {
+                setErroDataNacimento('A data inserida não é válida!')
+              } else {
+                setErroDataNacimento('');
+              }
+            }}
           />
+
+          {erroDataNacimento !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroDataNacimento}</Text> : <></>}
 
           <InputGreen
             placeholder="Email"
@@ -129,40 +171,103 @@ export default function CreateAccount({
             onChangeText={handleEmailChange}
             keyboardType="email-address"
             maxLength={50}
+            onEndEditing={() => {
+              if (!validEmail(email)) {
+                setErroEmail('Email inválido, ex: teste@teste.com')
+              } else {
+                setErroEmail('');
+              }
+            }}
           />
 
-          <InputGreen
-            placeholder="Senha"
-            value={senha}
-            onChangeText={handleSenhaChange}
-            keyboardType="default"
-            maxLength={50}
-            secureTextEntry={true}
-            enterKeyHint="next"
-          />
+          {erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
 
-          <InputGreen
-            placeholder="Confirmar senha"
-            value={confirmarSenha}
-            onChangeText={handleConfirmarSenhaChange}
-            keyboardType="default"
-            maxLength={50}
-            secureTextEntry={true}
-            enterKeyHint="enter"
-          />
+          <ContainerMargin $width="100%" style={{ position: "relative" }}>
+
+            <InputGreen
+              placeholder="Senha"
+              value={senha}
+              onChangeText={handleSenhaChange}
+              keyboardType="default"
+              maxLength={50}
+              secureTextEntry={!showPassword}
+              enterKeyHint="next"
+              onEndEditing={() => {
+                if (!validNewPassWord(senha)) {
+                  setErroSenha('A senha deve conter 8 catacteres e incluir no minimo uma letra minuscula, uma maisucula um numero e um caracter especial. ')
+                } else {
+                  setErroSenha('');
+                }
+              }}
+            />
+            <TouchableOpacity
+              style={{ position: "absolute", right: 0, padding: 10 }}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <FontAwesome name={showPassword ? "eye-slash" : "eye"} size={24} color="#34898F" />
+
+            </TouchableOpacity>
+
+          </ContainerMargin>
+
+
+          {erroSenha !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroSenha}</Text> : <></>}
+
+          <ContainerMargin $width="100%" style={{ position: "relative" }}>
+
+            <InputGreen
+              placeholder="Confirmar senha"
+              value={confirmarSenha}
+              onChangeText={handleConfirmarSenhaChange}
+              keyboardType="default"
+              maxLength={50}
+              secureTextEntry={!showConfirPassword}
+              enterKeyHint="enter"
+              onEndEditing={() => {
+                if (!(senha === confirmarSenha)) {
+                  setErroConfirmarSenha('Senhas não são iguais')
+                } else {
+                  setErroConfirmarSenha('');
+                }
+              }}
+
+            />
+            <TouchableOpacity
+              style={{ position: "absolute", right: 0, padding: 10 }}
+              onPress={() => setShowConfirPassword(!showConfirPassword)}
+            >
+              <FontAwesome name={showConfirPassword ? "eye-slash" : "eye"} size={24} color="#34898F" />
+
+            </TouchableOpacity>
+
+          </ContainerMargin>
+
+          {erroConfirmarSenha !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroConfirmarSenha}</Text> : <></>}
+
+          {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
           <ButtonDefault
             textButton="Cadastrar"
-            onPress={() => account()}
+            onPress={() => {
+              if (nome !== '' && cpf !== '' && dataNascimento !== '' && email !== '' && senha !== '' && confirmarSenha !== '') {
+                if (validName(nome)  && validDataNasciemnto(dataNascimento) && validEmail(email) && validNewPassWord(senha) && (senha === confirmarSenha)) {
+                  account()
+                  setErroGeral('')
+                } else {
+
+                  setErroGeral('Necessário rever os erros acima antes de continuar.')
+                }
+              } else {
+                console.log('erro')
+                setErroGeral('Favor preencher todos os campos')
+              }
+            }}
           />
 
           <LinkUnderlineDefault onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Main' }]
-            })
+            navigation.goBack()
           }}>Cancelar</LinkUnderlineDefault>
         </ContainerMargin>
 

@@ -1,43 +1,69 @@
 export const validEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  console.log(email)
   if (email != '' && email != null) {
+    //console.log(emailRegex.test(email)) ;
     return emailRegex.test(email);
   } else {
     return false
   }
 }
 
+export const validName = (nome) => {
+  const nameRegex = /^[a-zA-ZÀ-ÿ]{3,}(?: [a-zA-ZÀ-ÿ]+)*$/;
+  if(nome != '' && nome != null){
+    return nameRegex.test(nome);
+  }else{
+    return false
+  }
+}
+
+export const validDataNasciemnto = (dataString) =>{
+  const dataRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+  if (!dataRegex.test(dataString)){
+    console.log('Erro')
+    return false;
+  }
+
+  const [, dia, mes, ano] = dataRegex.exec(dataString);
+
+  const data = new Date(Number(ano), Number(mes) - 1, Number(dia));
+  console.log(`Dia ${dia}, mes ${mes} e ano ${ano}`)
+  console.log(data.getDate() === Number(dia) &&
+    data.getMonth() + 1 === Number(mes) &&
+    data.getFullYear() === Number(ano));
+  return (
+    data.getDate() === Number(dia) &&
+    data.getMonth() + 1 === Number(mes) &&
+    data.getFullYear() === Number(ano)
+  );
+}
+
 export const validNewPassWord = (newPassWord) => {
   // Verifica se a senha tem pelo menos 8 caracteres
-  if (senha.length < 8) {
+  if (newPassWord.length < 8) {
     return false;
   }
-
   // Verifica se a senha contém pelo menos uma letra minúscula
   var regexMinuscula = /[a-z]/;
-  if (!regexMinuscula.test(senha)) {
+  if (!regexMinuscula.test(newPassWord)) {
     return false;
   }
-
   // Verifica se a senha contém pelo menos uma letra maiúscula
   var regexMaiuscula = /[A-Z]/;
-  if (!regexMaiuscula.test(senha)) {
+  if (!regexMaiuscula.test(newPassWord)) {
     return false;
   }
-
   // Verifica se a senha contém pelo menos um número
   var regexNumero = /[0-9]/;
-  if (!regexNumero.test(senha)) {
+  if (!regexNumero.test(newPassWord)) {
     return false;
   }
-
   // Verifica se a senha contém pelo menos um caractere especial
   var regexEspecial = /[!@#$%^&*()_+=-]/;
-  if (!regexEspecial.test(senha)) {
+  if (!regexEspecial.test(newPassWord)) {
     return false;
   }
-
   // Se passar por todas as verificações, a senha é válida
   return true;
 }

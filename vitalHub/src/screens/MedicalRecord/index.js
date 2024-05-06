@@ -1,12 +1,11 @@
 
-import { ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, StatusBar, Text, View } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
 import { InputGreen, InputGreenMultiLine } from "../../components/Inputs/styled"
-import { ButtonDefault, ButtonGreen, ButtonGreenCam } from "../../components/Buttons"
+import { ButtonDefault, ButtonGreenCam } from "../../components/Buttons"
 import { LinkUnderlineDefault } from "../../components/Links"
-import { Stethoscope } from "../../components/Stethoscope"
 import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
@@ -24,7 +23,7 @@ export default function MedicalRecord({
   const [descricaoExame, setDescricaoExame] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false);
   const [disabledInput, setDisableInput] = useState(false);
-  const [uriFotoCam,setUriFotoCam] = useState(null);
+  const [uriFotoCam, setUriFotoCam] = useState(null);
 
   const nome = route.params?.dadosConsulta?.paciente?.idNavigation?.nome || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.nome;
   const email = route.params?.dadosConsulta?.paciente?.idNavigation?.email || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.email;
@@ -94,7 +93,7 @@ export default function MedicalRecord({
 
   async function InserirExame() {
     const formData = new FormData();
-    console.log('Foto uriFotoCam',uriFotoCam)
+    console.log('Foto uriFotoCam', uriFotoCam)
     formData.append("ConsultaId", idConsulta)
     formData.append("File", {
       uri: uriFotoCam,
@@ -119,16 +118,16 @@ export default function MedicalRecord({
 
   async function ExibeExame() {
     await api.get(`/Exame/BuscarPorIdConsulta?idConsulta=${idConsulta}`)
-    .then(response => {
-      let descricao = '';
-      response.data.forEach(element => {
-        descricao+=element.descricao
-      });
-      setDescricaoExame(descricao);
-    })
-    .catch(error => {
-      alert(`Erro ao buscar exame: ${error}`)
-    })
+      .then(response => {
+        let descricao = '';
+        response.data.forEach(element => {
+          descricao += element.descricao
+        });
+        setDescricaoExame(descricao);
+      })
+      .catch(error => {
+        alert(`Erro ao buscar exame: ${error}`)
+      })
   }
 
   useEffect(() => {
@@ -136,13 +135,14 @@ export default function MedicalRecord({
     ExibeExame()
   }, [])
 
-  useEffect(()=>{
-    if(uriFotoCam != null) {
+  useEffect(() => {
+    if (uriFotoCam != null) {
       InserirExame();
     }
   }, [uriFotoCam])
-  
+
   return (
+
     <Container>
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
@@ -199,6 +199,8 @@ export default function MedicalRecord({
 
         </ContainerMargin>
 
+
+
         {
           role !== 'Medico' ? (
 
@@ -232,15 +234,21 @@ export default function MedicalRecord({
 
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
 
-              <ContainerMargin>
-              
-                
-                <InputGreenMultiLine placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} scrollEnabled={true} textAlignVertical={"top"} style={{maxHeight:250}} />
 
-              
-              
-                {/* editable={!disabledInput} */}
-              </ContainerMargin>
+              <View style={{height: 500}} >
+                <ScrollView style={{ height: 250, width: "100%", padding:50, backgroundColor: 'pink' }} showsVerticalScrollIndicator={true} >
+                  <Text>
+                    {descricaoExame}
+                  </Text>
+                </ScrollView>
+              </View>
+
+              {/* <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} /> */}
+
+
+
+              {/* editable={!disabledInput} */}
+
 
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
                 <LinkUnderlineDefault onPress={() => navigation.goBack()}>
