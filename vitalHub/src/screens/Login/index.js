@@ -1,4 +1,4 @@
-import { ActivityIndicator, StatusBar, Text } from "react-native";
+import { ActivityIndicator, StatusBar, Text, TouchableOpacity } from "react-native";
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { ButtonDefault, ButtonGoogle } from "../../components/Buttons";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
@@ -10,6 +10,8 @@ import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { validEmail } from "../../utils/validForm";
 import { useIsFocused } from "@react-navigation/native";
+import { FontAwesome } from '@expo/vector-icons';
+
 
 export default function Login({
   navigation
@@ -21,6 +23,7 @@ export default function Login({
   const [statusResponseLogin, setStatusResponseLogin] = useState(false);
   const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
+  const [showConfirPassword, setShowConfirPassword] = useState(false);
 
   const isFocused = useIsFocused();
 
@@ -91,6 +94,8 @@ export default function Login({
 
   useEffect(() => {
     setButtonDisable(!isFocused);
+    setEmail('');
+    setSenha('');
   }, [isFocused]);
   return (
 
@@ -126,16 +131,27 @@ export default function Login({
           />
           {erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
 
-          <InputGreen
-            placeholder="Senha"
-            enterKeyHint="enter"
-            keyboardType="default"
-            inputMode="text"
-            maxLength={50}
-            secureTextEntry={true}
-            value={senha}
-            onChangeText={(txt) => setSenha(txt)}
-          />
+          <ContainerMargin $width="100%" style={{ position: "relative" }}>
+            <InputGreen
+              placeholder="Senha"
+              enterKeyHint="enter"
+              keyboardType="default"
+              inputMode="text"
+              maxLength={50}
+              secureTextEntry={!showConfirPassword}
+              value={senha}
+              onChangeText={(txt) => setSenha(txt)}
+
+            />
+
+            <TouchableOpacity
+              style={{ position: "absolute", right: 0, padding: 10 }}
+              onPress={() => setShowConfirPassword(!showConfirPassword)}
+            >
+              <FontAwesome name={showConfirPassword ? "eye-slash" : "eye"} size={24} color="#34898F" />
+
+            </TouchableOpacity>
+          </ContainerMargin>
           {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
         </ContainerMargin>
 
@@ -146,14 +162,14 @@ export default function Login({
           <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' disabled={buttonDisable}
             onPress={() => {
               if (email !== '' && senha !== '') {
-                  setErroGeral('')
+                setErroGeral('')
                 if (validEmail(email)) {
                   Login()
                   setStatusResponseLogin(true)
                   setButtonDisable(true)
 
                 }
-                
+
               } else {
                 setErroGeral('Necessário preenchimento dos campos acima!')
               }

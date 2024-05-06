@@ -1,7 +1,7 @@
 
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
-import { StatusBar } from "react-native";
+import { StatusBar, Text } from "react-native";
 import { Description, Title } from "../../components/Texts/style";
 import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
@@ -9,12 +9,14 @@ import { IconBack } from "../../components/Icons/style";
 import { ButtonIcon } from "../../components/Buttons/style";
 import { useState } from "react";
 import api from '../../service/Service'
+import { validEmail } from "../../utils/validForm";
 
 export default function RecoveryPassWord({
   navigation
 }) {
 
-  const [email,setEmail] = useState('allanrodrigues1991.ar@gmail.com');
+  const [email,setEmail] = useState('');
+  const [erroEmail, setErroEmail] = useState('');
   
   async function enviarEmail(){
     await api.post(`/RecuperarSenha?email=${email}`)
@@ -23,7 +25,10 @@ export default function RecoveryPassWord({
     }).catch(
       error =>
       {
-        alert(`Erro ao fazer requisiçao de recuperar senha: `, error);
+        if(error.response.status == 404){
+          setErroEmail(error.response.data)
+        }
+        //alert(`Erro ao fazer requisiçao de recuperar senha: `, error.response);
       }
       )
   }
@@ -56,11 +61,29 @@ export default function RecoveryPassWord({
             value={email}
             onChangeText={(text) => setEmail(text)}
             maxLength={50}
+            onEndEditing={() => {
+              if (!validEmail(email)) {
+                setErroEmail('Email inválido, ex: teste@teste.com')
+              } else {
+                setErroEmail('');
+              }
+            }}
           />
+
+{erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={15} $mb={30}>
-          <ButtonDefault textButton="Continuar" onPress={()=>enviarEmail()} />
+          <ButtonDefault 
+            textButton="Continuar" 
+            onPress={()=>{
+              if(validEmail(email)){
+                enviarEmail()
+              }
+              }
+            } 
+
+            />
         </ContainerMargin>
 
       </ContainerScrollView>
