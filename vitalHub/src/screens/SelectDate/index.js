@@ -21,13 +21,15 @@ export default function SelectDate({
   route
 }) {
 
+  const dataAtual = moment().format('YYYY-MM-DD');
   const [select, setSelect] = useState(null);
   const [showSummaryMedicalAgenda, setShowSummaryMedicalAgenda] = useState(false);
-  const [dataSelecionada, setDataSelecionada] = useState("");
-  const [horaSelecionada, setHoraSelecionada] = useState("");
-  const [agendamento, setAgendamento] = useState(null);
+  const [dataSelecionada, setDataSelecionada] = useState(dataAtual);
+  const [horaSelecionada, setHoraSelecionada] = useState(null);
+  const [agendamento, setAgendamento] = useState({
+    dataConsulta: null
+  });
 
-  const dataAtual = moment().format('YYYY-MM-DD');
   const [arrayOptions, setArrayOptions] = useState(null);
 
   function LoadOptions() {
@@ -141,7 +143,13 @@ export default function SelectDate({
 
 
       <ContainerMargin $mt={42} $mb={30} $gap={30}>
-        <ButtonDefault textButton="Continuar" onPress={handlecontinue} />
+        <ButtonDefault
+          textButton="Continuar"
+          onPress={() => {
+            if (dataSelecionada !== null && horaSelecionada !== null) {
+              handlecontinue()
+            }
+          }} />
 
         <LinkUnderlineDefault
           onPress={() => {

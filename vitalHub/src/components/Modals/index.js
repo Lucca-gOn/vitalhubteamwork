@@ -1,4 +1,4 @@
-import { Modal, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Modal, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { Container, ContainerMargin } from "../Conatainer"
 import { Description, DescriptionBlack, TextData, TextLabel, TextLabelBlack, TextQuickSandRegular, Title } from "../Texts/style"
 import { ButtonDefault, ButtonSelectGreen } from "../Buttons"
@@ -18,6 +18,10 @@ import { Image } from "expo-image"
 import api from "../../service/Service"
 import moment from "moment"
 import { userDecodeToken } from '../../utils/Auth';
+import RNPickerSelect from 'react-native-picker-select';
+import { AntDesign } from '@expo/vector-icons';
+
+
 
 
 Notifications.requestPermissionsAsync();
@@ -145,19 +149,19 @@ export const ModalMedicalRecord = ({
   profile
 }) => {
 
-  const foto  = consultSelect.paciente?.idNavigation?.foto;
+  const foto = consultSelect.paciente?.idNavigation?.foto;
   const nome = consultSelect.paciente?.idNavigation?.nome;
   const email = consultSelect.paciente?.idNavigation?.email;
   const dataNascimento = consultSelect.paciente?.dataNascimento;
-  
-  const calculateAge = () => {    
+
+  const calculateAge = () => {
     const dob = moment(dataNascimento, 'YYYY-MM-DD');
     const today = moment();
-    const years = today.diff(dob, 'years');    
-    
+    const years = today.diff(dob, 'years');
+
     return years > 1 ? `${years} anos` : `${years} ano`
   };
-  
+
   return (
     <Modal
       transparent={true}
@@ -194,7 +198,7 @@ export const ModalMedicalRecord = ({
           <ContainerMargin $mt={30} $mb={20} $gap={30} $width="80%">
             <ButtonDefault textButton="Inserir prontuário" onPress={() => {
               setShowModalMedicalRecord(false)
-              navigation.navigate('MedicalRecord', {dadosConsulta:consultSelect, profile: profile, role: role, dadosSituacoes:dadosSituacoes});
+              navigation.navigate('MedicalRecord', { dadosConsulta: consultSelect, profile: profile, role: role, dadosSituacoes: dadosSituacoes });
             }} />
 
             <LinkUnderlineDefault onPress={() => {
@@ -216,9 +220,15 @@ export const ModalScheduleAppointment = ({
   navigation
 }) => {
 
-  const [agendamento, setAgendamento] = useState(null)
+  const [agendamento, setAgendamento] = useState({
+    prioridadeId: null,
+    prioridadeLabel: null,
+    localizacao: null
+  })
   const [isSelected, setIsSelected] = useState(false)
   const [tipoConsulta, setTipoConsulta] = useState("")
+  const [clinicas, setClinicas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
@@ -228,9 +238,22 @@ export const ModalScheduleAppointment = ({
 
   function handleContinue() {
     setShowModalScheduleAppointment(false);
-    navigation.navigate("SelectClinic", {agendamento: agendamento});
+    navigation.navigate("SelectClinic", { agendamento: agendamento });
   }
 
+  async function buscarClinicas() {
+    try {
+      const response = await api.get('/Clinica/ListarTodas');
+      setClinicas(response.data);
+    } catch (error) {
+      console.log('Erro ao buscar clínicas:', error);
+    }
+  };
+
+
+  useEffect(() => {
+    buscarClinicas();
+  }, [])
   return (
     <Modal
       transparent={true}
@@ -291,22 +314,91 @@ export const ModalScheduleAppointment = ({
             </ContainerMargin>
 
             <ContainerMargin $width="80%" $mt={20} $alingItens="flex-start">
-              <TextLabelBlack>Informe a localização desejada</TextLabelBlack>
-              <InputGreen
+              <TextLabelBlack style={{marginBottom: 10}}>Informe a localização desejada</TextLabelBlack>
+              {/* <InputGreen
                 placeholder="Informe a localização"
-                
+
                 value={agendamento ? agendamento.localizacao : null}
 
                 onChangeText={(txt) => setAgendamento({
                   ...agendamento,
                   localizacao: txt
-                })} />
+                })} /> */}
+
+              <View style={{ width: '100%', borderWidth: 2, borderColor: '#60BFC5', borderStyle: 'solid', borderRadius: 5}}>
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <RNPickerSelect
+                    mode="dropdown"
+                    useNativeAndroidPickerStyle={false}
+                    fixAndroidTouchableBug={true}
+                    onValueChange={(value) => setAgendamento({ ...agendamento, localizacao: value })}
+                    items={clinicas.map((clinica) => ({ label: clinica.endereco.cidade, value: clinica.endereco.cidade }))}
+                    placeholder={{ label: 'Selecione a cidade', value: null }}
+                    Icon={() => (
+                      <TouchableOpacity>
+                        <AntDesign name="caretdown" size={14} color="#34898F" />
+                      </TouchableOpacity>
+                    )}
+                    style={{
+                      iconContainer: {
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 16,
+                        zIndex: 0
+                      },
+                      headlessAndroidContainer: {
+                        justifyContent: 'center'
+                      },
+                      inputIOS: {
+                        color: '#34898F',
+                        padding: 16,
+                        zIndex: 1
+                      },
+                      inputAndroid: {
+                        color: '#34898F',
+                        padding: 16,
+                        width: '100%',
+                        zIndex: 1
+                      },
+                      inputWeb: {
+                        color: '#34898F',
+                        padding: 16
+                      },
+                      placeholder: {
+                        color: '#34898F',
+                        fontFamily: 'MontserratAlternates_600SemiBold',
+                        fontSize: 14,
+                        height: 'auto',
+                        zIndex: 1
+                      },
+                    }}
+                    // modalProps={{
+                    //   position: 'absolute',
+                    //   top: '100%', // Isso posiciona o dropdown logo abaixo do campo de seleção
+                    //   left: 0,
+                    //   right: 0,
+                    //   zIndex: 2,
+                    // }}
+                  />
+                )}
+              </View>
+
             </ContainerMargin>
 
 
 
             <ContainerMargin $mt={143} $mb={35} $gap={30} $width="80%">
-              <ButtonDefault textButton="Continuar" onPress={() => handleContinue()} />
+              <ButtonDefault
+                textButton="Continuar"
+                onPress={() => {
+                  console.log('agendamento: ', agendamento)
+                  if (agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel !== null) {
+                    handleContinue()
+                  }
+                }} />
 
               <LinkUnderlineDefault
                 onPress={() => setShowModalScheduleAppointment(false)}
@@ -344,9 +436,9 @@ export const SummaryMedicalAgenda = ({
   async function ConfirmarConsulta() {
     await api.post('/Consultas/Cadastrar', {
       ...agendamento,
-      pacienteId : profile.id,
-      situacaoId : 'DBCAE12A-D2B0-4317-8D37-AFF292B4017C',
-    }).then( async response => {
+      pacienteId: profile.id,
+      situacaoId: 'DBCAE12A-D2B0-4317-8D37-AFF292B4017C',
+    }).then(async response => {
       await setShowSummaryMedicalAgenda(false)
 
       navigation.replace("Main");
@@ -359,7 +451,7 @@ export const SummaryMedicalAgenda = ({
 
   useEffect(() => {
     profileLoad();
-  },[])
+  }, [])
   return (
 
     <Modal
@@ -392,7 +484,7 @@ export const SummaryMedicalAgenda = ({
           <ContainerMargin $alingItens="flex-start" $gap={20} >
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Data da consulta</TextLabel>
-              <TextData>{ moment(agendamento.dataConsulta).format('DD/MM/YYYY HH:mm')}</TextData>
+              <TextData>{moment(agendamento.dataConsulta).format('DD/MM/YYYY HH:mm')}</TextData>
             </ContainerMargin>
             <ContainerMargin $alingItens="flex-start" $gap={8}>
               <TextLabel>Médico(a) da consulta</TextLabel>
@@ -411,7 +503,7 @@ export const SummaryMedicalAgenda = ({
 
 
           <ContainerMargin $mt={30} $mb={30} $gap={30} $width="90%">
-            <ButtonDefault textButton="Confirmar" onPress={ConfirmarConsulta}/>
+            <ButtonDefault textButton="Confirmar" onPress={ConfirmarConsulta} />
 
             <LinkUnderlineDefault onPress={() => {
               navigation.reset({
@@ -439,7 +531,7 @@ export const ModalShowLocalConsult = ({
   dadosCard
 }) => {
 
-  
+
   return (
     <Modal
       transparent={true}
@@ -458,7 +550,7 @@ export const ModalShowLocalConsult = ({
 
         >
           <ContainerMargin $mt={30}>
-            <ImageUser source={{uri: dadosCard.idNavigation?.foto}} $width="90%" $height="181px" />
+            <ImageUser source={{ uri: dadosCard.idNavigation?.foto }} $width="90%" $height="181px" />
           </ContainerMargin>
           <ContainerMargin $mt={20} $width="100%">
             <Title>
@@ -467,7 +559,7 @@ export const ModalShowLocalConsult = ({
           </ContainerMargin>
           <ContainerMargin $width="80%" $mt={18} $fd="row" $justContent="space-around">
             <TextQuickSandRegular>
-            {dadosCard.especialidade?.especialidade1}
+              {dadosCard.especialidade?.especialidade1}
             </TextQuickSandRegular>
             <TextQuickSandRegular>
               CRM-{dadosCard.crm}
@@ -518,7 +610,7 @@ export const ModalCamera = ({
 
   async function capturePhoto() {
     if (cameraRef) {
-      const photo = await cameraRef.current.takePictureAsync();
+      const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
       setPhotoCam(photo.uri);
       setOpenModal(true);
     }
@@ -526,6 +618,7 @@ export const ModalCamera = ({
 
   async function savePhoto() {
     if (photoCam) {
+      console.log(photoCam)
       await MediaLibary.createAssetAsync(photoCam)
         .then(() => {
           alert('Sucesso, Foto Salva na Galeria');

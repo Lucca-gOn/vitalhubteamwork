@@ -15,55 +15,78 @@ export default function Login({
   navigation
 }) {
   const [email, setEmail] = useState('');
+  const [erroEmail, setErroEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [erroGeral, setErroGeral] = useState('');
   const [statusResponseLogin, setStatusResponseLogin] = useState(false);
   const [statusResponseLoginGoogle, setStatusResponseLoginGoogle] = useState(false);
   const [buttonDisable, setButtonDisable] = useState(false);
 
-  const [checkEmail, setCheckEmail] = useState(true);
   const isFocused = useIsFocused();
 
   //Chamar a funcao de login
   async function Login() {
+
     // chamar a api de login 
-    if (isFocused) {      
+    if (isFocused) {
       try {
         const response = await api.post('/Login', {
-          // email: email,
-          // senha: senha
+          email: email,
+          senha: senha
           //email: 'lucas@lucas.com',
           //senha: 'lucas'
-          // email: 'allan@allan.com',
-          // senha: 'allan'
-          email: 'caio@caio.com',
-          senha: 'caio'
+          //email: 'allan@allan.com',
+          //senha: 'allan'
+          //email: 'caio@caio.com',
+          //senha: 'caio'
         })
         //console.log(response.data)
         await AsyncStorage.setItem('token', JSON.stringify(response.data))
 
+        setErroGeral('')
+
         navigation.navigate('Main')
-          setTimeout(()=>{
-            setStatusResponseLogin(false),
+        setTimeout(() => {
+          setStatusResponseLogin(false),
             setStatusResponseLoginGoogle(false),
             setButtonDisable(false)
-          },250)  
+        }, 250)
       } catch (error) {
+        setErroGeral('')
         console.log(error)
-        alert('Problema ao tentar conectar com o servidor, favor acionar o suporte');
-        
+        //alert('Problema ao tentar conectar com o servidor, favor acionar o suporte');
+        setStatusResponseLogin(false)
+        setStatusResponseLoginGoogle(false)
+        setButtonDisable(false)
+
+        if (error.response) {
+          // O servidor respondeu com um código de status diferente de 2xx
+          console.log('Erro de status:', error.response.status);
+          console.log('Dados de erro:', error.response.data);
+          if (error.response.status == 401) {
+            setErroGeral(error.response.data);
+          }
+        } else if (error.request) {
+          // A solicitação foi feita, mas não recebeu resposta
+          //console.log('Erro de solicitação:', error.request);
+        } else {
+          // Algo aconteceu ao configurar a solicitação que desencadeou um erro
+          //console.log('Erro ao configurar a solicitação:', error.message);
+        }
+        //console.log('Erro:', error.config);
+        //console.log('Erro:', error.response);
       }
     }
-
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     const unsucscribe = navigation.addListener('transitionEnd', (e) => {
       setStatusResponseLogin(false)
       setStatusResponseLoginGoogle(false)
       setButtonDisable(false)
     })
     return unsucscribe;
-  },[navigation])
+  }, [navigation])
   // validEmail(email)
 
   useEffect(() => {
@@ -93,12 +116,15 @@ export default function Login({
             onChangeText={(txt) => {
               setEmail(txt)
             }}
-          // onBlur={()=>{
-          //   setCheckEmail(validEmail(email));
-          // }}
-
+            onEndEditing={() => {
+              if (!validEmail(email)) {
+                setErroEmail('Email nâo é válido. Ex: teste@teste.com')
+              } else {
+                setErroEmail('')
+              }
+            }}
           />
-          {!checkEmail ? <Text>Email invalido</Text> : <></>}
+          {erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
 
           <InputGreen
             placeholder="Senha"
@@ -110,16 +136,27 @@ export default function Login({
             value={senha}
             onChangeText={(txt) => setSenha(txt)}
           />
+          {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
         </ContainerMargin>
+
 
         <LinkGray onPress={() => { navigation.navigate('RecoveryPassWord') }}>Esqueceu sua senha?</LinkGray>
 
         <ContainerMargin $mt={42} $gap={15} $mb={30}>
           <ButtonDefault statusResponse={statusResponseLogin} textButton='Entrar' disabled={buttonDisable}
             onPress={() => {
-              Login()
-              setStatusResponseLogin(true)
-              setButtonDisable(true)
+              if (email !== '' && senha !== '') {
+                  setErroGeral('')
+                if (validEmail(email)) {
+                  Login()
+                  setStatusResponseLogin(true)
+                  setButtonDisable(true)
+
+                }
+                
+              } else {
+                setErroGeral('Necessário preenchimento dos campos acima!')
+              }
             }} />
           <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={() => {
             Login()

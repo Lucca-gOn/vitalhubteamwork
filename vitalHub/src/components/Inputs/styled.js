@@ -80,7 +80,8 @@ export const InputGreenMultiLine = styled(InputGreen).attrs({
     }
   }
   }
-  height:121px;  
+  width: 100%;
+  /* height:121px;   */
 `
 
 export const InputGreenCode = styled.TextInput.attrs({

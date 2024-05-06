@@ -79,7 +79,13 @@ export default function SelectMedic({ navigation, route }) {
       ></FlatList>
 
       <ContainerMargin $mt={30} $mb={35} $gap={30} $width="80%">
-        <ButtonDefault textButton="Continuar" onPress={handleContinue} />
+        <ButtonDefault 
+          textButton="Continuar" 
+          onPress={ () => {
+            if(select !== null){
+              handleContinue()
+            }
+          }} />
         <LinkUnderlineDefault
           onPress={() => {
             navigation.reset({

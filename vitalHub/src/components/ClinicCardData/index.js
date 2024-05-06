@@ -22,7 +22,7 @@ export const ClinicCardData = ({
         </ContainerMargin>
       </ContainerMargin>
       <ContainerMargin $fd="row" $justContent="space-between" $width="100%">
-        <TextAdress>{`${logradouro}, ${cidade}`}</TextAdress>
+        <TextAdress style={{width:'65%'}}>{`${logradouro}, ${cidade}`}</TextAdress>
 
         <ContainerMargin $fd="row" $justContent="center" $alingItens="center" $width="auto" $gap={5} $pd="4px 14px" $bgColor="#E8FCFD" $borderRadius={5}>
           <MaterialCommunityIcons name="calendar" size={14} color="#49B3BA" />

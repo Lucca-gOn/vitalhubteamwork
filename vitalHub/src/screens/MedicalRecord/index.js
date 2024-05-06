@@ -1,12 +1,11 @@
 
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, StatusBar, Text, View } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
 import { InputGreen, InputGreenMultiLine } from "../../components/Inputs/styled"
-import { ButtonDefault, ButtonGreen, ButtonGreenCam } from "../../components/Buttons"
+import { ButtonDefault, ButtonGreenCam } from "../../components/Buttons"
 import { LinkUnderlineDefault } from "../../components/Links"
-import { Stethoscope } from "../../components/Stethoscope"
 import { Image } from "expo-image"
 import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
@@ -24,6 +23,7 @@ export default function MedicalRecord({
   const [descricaoExame, setDescricaoExame] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false);
   const [disabledInput, setDisableInput] = useState(false);
+  const [uriFotoCam, setUriFotoCam] = useState(null);
 
   const nome = route.params?.dadosConsulta?.paciente?.idNavigation?.nome || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.nome;
   const email = route.params?.dadosConsulta?.paciente?.idNavigation?.email || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.email;
@@ -32,7 +32,7 @@ export default function MedicalRecord({
 
   const dadosSituações = route.params?.dadosSituacoes;
 
-  const idConsulta = route.params?.dadosConsulta?.id;a
+  const idConsulta = route.params?.dadosConsulta?.id;
   const dataNascimento = route.params?.dadosConsulta?.paciente?.dataNascimento;
   const fotoCam = route.params?.fotoCam;
   const situacaoConsulta = route.params?.dadosConsulta?.situacao?.situacao;
@@ -93,11 +93,12 @@ export default function MedicalRecord({
 
   async function InserirExame() {
     const formData = new FormData();
-    formData.append("ConsultaId", produtario)
-    formData.append("Imagem", {
-      uri: foto,
-      name: `image.${foto.split('.').pop()}`,
-      type: `image/${foto.split('.').pop()}`
+    console.log('Foto uriFotoCam', uriFotoCam)
+    formData.append("ConsultaId", idConsulta)
+    formData.append("File", {
+      uri: uriFotoCam,
+      name: `image.${uriFotoCam.split('.').pop()}`,
+      type: `image/${uriFotoCam.split('.').pop()}`
     })
 
     await api.post(`/Exame/Cadastrar`, formData, {
@@ -115,11 +116,33 @@ export default function MedicalRecord({
     )
   }
 
+  async function ExibeExame() {
+    await api.get(`/Exame/BuscarPorIdConsulta?idConsulta=${idConsulta}`)
+      .then(response => {
+        let descricao = '';
+        response.data.forEach(element => {
+          descricao += element.descricao
+        });
+        setDescricaoExame(descricao);
+      })
+      .catch(error => {
+        alert(`Erro ao buscar exame: ${error}`)
+      })
+  }
+
   useEffect(() => {
     verificaProntuario()
+    ExibeExame()
   }, [])
-  
+
+  useEffect(() => {
+    if (uriFotoCam != null) {
+      InserirExame();
+    }
+  }, [uriFotoCam])
+
   return (
+
     <Container>
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
@@ -176,6 +199,8 @@ export default function MedicalRecord({
 
         </ContainerMargin>
 
+
+
         {
           role !== 'Medico' ? (
 
@@ -186,9 +211,8 @@ export default function MedicalRecord({
                 <TextLabel>Exames médicos</TextLabel>
 
                 <ContainerMargin $width="100%" $height="111px" $bgColor="#F5F3F3" $borderRadius={5} $fd="row" $gap={9}>
-                  {fotoCam !== undefined ?
-
-                    <Image source={fotoCam !== undefined ? { uri: fotoCam.photoCam } : require('../../assets/images/NotImage.svg')} style={{ width: "100%", height: '100%', resizeMode: "cover" }} />
+                  {uriFotoCam !== null ?
+                    <Image source={{ uri: uriFotoCam }} style={{ width: "100%", height: '100%', contentfit: "cover" }} />
                     :
                     <>
                       <Image source={require('../../assets/images/ImageExclamation.svg')} style={{ width: 16, height: 18 }} />
@@ -210,9 +234,21 @@ export default function MedicalRecord({
 
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
 
-              <ContainerMargin>
-                <InputGreenMultiLine editable={!disabledInput} placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
-              </ContainerMargin>
+
+              <View style={{height: 500}} >
+                <ScrollView style={{ height: 250, width: "100%", padding:50, backgroundColor: 'pink' }} showsVerticalScrollIndicator={true} >
+                  <Text>
+                    {descricaoExame}
+                  </Text>
+                </ScrollView>
+              </View>
+
+              {/* <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} /> */}
+
+
+
+              {/* editable={!disabledInput} */}
+
 
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
                 <LinkUnderlineDefault onPress={() => navigation.goBack()}>
@@ -248,7 +284,7 @@ export default function MedicalRecord({
 
       </ContainerScrollView>
 
-      <ModalCamera showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
 
     </Container>
   )
