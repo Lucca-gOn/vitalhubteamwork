@@ -91,7 +91,7 @@ export const InputGreenCode = styled.TextInput.attrs({
   cursorColor: '#34898F',
   enablesReturnKeyAutomatically: true,
   maxLength: 1,
-  placeholder: '0',
+  //placeholder: '0',
   inputMode: "numeric",
   keyboardType: "numeric",
   selectTextOnFocus: true,

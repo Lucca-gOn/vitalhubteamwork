@@ -17,38 +17,44 @@ export default function CheckEmail({
 }) {
 
 
-  const [codigo,setCodigo] = useState('');
+  const [codigo, setCodigo] = useState('0000');
 
   const inputs = [
-    useRef(null),useRef(null),useRef(null),useRef(null)
+    useRef(null), useRef(null), useRef(null), useRef(null)
   ]
 
-  function focusNextInput(index){
+  function focusNextInput(index) {
     // Verificar se o index é menor que a quantidade de campos
-    if(index < inputs.length -1){
-      inputs[index+1].current.focus()
+    if (index < inputs.length - 1) {
+      inputs[index + 1].current.focus()
     }
   }
 
-  function focusPrevInput(index){
-    if(index > 0){
-      inputs[index -1].current.focus()
+  function focusPrevInput(index) {
+    if (index > 0) {
+      inputs[index - 1].current.focus()
     }
   }
 
-  async function validarCodigo(){
+  async function validarCodigo() {
     console.log(codigo);
-
-    await api.post(`RecuperarSenha/ValidarCoidgoRecuperacaoSenha?email=${route.params.emailRecuperacao}&codigo=${codigo}`)
-    .then(
-      navigation.replace('NewPassword',{email: route.params.emailRecuperacao })
-    ).catch(error => {
-      console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
-    })
-   
+    console.log(route.params.emailRecuperacao);
+try {
+  await api.post(`RecuperarSenha/ValidarCodigoRecuperacaoSenha?email=${route.params.emailRecuperacao}&codigo=${codigo}`)
+  navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
+  
+} catch (error) {
+  console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
+}
+      // .then(
+      //   console.log('aceitou o codigo'),
+      //   navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
+      // ).catch((error) => {
+      //   console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
+      // })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     inputs[0].current.focus()
   }, [])
   return (
@@ -60,7 +66,7 @@ export default function CheckEmail({
         <ButtonIcon onPress={() => {
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' }]
+            routes: [{ name: 'Login' }]
           })
         }}>
           <IconX />
@@ -87,15 +93,16 @@ export default function CheckEmail({
           <InputGreenCode />
           <InputGreenCode /> */}
           {
-            [0,1,2,3].map((index)=> (
-              <InputGreenCode 
-                ref={inputs[index]} 
-                key={index} 
-                onChangeText={(text)=>{
+            [0, 1, 2, 3].map((index) => (
+              <InputGreenCode
+                ref={inputs[index]}
+                key={index}
+                value={codigo[index]}
+                onChangeText={(text) => {
                   // Verificar se o texto não é vazio (pra voltar para o campo anterior)
-                  if(text == ''){
+                  if (text == '') {
                     focusPrevInput(index)
-                  }else{
+                  } else {
                     // Separa os valore em arrays
                     const novoCodigo = [...codigo]
                     // corrige o valo de acrodo com a posicao
@@ -104,13 +111,20 @@ export default function CheckEmail({
                     // Verificar se o campo tem 1 caracter (passa pro proximo campo)
                     focusNextInput(index);
                   }
-              }}/>
+                }} />
             ))
           }
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Continuar" onPress={() => validarCodigo()} />
+          <ButtonDefault textButton="Continuar" onPress={
+            () => {    
+              console.log('antes do if',codigo)          
+              if ((codigo !== '0000') && (codigo>999) && (codigo < 9999)) {              
+                validarCodigo()
+              }
+            }
+          } />
 
           <LinkUnderlineDefault>Reenviar código</LinkUnderlineDefault>
         </ContainerMargin>

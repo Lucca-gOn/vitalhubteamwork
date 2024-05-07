@@ -395,7 +395,7 @@ export const ModalScheduleAppointment = ({
                 textButton="Continuar"
                 onPress={() => {
                   console.log('agendamento: ', agendamento)
-                  if (agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel !== null) {
+                  if(agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel!== null){
                     handleContinue()
                   }
                 }} />
