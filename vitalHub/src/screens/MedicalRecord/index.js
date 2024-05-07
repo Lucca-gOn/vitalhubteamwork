@@ -1,5 +1,5 @@
 
-import { ScrollView, StatusBar, Text, View } from "react-native"
+import { ScrollView, StatusBar, Text, View, SafeAreaView } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
@@ -11,6 +11,7 @@ import { ModalCamera } from "../../components/Modals"
 import { useEffect, useState } from "react"
 import api from "../../service/Service"
 import moment from "moment"
+
 
 
 export default function MedicalRecord({
@@ -235,21 +236,12 @@ export default function MedicalRecord({
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
 
 
-              <View style={{height: 500}} >
-                <ScrollView style={{ height: 250, width: "100%", padding:50, backgroundColor: 'pink' }} showsVerticalScrollIndicator={true} >
-                  <Text>
-                    {descricaoExame}
-                  </Text>
-                </ScrollView>
-              </View>
 
-              {/* <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} /> */}
 
+              <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
 
 
               {/* editable={!disabledInput} */}
-
-
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
                 <LinkUnderlineDefault onPress={() => navigation.goBack()}>
                   Voltar

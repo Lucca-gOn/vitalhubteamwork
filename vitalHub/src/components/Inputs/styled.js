@@ -61,7 +61,7 @@ ${(props) => {
 `
 
 
-export const InputGreenMultiLine = styled(InputGreen).attrs({
+export const InputGreenMultiLine = styled.Text.attrs({
   multiline: true,
   textAlignVertical: "top"
 })`
@@ -70,19 +70,19 @@ export const InputGreenMultiLine = styled(InputGreen).attrs({
       return css`
         color: #34898F;
         border-color: #34898F;
-      `
+      `;
     } else {
       return css`
         background-color: #F5F3F3;
         border-color: #F5F3F3;
         color: #4E4B59;
-      `
+      `;
     }
-  }
-  }
+  }}
   width: 100%;
-  /* height:121px;   */
-`
+  max-height: 300px;
+  flex:1;
+`;
 
 export const InputGreenCode = styled.TextInput.attrs({
   placeholderTextColor: '#34898F',
