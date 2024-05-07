@@ -174,11 +174,11 @@ export default function Login({
                 setErroGeral('Necessário preenchimento dos campos acima!')
               }
             }} />
-          <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={() => {
+          {/* <ButtonGoogle statusResponse={statusResponseLoginGoogle} textButton="Entrar com google" disabled={buttonDisable} onPress={() => {
             Login()
             setStatusResponseLoginGoogle(true)
             setButtonDisable(true)
-          }} />
+          }} /> */}
         </ContainerMargin>
 
         <ContainerMargin $fd="row" $mb={30} >

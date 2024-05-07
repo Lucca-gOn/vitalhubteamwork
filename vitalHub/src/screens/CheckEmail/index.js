@@ -1,7 +1,7 @@
 
 import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
-import { StatusBar } from "react-native";
+import { StatusBar, Text } from "react-native";
 import { Description, Title } from "../../components/Texts/style";
 import { InputGreenCode } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
@@ -18,6 +18,10 @@ export default function CheckEmail({
 
 
   const [codigo, setCodigo] = useState('0000');
+  const [erroGeral, setErroGeral] = useState('');
+  const [erroReenvioCodigo, setErroReenvioCodigo] = useState('');
+  const [statusResponseCodigo, setStatusResponseCodigo] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
 
   const inputs = [
     useRef(null), useRef(null), useRef(null), useRef(null)
@@ -36,22 +40,44 @@ export default function CheckEmail({
     }
   }
 
+  async function reenviarCodico() {
+    await api.post(`/RecuperarSenha?email=${route.params.emailRecuperacao}`)
+      .then(() => {
+        setErroReenvioCodigo('Código reenviado com sucesso.')
+        alert('Código reenviado com sucesso.')
+        setButtonDisable(false)
+      }).catch(
+        error => {
+          setButtonDisable(false)
+        }
+      )
+  }
+
   async function validarCodigo() {
     console.log(codigo);
     console.log(route.params.emailRecuperacao);
-try {
-  await api.post(`RecuperarSenha/ValidarCodigoRecuperacaoSenha?email=${route.params.emailRecuperacao}&codigo=${codigo}`)
-  navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
-  
-} catch (error) {
-  console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
-}
-      // .then(
-      //   console.log('aceitou o codigo'),
-      //   navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
-      // ).catch((error) => {
-      //   console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
-      // })
+    try {
+      await api.post(`RecuperarSenha/ValidarCodigoRecuperacaoSenha?email=${route.params.emailRecuperacao}&codigo=${codigo}`)
+      navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
+      setTimeout(() => {
+        setStatusResponseCodigo(false),
+          setButtonDisable(false)
+      }, 250)
+    } catch (error) {
+      console.log(error.response)
+      console.log(`Erro ao enviar o codigo de recupereção de senha : ${error.response}`)
+      if (error.response.status = 400) {
+        setErroGeral(error.response.data)
+      }
+      setStatusResponseCodigo(false),
+        setButtonDisable(false)
+    }
+    // .then(
+    //   console.log('aceitou o codigo'),
+    //   navigation.replace('NewPassword', { email: route.params.emailRecuperacao })
+    // ).catch((error) => {
+    //   console.log(`Erro ao enviar o codigo de recupereção de senha : ${error}`)
+    // })
   }
 
   useEffect(() => {
@@ -114,19 +140,33 @@ try {
                 }} />
             ))
           }
+
+
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
-          <ButtonDefault textButton="Continuar" onPress={
-            () => {    
-              console.log('antes do if',codigo)          
-              if ((codigo !== '0000') && (codigo>999) && (codigo < 9999)) {              
+          {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
+          <ButtonDefault disabled={buttonDisable} statusResponse={statusResponseCodigo} textButton="Continuar" onPress={
+            () => {
+              console.log('antes do if', codigo)
+              if ((codigo !== '0000') && (codigo > 999) && (codigo < 9999)) {
+                setStatusResponseCodigo(true)
+                setButtonDisable(true)
                 validarCodigo()
               }
             }
           } />
 
-          <LinkUnderlineDefault>Reenviar código</LinkUnderlineDefault>
+          <LinkUnderlineDefault
+            disabled={buttonDisable}
+            onPress={() => {
+              setButtonDisable(true)
+              reenviarCodico()
+            }}>
+            Reenviar código
+          </LinkUnderlineDefault>
+
+          {/* {erroReenvioCodigo !== '' ? <Text style={{ color: '#496BBA', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroReenvioCodigo}</Text> : <></>} */}
         </ContainerMargin>
 
 

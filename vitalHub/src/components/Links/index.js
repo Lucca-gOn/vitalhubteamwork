@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 
 export const LinkGray = styled.Text`
   width:90%;
@@ -21,7 +21,17 @@ export const LinkBlueLigth = styled.Text`
 `
 
 export const LinkUnderlineDefault  = styled(LinkBlueLigth)`
-  color: #344F8F;
+  ${({ disabled }) => {
+    if (disabled) {
+      return css`
+        color: #b5b5b5;     
+      `
+    }else{
+      return css`
+        color: #344F8F;
+      `
+    }
+  }}
 `
 
 export const LinkBlueMedium = styled(LinkBlueLigth)`

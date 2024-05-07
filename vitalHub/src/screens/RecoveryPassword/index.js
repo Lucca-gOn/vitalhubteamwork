@@ -15,31 +15,38 @@ export default function RecoveryPassWord({
   navigation
 }) {
 
-  const [email,setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const [erroEmail, setErroEmail] = useState('');
-  
-  async function enviarEmail(){
+  const [statusResponseEmail, setStatusResponseEmail] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
+
+  async function enviarEmail() {
     await api.post(`/RecuperarSenha?email=${email}`)
-    .then(() => {
-      navigation.replace('CheckEmail', {emailRecuperacao: email});
-    }).catch(
-      error =>
-      {
-        if(error.response.status == 404){
-          setErroEmail(error.response.data)
+      .then(() => {
+        navigation.replace('CheckEmail', { emailRecuperacao: email });
+        setTimeout(() => {
+          setStatusResponseEmail(false),
+            setButtonDisable(false)
+        }, 250)
+      }).catch(
+        error => {
+          if (error.response.status == 404) {
+            setErroEmail(error.response.data)
+          }
+          setStatusResponseEmail(false),
+            setButtonDisable(false)
+          //alert(`Erro ao fazer requisiçao de recuperar senha: `, error.response);
         }
-        //alert(`Erro ao fazer requisiçao de recuperar senha: `, error.response);
-      }
       )
   }
-  
+
   return (
     <ContainerMarginStatusBar>
 
       <StatusBar translucent={true} barStyle="dark-content" backgroundColor={'transparent'} currentHeight />
 
       <ContainerMargin $mb={25} $mt={20}>
-        <ButtonIcon onPress={()=> navigation.goBack()}>
+        <ButtonIcon onPress={() => navigation.goBack()}>
           <IconBack />
         </ButtonIcon>
         <BrandLogoBlue />
@@ -70,20 +77,28 @@ export default function RecoveryPassWord({
             }}
           />
 
-{erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
+          {erroEmail !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroEmail}</Text> : <></>}
         </ContainerMargin>
 
         <ContainerMargin $mt={30} $gap={15} $mb={30}>
-          <ButtonDefault 
-            textButton="Continuar" 
-            onPress={()=>{
-              if(validEmail(email)){
-                enviarEmail()
+          <ButtonDefault
+            statusResponse={statusResponseEmail}
+            disabled={buttonDisable}
+            textButton="Continuar"
+            onPress={() => {
+              if (email !== '') {
+                if (validEmail(email)) {
+                  setButtonDisable(true)
+                  setStatusResponseEmail(true)
+                  enviarEmail()
+                }
+              }else{
+                setErroEmail('Necessário preencher os campos acima')
               }
-              }
-            } 
+            }
+            }
 
-            />
+          />
         </ContainerMargin>
 
       </ContainerScrollView>
