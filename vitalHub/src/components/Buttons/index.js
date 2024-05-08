@@ -13,7 +13,7 @@ export const ButtonDefault = ({
 }) => {
   return (
     <>
-      <ButtonBlueStyle onPress={onPress} disabled={disabled} disabledInput={disabledInput}>
+      <ButtonBlueStyle onPress={onPress} disabled={disabled} disabledInput={disabled}>
         <TextButtonBlue disabledInput={disabledInput}>{statusResponse ? <ActivityIndicator /> : textButton}</TextButtonBlue>
       </ButtonBlueStyle>
     </>

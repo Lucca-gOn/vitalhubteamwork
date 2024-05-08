@@ -25,8 +25,10 @@ export default function Profile({ navigation }) {
   const [cidade, setCidade] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false)
   const [disabledInput, setDisableInput] = useState(false)
-  const [uriFotoCam,setUriFotoCam] = useState(null);
-  
+  const [uriFotoCam, setUriFotoCam] = useState(null);
+  const [buttonDisable, setButtonDisable] = useState(false);
+  const [statusResponseSalvar,setStatusResponseSalvar] = useState(false);
+
 
   const { role } = profile
 
@@ -71,7 +73,7 @@ export default function Profile({ navigation }) {
     }
   };
 
-  async function alterarFotoPerfil(){
+  async function alterarFotoPerfil() {
     alert('Chamou a função alterarFotoPerfil')
     const formData = new FormData();
 
@@ -85,11 +87,12 @@ export default function Profile({ navigation }) {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    }).then( () => {
+    }).then(() => {
+    }).then(() => {
 
       setFoto(uriFotoCam)
     }
-    ).catch(error =>{console.log('Erro ao alterar a foto : ',error.request)})
+    ).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
   }
 
   async function alterarDadosProfile() {
@@ -117,28 +120,28 @@ export default function Profile({ navigation }) {
     profileLoad();
   }, []);
 
-  useEffect(()=>{
-    if(uriFotoCam){
-      alterarFotoPerfil()      
-    }
-  },[uriFotoCam]);
+  useEffect(() => {
+    if (uriFotoCam) {
+      alterarFotoPerfil()
+  }}, [uriFotoCam]);
 
-  
+
+
 
   return (
-    <Container>
+    <Container >
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
-      <ContainerMargin style={{ position: "relative" }}>
-        <ImageUser source={uri=foto} $width="100%" $height="280px" />
-        <TouchableOpacity 
-        activeOpacity={0.8} 
-        style={{backgroundColor:'#496BBA',position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white',zIndex: 1}}
-        onPress={()=> setShowModalCamera(true)}
+      <ContainerMargin style={{ position: "relative", zIndex: 10 }}>
+        <ImageUser source={uri = foto} $width="100%" $height="280px" />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ backgroundColor: '#496BBA', position: "absolute", bottom: -20, right: 15, padding: 12, borderRadius: 10, borderWidth: 1, borderStyle: "solid", borderColor: 'white' }}
+          onPress={() => setShowModalCamera(true)}
         >
           <MaterialCommunityIcons name="camera-plus" size={24} color="white" />
         </TouchableOpacity>
       </ContainerMargin>
-      <ContainerScrollView  showsVerticalScrollIndicator={false}>
+      <ContainerScrollView showsVerticalScrollIndicator={false}>
 
         <ContainerMargin $mt={20} $width="100%">
           <Title>{user?.nome}</Title>
@@ -150,7 +153,7 @@ export default function Profile({ navigation }) {
 
         {role == 'Medico' ? (
           <>
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} >
               <TextLabel>CRM:</TextLabel>
               <InputGray
                 placeholder="Número do CRM"
@@ -160,7 +163,8 @@ export default function Profile({ navigation }) {
                 onChangeText={(text) => {
                   setCRM(text);
                 }}
-                style={{zIndex:0}}
+                style={{ zIndex: 0 }}
+                style={{ zIndex: 0 }}
               />
             </ContainerMargin>
 
@@ -263,14 +267,29 @@ export default function Profile({ navigation }) {
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
-          <ButtonDefault textButton="Salvar" onPress={() => { alterarDadosProfile() }} />
-          <ButtonDefault textButton="Editar" onPress={() => setDisableInput(true)} />
+          <ButtonDefault
+            textButton="Salvar"
+            disabled={!buttonDisable}
+            statusResponse={statusResponseSalvar}
+            onPress={() => {
+              alterarDadosProfile()
+              setButtonDisable(!buttonDisable)
+            }} />
+
+          <ButtonDefault
+            textButton="Editar"
+            disabled={buttonDisable}
+            onPress={() => {
+              setButtonDisable(!buttonDisable);
+              setDisableInput(true)
+            }} />
           <ButtonGray textButton="Sair do app" onPress={Logout} />
 
         </ContainerMargin>
       </ContainerScrollView>
       <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
-    </Container>    
+    </Container>
+    
   );
 
 }
