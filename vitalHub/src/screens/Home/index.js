@@ -30,11 +30,12 @@ export default function Home(
   const [dateConsult, setDateConsult] = useState('');  
   const [profile, setProfile] = useState({});
   const [renderizaDados, setRenderizaDados]= useState(false);
+  const [foto,setFoto] = useState('')
   const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada :'Agendadas');
   const [situacao, setSituacao] = useState("");
   
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
-  const { name, foto,  role } = profile;
+  const { name,  role } = profile;
     
   console.log(profile)
   // Função para obter os dados descriptografados do token
@@ -65,6 +66,20 @@ export default function Home(
     })    
   }
 
+  async function buscarUsuarioId() {
+    console.log(profile.id)
+    await api.get(`/Usuario/BuscarPorId?id=${profile.id}`)
+    .then(
+      response =>{
+        setFoto(response.data.foto)
+      }
+    ).catch(
+      error => {
+        console.log(`Erro ao buscar por id : ${error}`)
+      }
+    )
+  }
+
   //Executando a função ProfileLoad
   useEffect(() => {
     profileLoad();
@@ -72,6 +87,7 @@ export default function Home(
   }, [])
 
   useEffect(() => {
+    buscarUsuarioId()
     if (dateConsult !== '') {
       ListarConsultas();
     }

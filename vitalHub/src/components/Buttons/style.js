@@ -18,7 +18,7 @@ export const ButtonBlueStyle = styled.TouchableOpacity`
   padding:12px;
 `
 export const ButtonGrayStyle = styled(ButtonBlueStyle)`
-  background-color: #ACABB7;
+  background-color: #ACACAC;
   width:50%;
 `
 
