@@ -35,6 +35,8 @@ export default function CreateAccount({
 
   const [erroGeral, setErroGeral] = useState('');
 
+  const [buttonDisable, setButtonDisable] = useState(false);
+  const [statusResponseCadastro, setStatusResponseCadastro] = useState(false);
   // Handlers
   const handleCPFChange = (text) => {
     setCpf(text);
@@ -76,16 +78,27 @@ export default function CreateAccount({
       await Login(); // Chama o login após o cadastro
     } catch (error) {
       console.log("Erro ao criar conta:", error);
+      setButtonDisable(false)
+      setStatusResponseCadastro(false)
     }
   }
 
   async function Login() {
     try {
+      console.log('entrou no login')
+      console.log(email)
+      console.log(senha)
       const response = await api.post('/Login', { email, senha });
       await AsyncStorage.setItem("token", JSON.stringify(response.data));
       navigation.replace("Profile");
+      setTimeout(() => {
+        setButtonDisable(false)
+        setStatusResponseCadastro(false)
+      }, 250)
     } catch (error) {
       console.log(error);
+      setButtonDisable(false)
+      setStatusResponseCadastro(false)
     }
   }
 
@@ -116,9 +129,10 @@ export default function CreateAccount({
             onChangeText={handleNomeChange}
             keyboardType="default"
             maxLength={50}
+            autoCapitalize={"words"}
             enterKeyHint="next"
             onEndEditing={() => {
-                setNome(nome.trim())
+              setNome(nome.trim())
               if (!validName(nome.trim())) {
                 setErroNome('O campo deve ter no mínimo três caracteres!')
               } else {
@@ -249,12 +263,16 @@ export default function CreateAccount({
 
         <ContainerMargin $mt={30} $gap={30} $mb={30}>
           <ButtonDefault
+            disabled={buttonDisable}
+            statusResponse={statusResponseCadastro}
             textButton="Cadastrar"
             onPress={() => {
               if (nome !== '' && cpf !== '' && dataNascimento !== '' && email !== '' && senha !== '' && confirmarSenha !== '') {
-                if (validName(nome)  && validDataNasciemnto(dataNascimento) && validEmail(email) && validNewPassWord(senha) && (senha === confirmarSenha)) {
+                if (validName(nome) && validDataNasciemnto(dataNascimento) && validEmail(email) && validNewPassWord(senha) && (senha === confirmarSenha)) {
                   account()
                   setErroGeral('')
+                  setButtonDisable(true)
+                  setStatusResponseCadastro(true)
                 } else {
 
                   setErroGeral('Necessário rever os erros acima antes de continuar.')
