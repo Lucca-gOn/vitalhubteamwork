@@ -113,7 +113,7 @@ console.log(clinica)
                 width: '100%',
               }}
               //Espera carregar o mapa para depois ajustar
-              on={()=> {setMapRendered(true)}}
+              onLayout={()=> {setMapRendered(true)}}
             >
               <Marker
                 coordinate={{

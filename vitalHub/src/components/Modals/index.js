@@ -221,15 +221,15 @@ export const ModalScheduleAppointment = ({
 }) => {
 
   const [agendamento, setAgendamento] = useState({
-    prioridadeId: null,
-    prioridadeLabel: null,
+    prioridadeId: '989B4408-D25C-471F-B5C3-06BEAF08D8DA',
+    prioridadeLabel: 'Rotina',
     localizacao: null
   })
   const [isSelected, setIsSelected] = useState(false)
-  const [tipoConsulta, setTipoConsulta] = useState("")
+  const [tipoConsulta, setTipoConsulta] = useState("Rotina")
   const [clinicas, setClinicas] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [buttonDisable, setButtonDisable] = useState(false);
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
     { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Exame' },
@@ -239,6 +239,14 @@ export const ModalScheduleAppointment = ({
   function handleContinue() {
     setShowModalScheduleAppointment(false);
     navigation.navigate("SelectClinic", { agendamento: agendamento });
+    setAgendamento(
+      {
+        prioridadeId: '989B4408-D25C-471F-B5C3-06BEAF08D8DA',
+        prioridadeLabel: 'Rotina',
+        localizacao: null
+      }
+    )
+    setTipoConsulta('Rotina')
   }
 
   async function buscarClinicas() {
@@ -250,11 +258,13 @@ export const ModalScheduleAppointment = ({
     }
   };
 
+  
 
   useEffect(() => {
     buscarClinicas();
   }, [])
   return (
+
     <Modal
       transparent={true}
       visible={showModalScheduleAppointment}
@@ -314,7 +324,7 @@ export const ModalScheduleAppointment = ({
             </ContainerMargin>
 
             <ContainerMargin $width="80%" $mt={20} $alingItens="flex-start">
-              <TextLabelBlack style={{marginBottom: 10}}>Informe a localização desejada</TextLabelBlack>
+              <TextLabelBlack style={{ marginBottom: 10 }}>Informe a localização desejada</TextLabelBlack>
               {/* <InputGreen
                 placeholder="Informe a localização"
 
@@ -325,12 +335,12 @@ export const ModalScheduleAppointment = ({
                   localizacao: txt
                 })} /> */}
 
-              <View style={{ width: '100%', borderWidth: 2, borderColor: '#60BFC5', borderStyle: 'solid', borderRadius: 5}}>
+              <View style={{ width: '100%', borderWidth: 2, borderColor: '#60BFC5', borderStyle: 'solid', borderRadius: 5 }}>
                 {loading ? (
                   <ActivityIndicator />
                 ) : (
                   <RNPickerSelect
-                    mode="dropdown"
+
                     useNativeAndroidPickerStyle={false}
                     fixAndroidTouchableBug={true}
                     onValueChange={(value) => setAgendamento({ ...agendamento, localizacao: value })}
@@ -340,7 +350,10 @@ export const ModalScheduleAppointment = ({
                       <TouchableOpacity>
                         <AntDesign name="caretdown" size={14} color="#34898F" />
                       </TouchableOpacity>
+
                     )}
+
+                    position="absolute"
                     style={{
                       iconContainer: {
                         height: '100%',
@@ -355,11 +368,13 @@ export const ModalScheduleAppointment = ({
                       inputIOS: {
                         color: '#34898F',
                         padding: 16,
+
                         zIndex: 1
                       },
                       inputAndroid: {
                         color: '#34898F',
                         padding: 16,
+
                         width: '100%',
                         zIndex: 1
                       },
@@ -374,14 +389,16 @@ export const ModalScheduleAppointment = ({
                         height: 'auto',
                         zIndex: 1
                       },
+                     
                     }}
-                    // modalProps={{
-                    //   position: 'absolute',
-                    //   top: '100%', // Isso posiciona o dropdown logo abaixo do campo de seleção
-                    //   left: 0,
-                    //   right: 0,
-                    //   zIndex: 2,
-                    // }}
+                  // modalProps={{
+                  //   position: 'absolute',
+                  //   top: '100%', // Isso posiciona o dropdown logo abaixo do campo de seleção
+                  //   left: 0,
+                  //   right: 0,
+                  //   zIndex: 2,
+                  // }}
+                  
                   />
                 )}
               </View>
@@ -395,7 +412,7 @@ export const ModalScheduleAppointment = ({
                 textButton="Continuar"
                 onPress={() => {
                   console.log('agendamento: ', agendamento)
-                  if(agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel!== null){
+                  if (agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel !== null) {
                     handleContinue()
                   }
                 }} />

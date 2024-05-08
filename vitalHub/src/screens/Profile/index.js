@@ -93,7 +93,6 @@ export default function Profile({ navigation }) {
       setFoto(uriFotoCam)
     }
     ).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
-    ).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
   }
 
   async function alterarDadosProfile() {
@@ -124,12 +123,7 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     if (uriFotoCam) {
       alterarFotoPerfil()
-  useEffect(() => {
-    if (uriFotoCam) {
-      alterarFotoPerfil()
-    }
-  }, [uriFotoCam]);
-  }, [uriFotoCam]);
+  }}, [uriFotoCam]);
 
 
 
@@ -295,7 +289,7 @@ export default function Profile({ navigation }) {
       </ContainerScrollView>
       <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
     </Container>
-    </Container>
+    
   );
 
 }
