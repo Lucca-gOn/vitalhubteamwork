@@ -74,35 +74,35 @@ export const validarCPF = (cpf) => {
   //Se o CPF não tem exatamente 11 dígitos ou se todos os dígitos são iguais. 
   if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
 
-  //COMENTADO PARA FACILITAR TESTES
+  // COMENTADO PARA FACILITAR TESTES
 
-  // let soma = 0;  
-  // let resto;  
+  let soma = 0;  
+  let resto;  
 
-  // //Calcula a soma dos produtos dos primeiros nove dígitos do CPF.
-  // for (let i = 1; i <= 9; i++)  
-  //   soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);  
-  // //Calcula o resto da divisão da soma por 11 e multiplica por 10. O resultado define o primeiro dígito verificador.
-  // resto = (soma * 10) % 11; 
+  //Calcula a soma dos produtos dos primeiros nove dígitos do CPF.
+  for (let i = 1; i <= 9; i++)  
+    soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);  
+  //Calcula o resto da divisão da soma por 11 e multiplica por 10. O resultado define o primeiro dígito verificador.
+  resto = (soma * 10) % 11; 
 
-  // //Se o resto é 10 ou 11, ajusta o dígito para 0.
-  // if ((resto === 10) || (resto === 11)) resto = 0;  
-  // //Compara o dígito verificador calculado com o décimo dígito do CPF. Se forem diferentes, retorna false
-  // if (resto !== parseInt(cpf.substring(9, 10))) return false;  
+  //Se o resto é 10 ou 11, ajusta o dígito para 0.
+  if ((resto === 10) || (resto === 11)) resto = 0;  
+  //Compara o dígito verificador calculado com o décimo dígito do CPF. Se forem diferentes, retorna false
+  if (resto !== parseInt(cpf.substring(9, 10))) return false;  
 
-  // //Reinicia a variável soma para calcular o segundo dígito verificador.
-  // soma = 0;
-  // //Calcula a soma dos produtos dos primeiros dez dígitos do CPF pelos seus respectivos pesos   
-  // for (let i = 1; i <= 10; i++)  
-  //   soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);  
-  // resto = (soma * 10) % 11;  
+  //Reinicia a variável soma para calcular o segundo dígito verificador.
+  soma = 0;
+  //Calcula a soma dos produtos dos primeiros dez dígitos do CPF pelos seus respectivos pesos   
+  for (let i = 1; i <= 10; i++)  
+    soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);  
+  resto = (soma * 10) % 11;  
 
-  // //Novamente ajusta o resto para 0 se for 10 ou 11.
-  // if ((resto === 10) || (resto === 11)) resto = 0;  
-  // //Compara o segundo dígito verificador calculado com o décimo primeiro dígito do CPF.
-  // if (resto !== parseInt(cpf.substring(10, 11))) return false;  
+  //Novamente ajusta o resto para 0 se for 10 ou 11.
+  if ((resto === 10) || (resto === 11)) resto = 0;  
+  //Compara o segundo dígito verificador calculado com o décimo primeiro dígito do CPF.
+  if (resto !== parseInt(cpf.substring(10, 11))) return false;  
 
-  // Se passar por todas as verificações, cpf é valido.
+  //Se passar por todas as verificações, cpf é valido.
   return true;
 };
 

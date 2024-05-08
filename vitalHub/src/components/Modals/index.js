@@ -1,4 +1,4 @@
-import { Modal, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Modal, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { Container, ContainerMargin } from "../Conatainer"
 import { Description, DescriptionBlack, TextData, TextLabel, TextLabelBlack, TextQuickSandRegular, Title } from "../Texts/style"
 import { ButtonDefault, ButtonSelectGreen } from "../Buttons"
@@ -18,6 +18,10 @@ import { Image } from "expo-image"
 import api from "../../service/Service"
 import moment from "moment"
 import { userDecodeToken } from '../../utils/Auth';
+import RNPickerSelect from 'react-native-picker-select';
+import { AntDesign } from '@expo/vector-icons';
+
+
 
 
 Notifications.requestPermissionsAsync();
@@ -223,6 +227,8 @@ export const ModalScheduleAppointment = ({
   })
   const [isSelected, setIsSelected] = useState(false)
   const [tipoConsulta, setTipoConsulta] = useState("")
+  const [clinicas, setClinicas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
@@ -235,6 +241,19 @@ export const ModalScheduleAppointment = ({
     navigation.navigate("SelectClinic", { agendamento: agendamento });
   }
 
+  async function buscarClinicas() {
+    try {
+      const response = await api.get('/Clinica/ListarTodas');
+      setClinicas(response.data);
+    } catch (error) {
+      console.log('Erro ao buscar clínicas:', error);
+    }
+  };
+
+
+  useEffect(() => {
+    buscarClinicas();
+  }, [])
   return (
     <Modal
       transparent={true}
@@ -295,8 +314,8 @@ export const ModalScheduleAppointment = ({
             </ContainerMargin>
 
             <ContainerMargin $width="80%" $mt={20} $alingItens="flex-start">
-              <TextLabelBlack>Informe a localização desejada</TextLabelBlack>
-              <InputGreen
+              <TextLabelBlack style={{marginBottom: 10}}>Informe a localização desejada</TextLabelBlack>
+              {/* <InputGreen
                 placeholder="Informe a localização"
 
                 value={agendamento ? agendamento.localizacao : null}
@@ -304,7 +323,69 @@ export const ModalScheduleAppointment = ({
                 onChangeText={(txt) => setAgendamento({
                   ...agendamento,
                   localizacao: txt
-                })} />
+                })} /> */}
+
+              <View style={{ width: '100%', borderWidth: 2, borderColor: '#60BFC5', borderStyle: 'solid', borderRadius: 5}}>
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <RNPickerSelect
+                    mode="dropdown"
+                    useNativeAndroidPickerStyle={false}
+                    fixAndroidTouchableBug={true}
+                    onValueChange={(value) => setAgendamento({ ...agendamento, localizacao: value })}
+                    items={clinicas.map((clinica) => ({ label: clinica.endereco.cidade, value: clinica.endereco.cidade }))}
+                    placeholder={{ label: 'Selecione a cidade', value: null }}
+                    Icon={() => (
+                      <TouchableOpacity>
+                        <AntDesign name="caretdown" size={14} color="#34898F" />
+                      </TouchableOpacity>
+                    )}
+                    style={{
+                      iconContainer: {
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 16,
+                        zIndex: 0
+                      },
+                      headlessAndroidContainer: {
+                        justifyContent: 'center'
+                      },
+                      inputIOS: {
+                        color: '#34898F',
+                        padding: 16,
+                        zIndex: 1
+                      },
+                      inputAndroid: {
+                        color: '#34898F',
+                        padding: 16,
+                        width: '100%',
+                        zIndex: 1
+                      },
+                      inputWeb: {
+                        color: '#34898F',
+                        padding: 16
+                      },
+                      placeholder: {
+                        color: '#34898F',
+                        fontFamily: 'MontserratAlternates_600SemiBold',
+                        fontSize: 14,
+                        height: 'auto',
+                        zIndex: 1
+                      },
+                    }}
+                    // modalProps={{
+                    //   position: 'absolute',
+                    //   top: '100%', // Isso posiciona o dropdown logo abaixo do campo de seleção
+                    //   left: 0,
+                    //   right: 0,
+                    //   zIndex: 2,
+                    // }}
+                  />
+                )}
+              </View>
+
             </ContainerMargin>
 
 

@@ -88,9 +88,11 @@ export default function Profile({ navigation }) {
         'Content-Type': 'multipart/form-data'
       }
     }).then(() => {
+    }).then(() => {
 
       setFoto(uriFotoCam)
     }
+    ).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
     ).catch(error => { console.log('Erro ao alterar a foto : ', error.request) })
   }
 
@@ -122,13 +124,18 @@ export default function Profile({ navigation }) {
   useEffect(() => {
     if (uriFotoCam) {
       alterarFotoPerfil()
+  useEffect(() => {
+    if (uriFotoCam) {
+      alterarFotoPerfil()
     }
+  }, [uriFotoCam]);
   }, [uriFotoCam]);
 
 
 
+
   return (
-    <Container>
+    <Container >
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} currentHeight />
       <ContainerMargin style={{ position: "relative", zIndex: 10 }}>
         <ImageUser source={uri = foto} $width="100%" $height="280px" />
@@ -152,7 +159,7 @@ export default function Profile({ navigation }) {
 
         {role == 'Medico' ? (
           <>
-            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+            <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} >
               <TextLabel>CRM:</TextLabel>
               <InputGray
                 placeholder="Número do CRM"
@@ -162,6 +169,7 @@ export default function Profile({ navigation }) {
                 onChangeText={(text) => {
                   setCRM(text);
                 }}
+                style={{ zIndex: 0 }}
                 style={{ zIndex: 0 }}
               />
             </ContainerMargin>
@@ -286,6 +294,7 @@ export default function Profile({ navigation }) {
         </ContainerMargin>
       </ContainerScrollView>
       <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+    </Container>
     </Container>
   );
 
