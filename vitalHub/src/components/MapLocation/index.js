@@ -75,7 +75,7 @@ export const MapLocation = ({
         timeInterval: 1000,
         distanceInterval: 1,
       }, async (response) => {
-        await setInitialPosition(response)
+        setInitialPosition(response)
 
         // mapReference.current?.animateCamera({
         //   pitch: 60,

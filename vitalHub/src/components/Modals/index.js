@@ -7,9 +7,9 @@ import * as Notifications from 'expo-notifications'
 import { ImageUser } from "../Images/style"
 import { InputGreen } from "../Inputs/styled"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { AutoFocus, Camera, CameraType, FlashMode } from 'expo-camera';
+import { CameraView, useCameraPermissions, Camera } from 'expo-camera';
 import { useEffect, useRef, useState } from 'react';
-import * as MediaLibary from 'expo-media-library';
+import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 
 import { FontAwesome } from '@expo/vector-icons'
@@ -258,7 +258,7 @@ export const ModalScheduleAppointment = ({
     }
   };
 
-  
+
 
   useEffect(() => {
     buscarClinicas();
@@ -389,7 +389,7 @@ export const ModalScheduleAppointment = ({
                         height: 'auto',
                         zIndex: 1
                       },
-                     
+
                     }}
                   // modalProps={{
                   //   position: 'absolute',
@@ -398,7 +398,7 @@ export const ModalScheduleAppointment = ({
                   //   right: 0,
                   //   zIndex: 2,
                   // }}
-                  
+
                   />
                 )}
               </View>
@@ -609,7 +609,7 @@ export const ModalCamera = ({
   setShowModalCamera,
   navigation,
   setUriFotoCam,
-  getMediaLibary = false
+  getMediaLibrary = false
 }) => {
 
   const cameraRef = useRef(null);
@@ -617,8 +617,11 @@ export const ModalCamera = ({
   const [photoCam, setPhotoCam] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const [tipoCamera, setTipoCamera] = useState(Camera.Constants.Type.front);
+  const [tipoCamera, setTipoCamera] = useState('front');
   const [latestPhoto, setLatestPhoto] = useState(null);
+  const [permission, requestPermission] = useCameraPermissions();
+  const [permissionResponse, requestMediaPermission] = MediaLibrary.usePermissions();
+
 
   const clearPhoto = () => {
     setPhotoCam(null);
@@ -636,7 +639,7 @@ export const ModalCamera = ({
   async function savePhoto() {
     if (photoCam) {
       console.log(photoCam)
-      await MediaLibary.createAssetAsync(photoCam)
+      await MediaLibrary.createAssetAsync(photoCam)
         .then(() => {
           alert('Sucesso, Foto Salva na Galeria');
           setUriFotoCam(photoCam)
@@ -650,7 +653,7 @@ export const ModalCamera = ({
   // useEffect(() => {
   //   async () => {
   //     const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-  //     //const { status: mediaStatus } = await MediaLibary.requestPermissionsAsync();
+  //     //const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
   //     if(cameraStatus !== 'granted'){
   //       alert('Erro')
   //     }
@@ -659,11 +662,15 @@ export const ModalCamera = ({
 
   useEffect(() => {
     (async () => {
-      const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-      if (cameraStatus !== 'granted') {
+
+      if (permission && !permission.granted) {
         alert('Sorry, we need camera permissions to make this work');
       }
-      await MediaLibary.requestPermissionsAsync();
+
+      if (!MediaLibrary.PermissionStatus.GRANTED) {
+        await requestMediaPermission()
+      }
+      // await MediaLibrary.requestPermissionsAsync();
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     })();
   }, []);
@@ -686,7 +693,7 @@ export const ModalCamera = ({
 
 
   async function getLastPhoto() {
-    const { assets } = await MediaLibary.getAssetsAsync({ sortBy: [[MediaLibary.SortBy.creationTime, false]], first: 1 })
+    const { assets } = await MediaLibrary.getAssetsAsync({ sortBy: [[MediaLibrary.SortBy.creationTime, false]], first: 1 })
     //console.log(assets);
     if (assets.length > 0) {
       setLatestPhoto(assets[0].uri)
@@ -695,7 +702,7 @@ export const ModalCamera = ({
 
   useEffect(() => {
     setPhotoCam(null)
-    if (getMediaLibary) {
+    if (getMediaLibrary) {
       getLastPhoto();
     }
   }, [showModalCamera])
@@ -718,16 +725,16 @@ export const ModalCamera = ({
           $bgColor="#FFF"
         >
           {/* <View style={stylesCamera.container}> */}
-          <Camera
+          <CameraView
             ref={cameraRef}
             ratio={'16:9'}
             type={tipoCamera}
             style={stylesCamera.camera}
-            flashMode={FlashMode.auto}
-            autoFocus={AutoFocus.on}
+            flashMode={'auto'}
+            autoFocus={'on'}
           >
 
-          </Camera>
+          </CameraView>
           <ContainerMargin $fd="row" $justContent="space-between" $mt={30}>
             <TouchableOpacity onPress={() => selectImageGallery()} style={{ padding: 12, backgroundColor: 'black', borderRadius: 15 }}>
               {
@@ -741,7 +748,7 @@ export const ModalCamera = ({
             <TouchableOpacity style={stylesCamera.btnCaptura} onPress={() => capturePhoto()}>
               <FontAwesome name='camera' size={23} color={'#FFF'} />
             </TouchableOpacity>
-            <TouchableOpacity style={stylesCamera.btnSwitch} onPress={() => { setTipoCamera(tipoCamera === CameraType.front ? CameraType.back : CameraType.front) }}>
+            <TouchableOpacity style={stylesCamera.btnSwitch} onPress={() => { setTipoCamera(tipoCamera === 'back' ? 'front' : 'back') }}>
               <MaterialIcons name="cameraswitch" size={24} color="#FFF" />
             </TouchableOpacity>
           </ContainerMargin>
