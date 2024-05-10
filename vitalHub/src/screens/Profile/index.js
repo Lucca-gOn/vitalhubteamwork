@@ -19,6 +19,7 @@ export default function Profile({ navigation }) {
   const [especialidade, setEspecialidade] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [cpf, setCpf] = useState('');
+  const [rg, setRg] = useState('');
   const [foto, setFoto] = useState('');
   const [endereco, setEndereco] = useState('');
   const [cep, setCep] = useState('');
@@ -28,6 +29,7 @@ export default function Profile({ navigation }) {
   const [uriFotoCam, setUriFotoCam] = useState(null);
   const [buttonDisable, setButtonDisable] = useState(false);
   const [statusResponseSalvar,setStatusResponseSalvar] = useState(false);
+
 
 
   const { role } = profile
@@ -49,6 +51,8 @@ export default function Profile({ navigation }) {
               } else {
                 setDataNascimento(moment(userSearched.data.paciente.dataNascimento).format('DD/MM/YYYY'))
                 setCpf(userSearched.data.paciente.cpf)
+                setRg(userSearched.data.paciente.rg)
+
               }
               setFoto(userSearched.data.foto)
               setEndereco(token.role == 'Medico' ? userSearched.data.medico?.endereco.logradouro : userSearched.data.paciente.endereco.logradouro)
@@ -198,6 +202,18 @@ export default function Profile({ navigation }) {
                 />
               </ContainerMargin>
 
+              <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
+                <TextLabel>RG</TextLabel>
+                <InputGray
+                  placeholder="xx.xxx.xxx-x"
+                  inputMode="decimal"
+                  value={rg}
+                  editable={false}
+                  onChangeText={(text) => {
+                    setRg(text);
+                  }}
+                />
+              </ContainerMargin>
               <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
                 <TextLabel>CPF</TextLabel>
                 <InputGray

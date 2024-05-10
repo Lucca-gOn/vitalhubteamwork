@@ -6,7 +6,7 @@ import { InputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
 import { useState } from "react";
-import { validarCPF, formatarDataNascimento } from "../../utils/validForm/";
+import { validarCPF, formatarDataNascimento, validarRG } from "../../utils/validForm/";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createGlobalStyle } from "styled-components";
@@ -21,6 +21,8 @@ export default function CreateAccount({
   const [erroNome, setErroNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [erroCpf, setErroCpf] = useState('');
+  const [rg, setRg] = useState('');
+  const [erroRg, setErroRg] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [erroDataNacimento, setErroDataNacimento] = useState('');
   const [email, setEmail] = useState('');
@@ -50,6 +52,7 @@ export default function CreateAccount({
   const handleNomeChange = (text) => setNome(text);
   const handleEmailChange = (text) => setEmail(text);
   const handleSenhaChange = (text) => setSenha(text);
+  const handleRgChange = (text) => setRg(text);
   const handleConfirmarSenhaChange = (text) => setConfirmarSenha(text);
 
   // Funções de API
@@ -57,6 +60,7 @@ export default function CreateAccount({
     console.log('criando conta')
     const formData = new FormData();
     formData.append('Cpf', cpf.replace(/[^\d]/g, ""));
+    formData.append('Rg', "");
     formData.append('DataNascimento', dataNascimento);
     formData.append('Cep', "");
     formData.append('Logradouro', "");
@@ -143,6 +147,22 @@ export default function CreateAccount({
 
           {erroNome !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroNome}</Text> : <></>}
 
+          <InputGreen
+            placeholder="RG"
+            value={rg}
+            onChangeText={handleRgChange}
+            keyboardType="numeric"
+            maxLength={9}
+            onEndEditing={() => {
+              if (!validarRG(rg)) {
+                setErroRg('RG digitado está inválido.')
+              } else {
+                setErroRg('');
+              }
+            }}
+          />
+
+          {erroRg !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroRg}</Text> : <></>}
 
           <InputGreen
             placeholder="CPF"

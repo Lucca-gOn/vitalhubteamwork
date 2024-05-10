@@ -256,7 +256,6 @@ export default function MedicalRecord({
                   onPress={() => {
                     alterarDadosConsulta();
                     alterarStatusConsulta()
-
                   }} />
 
 
@@ -270,10 +269,6 @@ export default function MedicalRecord({
               </ContainerMargin>
             )
         }
-
-
-
-
       </ContainerScrollView>
 
       <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />

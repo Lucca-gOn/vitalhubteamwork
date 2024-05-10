@@ -120,3 +120,7 @@ export const formatarDataNascimento = (data) => {
   return data;
 };
 
+export const validarRG = (rg) => {
+
+  return true;
+};

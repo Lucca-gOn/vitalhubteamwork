@@ -67,6 +67,7 @@ namespace WebAPI.Controllers
             user.Medico.Endereco = new Endereco();
             user.Medico.Endereco.Logradouro = medicoModel.Logradouro;
             user.Medico.Endereco.Numero = medicoModel.Numero;
+            user.Medico.Endereco.Cidade = medicoModel.Cidade;
             user.Medico.Endereco.Cep = medicoModel.Cep;
 
             _medicoRepository.Cadastrar(user);
