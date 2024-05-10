@@ -622,7 +622,6 @@ export const ModalCamera = ({
   const [permission, requestPermission] = useCameraPermissions();
   const [permissionResponse, requestMediaPermission] = MediaLibrary.usePermissions();
 
-
   const clearPhoto = () => {
     setPhotoCam(null);
     setOpenModal(false);
@@ -689,6 +688,22 @@ export const ModalCamera = ({
       setShowModalCamera(false)
     }
   }
+  useEffect(() => {
+    (async () => {
+      
+      if (permission && !permission.granted) {
+        alert('Sorry, we need camera permissions to make this work');
+      }
+
+      if(!MediaLibrary.PermissionStatus.GRANTED){
+        await requestMediaPermission()
+      }
+      // await MediaLibrary.requestPermissionsAsync();
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    })();
+  }, []);
+
+
 
 
 

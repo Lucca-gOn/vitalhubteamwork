@@ -36,7 +36,7 @@ namespace WebAPI.Repositories
         public void AtualizarFoto(Guid id, string novaUrlFoto)
         {
             try
-            {
+            {                
                 Usuario usuarioBuscado = ctx.Usuarios.FirstOrDefault(x => x.Id == id)!;
 
                 if (usuarioBuscado != null)
