@@ -69,6 +69,7 @@ export default function MedicalRecord({
         descricao: descricaoConsulta,
         diagnostico: diagnosticoPaciente,
       })
+      alterarStatusConsulta()
       setDisableInput(true);
       console.log('Relizado alteracao')
     } catch (error) {
@@ -270,7 +271,7 @@ export default function MedicalRecord({
                 disabledInput={disabledInput}
                   onPress={() => {
                     alterarDadosConsulta();
-                    alterarStatusConsulta()
+                    
                   }} />
 
 
@@ -286,7 +287,7 @@ export default function MedicalRecord({
         }
       </ContainerScrollView>
 
-      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibrary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
 
     </Container>
   )

@@ -52,10 +52,11 @@ export default function SelectDate({
       {label: '20:00', value: '20:00'},      
     ];
       
-    // const horaAtual = moment().format('HH:mm');
-    const horaAtual = moment.parseZone('15:00:00', 'HH:mm');
+    const horaAtual = moment().format('HH:mm');
+    //const horaAtual = moment.parseZone(dataatual, 'HH:mm');
     const horaInicial = moment.parseZone('08:00:00', 'HH:mm');
-    const horaFinal = moment.parseZone('22:00:00', 'HH:mm');
+    console.log(`teste`,horaInicial)
+    const horaFinal = moment.parseZone('20:00:00', 'HH:mm');
     const horaValida = moment.parseZone(horaAtual, 'HH:mm').isBetween(horaInicial,horaFinal, 'minutes',true)
 
     if(horaValida && (dataAtual == dataSelecionada)){

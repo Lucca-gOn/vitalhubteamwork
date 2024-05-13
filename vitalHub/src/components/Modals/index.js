@@ -666,7 +666,7 @@ export const ModalCamera = ({
         alert('Sorry, we need camera permissions to make this work');
       }
 
-      if (!MediaLibrary.PermissionStatus.GRANTED) {
+      if (permissionResponse && !permissionResponse.granted) {
         await requestMediaPermission()
       }
       // await MediaLibrary.requestPermissionsAsync();
@@ -688,30 +688,29 @@ export const ModalCamera = ({
       setShowModalCamera(false)
     }
   }
-  useEffect(() => {
-    (async () => {
+  // useEffect(() => {
+  //   (async () => {
       
-      if (permission && !permission.granted) {
-        alert('Sorry, we need camera permissions to make this work');
-      }
+  //     if (permission && !permission.granted) {
+  //       alert('Sorry, we need camera permissions to make this work');
+  //     }
 
-      if(!MediaLibrary.PermissionStatus.GRANTED){
-        await requestMediaPermission()
-      }
-      // await MediaLibrary.requestPermissionsAsync();
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    })();
-  }, []);
-
-
-
-
+  //     if(!MediaLibrary.PermissionStatus.GRANTED){
+  //       await requestMediaPermission()
+  //     }
+  //     // await MediaLibrary.requestPermissionsAsync();
+  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   })();
+  // }, []);
 
   async function getLastPhoto() {
     const { assets } = await MediaLibrary.getAssetsAsync({ sortBy: [[MediaLibrary.SortBy.creationTime, false]], first: 1 })
-    //console.log(assets);
+    console.log(assets);
     if (assets.length > 0) {
-      setLatestPhoto(assets[0].uri)
+      //setLatestPhoto(assets[0].uri)
+      const infoAssets = await MediaLibrary.getAssetInfoAsync(assets[0].id)
+      console.log(infoAssets)
+      setLatestPhoto(infoAssets.localUri)
     }
   }
 
@@ -735,7 +734,7 @@ export const ModalCamera = ({
       >
         <ContainerMargin
           $height="90%"
-          $width="90%"
+          $width="100%"
           $borderRadius={10}
           $bgColor="#FFF"
         >
@@ -743,7 +742,7 @@ export const ModalCamera = ({
           <CameraView
             ref={cameraRef}
             ratio={'16:9'}
-            type={tipoCamera}
+            facing={tipoCamera}
             style={stylesCamera.camera}
             flashMode={'auto'}
             autoFocus={'on'}
@@ -810,9 +809,7 @@ const stylesCamera = StyleSheet.create({
   camera: {
     // flex: 1,
     height: '70%',
-    width: '100%',
-
-
+    width: '90%',
   },
   viewFlip: {
     flex: 1,
