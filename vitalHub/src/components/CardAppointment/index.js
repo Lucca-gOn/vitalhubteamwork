@@ -42,6 +42,7 @@ export default CardAppointment = (
   useEffect(() => {
     calculateAge();
   }, [])
+
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
       <TouchableOpacity
@@ -83,7 +84,7 @@ export default CardAppointment = (
             <NivelConsult>{tipoConsulta == 1 ? 'Rotina' : tipoConsulta == 2 ? 'Exame' : 'Urgência'}</NivelConsult>
           </ContainerMargin>
           <ContainerMargin $width="100%" $fd="row" $justContent="space-between" >
-            <Time timeConsult={'10:00'} selectStatus={selectStatus === 'Agendadas'} />
+            <Time timeConsult={moment(data.dataConsulta).format('HH:mm')} selectStatus={selectStatus === 'Agendadas'} />
             {
               selectStatus === 'Agendadas' ?
                 <TextCancelAppointment onPress={() => {

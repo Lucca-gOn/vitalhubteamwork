@@ -3,7 +3,7 @@ import { ScrollView, StatusBar, Text, View, SafeAreaView } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
-import { InputGreen, InputGreenMultiLine } from "../../components/Inputs/styled"
+import { InputGreen, InputGreenMultiLine} from "../../components/Inputs/styled"
 import { ButtonDefault, ButtonGreenCam } from "../../components/Buttons"
 import { LinkUnderlineDefault } from "../../components/Links"
 import { Image } from "expo-image"
@@ -37,6 +37,7 @@ export default function MedicalRecord({
   const dataNascimento = route.params?.dadosConsulta?.paciente?.dataNascimento;
   const fotoCam = route.params?.fotoCam;
   const situacaoConsulta = route.params?.dadosConsulta?.situacao?.situacao;
+  
 
   //console.log(route.params?.dadosConsulta)
   //const [foto, setFoto] = useState('')
@@ -48,7 +49,6 @@ export default function MedicalRecord({
     return years > 1 ? `${years} anos` : `${years} ano`
   };
 
-
   function verificaProntuario() {
     diagnosticoPaciente !== undefined && diagnosticoPaciente !== undefined && prescricaoMedica !== undefined ?
       setDisableInput(true) :
@@ -56,6 +56,12 @@ export default function MedicalRecord({
   }
 
   async function alterarDadosConsulta() {
+    console.log(`
+    consultaId: ${idConsulta},
+    medicamento: ${prescricaoMedica},
+    descricao: ${descricaoConsulta},
+    diagnostico: ${diagnosticoPaciente},
+    `)
     try {
       await api.put('/Consultas/Prontuario', {
         consultaId: idConsulta,
@@ -81,11 +87,11 @@ export default function MedicalRecord({
 
   async function alterarStatusConsulta() {
     console.log('idconsulta', idConsulta);
-    const reste = encontraIdConsultaRealizada();
-    console.log('encontraIDconsulta', reste);
+    const rest = encontraIdConsultaRealizada();
+    console.log('encontraIDconsulta', rest);
     if (situacaoConsulta == 'Agendadas') {
       try {
-        await api.put(`/Consultas/Status?idConsulta=${idConsulta}&status=${encontraIdConsultaRealizada()}`)
+        await api.put(`/Consultas/Status?idConsulta=${idConsulta}&status=${rest}`)
       } catch (error) {
         console.log('Erro ao alterar a consulta para Realizadas, erro: ', error)
       }
@@ -134,6 +140,8 @@ export default function MedicalRecord({
   useEffect(() => {
     verificaProntuario()
     ExibeExame()
+    console.log('situação da consulta : ', route.params?.dadosConsulta?.situacao?.situacao);
+  console.log('Dados situações : ',route.params?.dadosSituacoes)
   }, [])
 
   useEffect(() => {
@@ -180,7 +188,13 @@ export default function MedicalRecord({
 
           <TextLabel>Descrição da consulta</TextLabel>
 
-          <InputGreenMultiLine placeholder="Inserir descrição" editable={!disabledInput} disabledInput={disabledInput} value={descricaoConsulta} onChangeText={(txt) => { setDescricaoConsulta(txt) }} />
+          <InputGreenMultiLine
+            placeholder="Inserir descrição" 
+            editable={!disabledInput}
+            disabledInput={disabledInput}
+            value={descricaoConsulta} 
+            onChangeText={(txt) => { setDescricaoConsulta(txt) }} 
+            />
 
         </ContainerMargin>
 
@@ -199,8 +213,6 @@ export default function MedicalRecord({
           <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
 
         </ContainerMargin>
-
-
 
         {
           role !== 'Medico' ? (
@@ -252,7 +264,10 @@ export default function MedicalRecord({
             (
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
-                <ButtonDefault textButton="Salvar"
+                <ButtonDefault 
+                textButton="Salvar"
+                disabled={disabledInput} 
+                disabledInput={disabledInput}
                   onPress={() => {
                     alterarDadosConsulta();
                     alterarStatusConsulta()

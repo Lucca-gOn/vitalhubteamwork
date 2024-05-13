@@ -60,7 +60,7 @@ export default function CreateAccount({
     console.log('criando conta')
     const formData = new FormData();
     formData.append('Cpf', cpf.replace(/[^\d]/g, ""));
-    formData.append('Rg', "");
+    formData.append('Rg', rg);
     formData.append('DataNascimento', dataNascimento);
     formData.append('Cep', "");
     formData.append('Logradouro', "");

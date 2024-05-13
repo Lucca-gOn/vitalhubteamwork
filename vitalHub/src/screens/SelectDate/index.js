@@ -30,23 +30,51 @@ export default function SelectDate({
     dataConsulta: null
   });
 
-  const [arrayOptions, setArrayOptions] = useState(null);
+  const [arrayOptions, setArrayOptions] = useState(
+    null
+  );
 
-  function LoadOptions() {
-    //Conferir quantas horas falta até as 00:00
-    const horasRestantes = moment(dataAtual).add(24, 'hours').diff(moment(), 'hours')
-    //console.log(horasRestantes);
-    //Criar um laço que tode a quantidade de horas que falta
-    const options = Array.from({ length: horasRestantes }, (_, index) => {
-      let valor = new Date().getHours() + (index + 1);
+  function horariosEmAberto(){
+    
+    const horariosDisponiveis = [
+      {label: '08:00', value: '08:00'},
+      {label: '09:00', value: '09:00'},
+      {label: '10:00', value: '10:00'},
+      {label: '11:00', value: '11:00'},
+      {label: '12:00', value: '12:00'},
+      {label: '13:00', value: '13:00'},
+      {label: '14:00', value: '14:00'},
+      {label: '15:00', value: '15:00'},
+      {label: '16:00', value: '16:00'},
+      {label: '17:00', value: '17:00'},
+      {label: '18:00', value: '18:00'},
+      {label: '19:00', value: '19:00'},
+      {label: '20:00', value: '20:00'},      
+    ];
+      
+    // const horaAtual = moment().format('HH:mm');
+    const horaAtual = moment.parseZone('15:00:00', 'HH:mm');
+    const horaInicial = moment.parseZone('08:00:00', 'HH:mm');
+    const horaFinal = moment.parseZone('22:00:00', 'HH:mm');
+    const horaValida = moment.parseZone(horaAtual, 'HH:mm').isBetween(horaInicial,horaFinal, 'minutes',true)
 
-      return {
-        label: `${valor}:00`, value: `${valor}:00`
-      }
-    })
-
-    //Devolver para cada hora, uma nova opção para o select
-    setArrayOptions(options);
+    if(horaValida && (dataAtual == dataSelecionada)){
+      const horariosValidos = [];
+      console.log('hora atual', horaAtual)
+      horariosDisponiveis.forEach(element => {
+        
+        const horaDisponivel = moment.parseZone(horaAtual, 'HH:mm').isBefore(moment.parseZone(element.value, 'HH:mm'), 'minutes',true)
+        if(horaDisponivel){          
+          horariosValidos.push({label: element.value, value: element.value})
+        }
+      });
+      setArrayOptions(horariosValidos)
+    }else{
+      setArrayOptions(
+        horariosDisponiveis
+      )
+    }
+    
   }
 
   function handlecontinue() {
@@ -56,19 +84,17 @@ export default function SelectDate({
     });
 
     setShowSummaryMedicalAgenda(true)
-  }
-
-  useEffect(() => {
-    LoadOptions();
-  }, [])
+  }  
 
   useEffect(() => {
     console.log(route);
   }, [route])
 
   useEffect(() => {
-    console.log(dataSelecionada);
+    horariosEmAberto() 
+    setHoraSelecionada(null)   
   }, [dataSelecionada])
+
   return (
     <ContainerMarginStatusBar
       // $bgColor="pink"
@@ -87,7 +113,7 @@ export default function SelectDate({
         <TextLabelBlack>Selecione um horário disponível:</TextLabelBlack>
 
 
-        <View style={{ width: '100%', borderWidth: 2, borderColor: '#34898F', borderStyle: "solid", borderRadius: 5 }}>
+        <View key={dataSelecionada} style={{ width: '100%', borderWidth: 2, borderColor: '#34898F', borderStyle: "solid", borderRadius: 5 }}>
           {arrayOptions ? (
             <RNPickerSelect
               useNativeAndroidPickerStyle={false}

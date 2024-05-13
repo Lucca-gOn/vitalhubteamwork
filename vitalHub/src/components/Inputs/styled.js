@@ -25,13 +25,9 @@ export const InputGreen = styled.TextInput.attrs((props) => ({
     }
   }
   }
-
   padding:16px;
   width:100%;
-  
-  
   border-radius: 5px;
-
   font-family: 'MontserratAlternates_600SemiBold';
   font-size: 14px;
 `
@@ -55,13 +51,11 @@ ${(props) => {
       `
     }
   }
-  }
-    
+  }    
   font-family: 'MontserratAlternates_500Medium';  
 `
 
-
-export const InputGreenMultiLine = styled.Text.attrs({
+export const InputGreenMultiLine = styled(InputGreen).attrs({
   multiline: true,
   textAlignVertical: "top"
 })`
@@ -69,7 +63,7 @@ export const InputGreenMultiLine = styled.Text.attrs({
     if (!props.disabledInput) {
       return css`
         color: #34898F;
-        border-color: #34898F;
+        border: 2px solid #49B3BA;
       `;
     } else {
       return css`
@@ -79,9 +73,10 @@ export const InputGreenMultiLine = styled.Text.attrs({
       `;
     }
   }}
+  
   width: 100%;
-  max-height: 300px;
-  flex:1;
+  height: 110px;
+  /* flex:1; */
 `;
 
 export const InputGreenCode = styled.TextInput.attrs({

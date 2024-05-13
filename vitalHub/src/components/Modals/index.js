@@ -232,8 +232,8 @@ export const ModalScheduleAppointment = ({
   const [buttonDisable, setButtonDisable] = useState(false);
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
-    { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Exame' },
-    { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Urgência' },
+    { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Exame' },
+    { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Urgência' },
   ];
 
   function handleContinue() {
