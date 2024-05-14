@@ -2,7 +2,7 @@ import { BrandLogoBlue } from "../../components/BrandLogo/style";
 import { Container, ContainerMargin, ContainerMarginStatusBar, ContainerSafeArea, ContainerScrollView } from "../../components/Conatainer";
 import { StatusBar, Text, TouchableOpacity, View } from "react-native";
 import { Description, TextLabel, Title } from "../../components/Texts/style";
-import { InputGreen } from "../../components/Inputs/styled";
+import { InputGreen, MaskInputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
 import { useState } from "react";
@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createGlobalStyle } from "styled-components";
 import { validDataNasciemnto, validEmail, validName, validNewPassWord } from "../../utils/validForm";
 import { FontAwesome } from '@expo/vector-icons';
+import { TextInputMask } from 'react-native-masked-text';
+import MaskInput from "react-native-mask-input";
 
 export default function CreateAccount({
   navigation
@@ -54,6 +56,8 @@ export default function CreateAccount({
   const handleSenhaChange = (text) => setSenha(text);
   const handleRgChange = (text) => setRg(text);
   const handleConfirmarSenhaChange = (text) => setConfirmarSenha(text);
+
+  
 
   // Funções de API
   async function account() {
@@ -147,12 +151,12 @@ export default function CreateAccount({
 
           {erroNome !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroNome}</Text> : <></>}
 
-          <InputGreen
+          <MaskInputGreen
             placeholder="RG"
             value={rg}
-            onChangeText={handleRgChange}
+            onChangeText={(masked,unmasked) =>{handleRgChange(unmasked)} }
             keyboardType="numeric"
-            maxLength={9}
+            maxLength={12}
             onEndEditing={() => {
               if (!validarRG(rg)) {
                 setErroRg('RG digitado está inválido.')
@@ -160,16 +164,17 @@ export default function CreateAccount({
                 setErroRg('');
               }
             }}
+            mask={[/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/]}
           />
-
+         
           {erroRg !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroRg}</Text> : <></>}
 
-          <InputGreen
+          <MaskInputGreen
             placeholder="CPF"
             value={cpf}
-            onChangeText={handleCPFChange}
+            onChangeText={(masked,unmasked) =>{handleCPFChange(unmasked)} }
             keyboardType="numeric"
-            maxLength={11}
+            maxLength={14}
             onEndEditing={() => {
               if (!validarCPF(cpf)) {
                 setErroCpf('Cpf digitado está inválido.')
@@ -177,8 +182,9 @@ export default function CreateAccount({
                 setErroCpf('');
               }
             }}
+            mask={[/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/]}
           />
-
+          
           {erroCpf !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroCpf}</Text> : <></>}
 
           <InputGreen

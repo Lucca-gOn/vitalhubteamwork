@@ -32,11 +32,16 @@ export const validDataNasciemnto = (dataString) =>{
   console.log(data.getDate() === Number(dia) &&
     data.getMonth() + 1 === Number(mes) &&
     data.getFullYear() === Number(ano));
-  return (
-    data.getDate() === Number(dia) &&
-    data.getMonth() + 1 === Number(mes) &&
-    data.getFullYear() === Number(ano)
-  );
+    
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zerar horas, minutos, segundos e milissegundos para comparar apenas a data
+  
+    return (
+      data.getDate() === Number(dia) &&
+      data.getMonth() + 1 === Number(mes) &&
+      data.getFullYear() === Number(ano) &&
+      data <= hoje
+    );
 }
 
 export const validNewPassWord = (newPassWord) => {

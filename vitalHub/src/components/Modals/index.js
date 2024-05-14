@@ -666,7 +666,7 @@ export const ModalCamera = ({
         alert('Sorry, we need camera permissions to make this work');
       }
 
-      if (permissionResponse && !permissionResponse.granted) {
+      if (MediaLibrary.PermissionStatus.DENIED) {
         await requestMediaPermission()
       }
       // await MediaLibrary.requestPermissionsAsync();
