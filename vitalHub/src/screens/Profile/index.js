@@ -112,7 +112,7 @@ export default function Profile({ navigation }) {
     })
       .then(() => {
         alert('Dados salvos com sucesso');
-        navigation.replace("Home");
+        navigation.replace("Main");
       })
       .catch((error) => {
         alert(`Erro ao fazer alteração dos dados: ${error}`);

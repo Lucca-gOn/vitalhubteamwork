@@ -3,7 +3,7 @@ import { ScrollView, StatusBar, Text, View, SafeAreaView } from "react-native"
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer"
 import { ImageUser } from "../../components/Images/style"
 import { TextCancelAppointment, TextInformation, TextLabel, TextQuickSandRegular, Title } from "../../components/Texts/style"
-import { InputGreen, InputGreenMultiLine} from "../../components/Inputs/styled"
+import { InputGreen, InputGreenMultiLine } from "../../components/Inputs/styled"
 import { ButtonDefault, ButtonGreenCam } from "../../components/Buttons"
 import { LinkUnderlineDefault } from "../../components/Links"
 import { Image } from "expo-image"
@@ -37,7 +37,7 @@ export default function MedicalRecord({
   const dataNascimento = route.params?.dadosConsulta?.paciente?.dataNascimento;
   const fotoCam = route.params?.fotoCam;
   const situacaoConsulta = route.params?.dadosConsulta?.situacao?.situacao;
-  
+
 
   //console.log(route.params?.dadosConsulta)
   //const [foto, setFoto] = useState('')
@@ -131,6 +131,7 @@ export default function MedicalRecord({
         response.data.forEach(element => {
           descricao += element.descricao
         });
+        // console.log('response',response)
         setDescricaoExame(descricao);
       })
       .catch(error => {
@@ -142,7 +143,7 @@ export default function MedicalRecord({
     verificaProntuario()
     ExibeExame()
     console.log('situação da consulta : ', route.params?.dadosConsulta?.situacao?.situacao);
-  console.log('Dados situações : ',route.params?.dadosSituacoes)
+    console.log('Dados situações : ', route.params?.dadosSituacoes)
   }, [])
 
   useEffect(() => {
@@ -190,12 +191,12 @@ export default function MedicalRecord({
           <TextLabel>Descrição da consulta</TextLabel>
 
           <InputGreenMultiLine
-            placeholder="Inserir descrição" 
+            placeholder="Inserir descrição"
             editable={!disabledInput}
             disabledInput={disabledInput}
-            value={descricaoConsulta} 
-            onChangeText={(txt) => { setDescricaoConsulta(txt) }} 
-            />
+            value={descricaoConsulta}
+            onChangeText={(txt) => { setDescricaoConsulta(txt) }}
+          />
 
         </ContainerMargin>
 
@@ -242,16 +243,21 @@ export default function MedicalRecord({
 
                 <ButtonGreenCam onPress={() => { setShowModalCamera(true) }} />
 
-                <TextCancelAppointment style={{ width: '25%', paddingTop: 10, paddingBottom: 10 }}>Cancelar</TextCancelAppointment>
+                {/* <TextCancelAppointment style={{ width: '25%', paddingTop: 10, paddingBottom: 10 }}>Cancelar</TextCancelAppointment> */}
 
               </ContainerMargin>
 
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
 
 
+              <ScrollView nestedScrollEnabled style={{ width: "90%", backgroundColor: "#F5F3F3", color: "#4E4B59", height: 110, padding: 16, borderRadius: 5 }}>
+                <Text style={{
+                  fontFamily: 'MontserratAlternates_600SemiBold',
+                  fontSize: 14
+                }}>{descricaoExame ? descricaoExame : 'Resultado do Exame'}</Text>
+              </ScrollView>
 
-
-              <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
+              {/* <InputGreenMultiLine readOnly placeholder="Resultado do exame" disabledInput={disabledInput} value={descricaoExame} onChangeText={(txt) => { setPrescricaoMedica(txt) }} /> */}
 
 
               {/* editable={!disabledInput} */}
@@ -265,13 +271,23 @@ export default function MedicalRecord({
             (
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
 
-                <ButtonDefault 
-                textButton="Salvar"
-                disabled={disabledInput} 
-                disabledInput={disabledInput}
+                <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 5, marginBottom: 5, width: '100%' }} />
+
+
+                <ScrollView nestedScrollEnabled style={{ width: "100%", backgroundColor: "#F5F3F3", color: "#4E4B59", height: 110, padding: 16, borderRadius: 5 }}>
+                  <Text style={{
+                    fontFamily: 'MontserratAlternates_600SemiBold',
+                    fontSize: 14
+                  }}>{descricaoExame ? descricaoExame : 'Resultado do Exame'}</Text>
+                </ScrollView>
+
+                <ButtonDefault
+                  textButton="Salvar"
+                  disabled={disabledInput}
+                  disabledInput={disabledInput}
                   onPress={() => {
                     alterarDadosConsulta();
-                    
+
                   }} />
 
 

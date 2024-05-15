@@ -178,7 +178,9 @@ export default function CreateAccount({
               } else {
                 setErroRg('');
               }
-            }}
+            
+            }
+            }
             mask={[/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /[\dA-Za-z]/]}
           />
 

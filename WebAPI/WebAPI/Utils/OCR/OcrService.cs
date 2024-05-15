@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 
 namespace WebAPI.Utils.OCR
@@ -23,6 +24,8 @@ namespace WebAPI.Utils.OCR
                 //Faz a chamada para a Api
                 var ocrResult = await client.RecognizePrintedTextInStreamAsync(true, imageStream);
 
+                
+
                 // Processa o resultado e retorna o texto reconhecido
                 return ProcessRecognitionResult(ocrResult);
             }
@@ -33,6 +36,8 @@ namespace WebAPI.Utils.OCR
         }
         public static string ProcessRecognitionResult(OcrResult result)
         {
+
+            Console.WriteLine(result);
             string recognizedText = "";
 
             //Percorre todas as regiões.
