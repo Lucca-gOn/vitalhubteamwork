@@ -6,11 +6,11 @@ import { InputGreen, MaskInputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
 import { useState } from "react";
-import { validarCPF, formatarDataNascimento, validarRG } from "../../utils/validForm/";
+import { validarCPF, formatarDataNascimento } from "../../utils/validForm/";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createGlobalStyle } from "styled-components";
-import { validDataNasciemnto, validEmail, validName, validNewPassWord } from "../../utils/validForm";
+import { validDataNasciemnto, validEmail, validName, validNewPassWord, validRG } from "../../utils/validForm";
 import { FontAwesome } from '@expo/vector-icons';
 import { TextInputMask } from 'react-native-masked-text';
 import MaskInput from "react-native-mask-input";
@@ -57,10 +57,20 @@ export default function CreateAccount({
   const handleRgChange = (text) => setRg(text);
   const handleConfirmarSenhaChange = (text) => setConfirmarSenha(text);
 
-  
+
 
   // Funções de API
   async function account() {
+
+    console.log(`
+      nome: ${nome}
+      email: ${email}
+      data: ${dataNascimento}
+      rg : ${rg}
+      cpf: ${cpf}
+      senha: ${senha}
+    `)
+
     console.log('criando conta')
     const formData = new FormData();
     formData.append('Cpf', cpf.replace(/[^\d]/g, ""));
@@ -85,7 +95,12 @@ export default function CreateAccount({
       });
       await Login(); // Chama o login após o cadastro
     } catch (error) {
-      console.log("Erro ao criar conta:", error);
+      console.log("Erro ao criar conta:", error.response.data);
+      if ((error.response.status == 400) && Array.isArray(error.response.data)) {
+        const mensagensErro = error.response.data;
+        const mensagensFormatadas = mensagensErro.join('\n');
+        setErroGeral(mensagensFormatadas);
+      }
       setButtonDisable(false)
       setStatusResponseCadastro(false)
     }
@@ -154,25 +169,25 @@ export default function CreateAccount({
           <MaskInputGreen
             placeholder="RG"
             value={rg}
-            onChangeText={(masked,unmasked) =>{handleRgChange(unmasked)} }
-            keyboardType="numeric"
+            onChangeText={(masked, unmasked) => { handleRgChange(unmasked) }}
+            keyboardType="default"
             maxLength={12}
             onEndEditing={() => {
-              if (!validarRG(rg)) {
+              if (!validRG(rg)) {
                 setErroRg('RG digitado está inválido.')
               } else {
                 setErroRg('');
               }
             }}
-            mask={[/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/]}
+            mask={[/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /[\dA-Za-z]/]}
           />
-         
+
           {erroRg !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroRg}</Text> : <></>}
 
           <MaskInputGreen
             placeholder="CPF"
             value={cpf}
-            onChangeText={(masked,unmasked) =>{handleCPFChange(unmasked)} }
+            onChangeText={(masked, unmasked) => { handleCPFChange(unmasked) }}
             keyboardType="numeric"
             maxLength={14}
             onEndEditing={() => {
@@ -184,7 +199,7 @@ export default function CreateAccount({
             }}
             mask={[/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/]}
           />
-          
+
           {erroCpf !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroCpf}</Text> : <></>}
 
           <InputGreen
@@ -212,6 +227,7 @@ export default function CreateAccount({
             keyboardType="email-address"
             maxLength={50}
             onEndEditing={() => {
+              setEmail(email.trim())
               if (!validEmail(email)) {
                 setErroEmail('Email inválido, ex: teste@teste.com')
               } else {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Rest.TransientFaultHandling;
 using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
@@ -51,12 +52,38 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] PacienteViewModel pacienteModel)
         {
+            //preciso validar se esse email existe antes de 
+
             try
             {
+
+                var errors = new List<string>();
+
+                if (pacienteRepository.VerificaEmail(pacienteModel.Email))
+                {
+                    errors.Add("Email já cadastrado no sistema!");
+                }
+
+                if (pacienteRepository.VerificaCpf(pacienteModel.Cpf))
+                {
+                    errors.Add("CPF já cadastrado no sistema!");
+                }
+
+                if (pacienteRepository.VerificaRg(pacienteModel.Rg))
+                {
+                    errors.Add("RG já cadastrado no sistema!");
+                }
+
+                if (errors.Any())
+                {
+                    return BadRequest(errors);
+                }
+
                 Usuario user = new Usuario();
 
                 user.Nome = pacienteModel.Nome;
                 user.Email = pacienteModel.Email;
+                
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
 
                 var containerName = "";

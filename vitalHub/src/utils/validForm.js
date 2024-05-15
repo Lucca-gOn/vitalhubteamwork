@@ -8,6 +8,61 @@ export const validEmail = (email) => {
   }
 }
 
+export const validRG = (rg) => {
+  // Removendo caracteres especiais e espaços em branco
+  rg = rg.replace(/[^\w\s]/gi, '');
+  
+  // Verificando se o RG tem o número correto de caracteres (7 ou 9 dígitos)
+  if (!/^(?:\d{7}|\d{8}[0-9A-Za-z])$/.test(rg)) {
+    console.log("rg validaçao:",rg)
+    return false;
+  }
+  
+  // Separando os dígitos do dígito verificador
+  const numerosRG = rg.substring(0, rg.length - 1); // Obtendo todos os dígitos (menos o último)
+  const dv = rg.charAt(rg.length - 1); // Obtendo o último caractere (dígito verificador)
+  
+  // Verificando se o último caractere é um dígito ou uma letra (para RGs antigos)
+  if (!/^\d$|^[A-Za-z]$/i.test(dv)) {
+    return false;
+  }
+
+  // Calculando o dígito verificador (RG antigo com 7 dígitos)
+  if (rg.length === 7) {
+    let soma = 0;
+    for (let i = 0; i < 7; i++) {
+      soma += parseInt(numerosRG.charAt(i)) * (i + 1);
+    }
+
+    const resto = soma % 10;
+    const dvCalculado = resto === 0 ? 0 : 10 - resto;
+    return dv.toUpperCase() === dvCalculado.toString().toUpperCase();
+  }
+
+  // Calculando o dígito verificador (RG novo com 9 dígitos)
+  let soma = 0;
+  for (let i = 0; i < 8; i++) {
+    soma += parseInt(numerosRG.charAt(i)) * (10 - i);
+  }
+
+  soma += parseInt(dv) * 2;
+
+  const resto = soma % 11;
+  let dvCalculado;
+  if (resto < 2) {
+    dvCalculado = 0;
+  } else {
+    dvCalculado = 11 - resto;
+    // Se o dígito verificador calculado for 10, ele deve ser representado pela letra 'X'
+    if (dvCalculado === 10) {
+      dvCalculado = 'X';
+    }
+  }
+
+  return dv.toUpperCase() === dvCalculado.toString().toUpperCase();
+};
+
+
 export const validName = (nome) => {
   const nameRegex = /^[a-zA-ZÀ-ÿ]{3,}(?: [a-zA-ZÀ-ÿ]+)*$/;
   if(nome != '' && nome != null){
@@ -125,7 +180,3 @@ export const formatarDataNascimento = (data) => {
   return data;
 };
 
-export const validarRG = (rg) => {
-
-  return true;
-};
