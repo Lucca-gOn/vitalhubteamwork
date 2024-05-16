@@ -12,7 +12,8 @@ export const Header = (
   {
    navigation,
    name,
-   foto
+   foto,
+   role
   }
 ) => {
 
@@ -27,7 +28,7 @@ export const Header = (
             <ImageUser source={{ uri: foto }} />
             <ContainerMargin $alingItens="flex-start" $justContent="flex-start" $width="auto" $gap={3}>
               <TitleHeader>Bem vindo!</TitleHeader>
-              <TextNameUserWhite>{name}</TextNameUserWhite>
+              <TextNameUserWhite>{role === "Medico" ? "Dr(a). " : ""}{name}</TextNameUserWhite>
             </ContainerMargin>
             </TouchableOpacity>
           </ContainerMargin>

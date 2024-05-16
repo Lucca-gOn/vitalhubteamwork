@@ -6,11 +6,12 @@ import api from "../../service/Service";
 import { Container, ContainerMargin, ContainerScrollView } from "../../components/Conatainer";
 import { ImageUser } from "../../components/Images/style";
 import { Description2, TextLabel, Title } from "../../components/Texts/style";
-import { InputGray } from "../../components/Inputs/styled";
+import { InputGray, MaskInputGray } from "../../components/Inputs/styled";
 import { ButtonDefault, ButtonGray } from "../../components/Buttons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import moment from "moment";
 import { ModalCamera } from "../../components/Modals";
+import { Masks } from 'react-native-mask-input';
 
 export default function Profile({ navigation }) {
   const [profile, setProfile] = useState({});
@@ -103,6 +104,7 @@ export default function Profile({ navigation }) {
     const url = `/${userType}/UpdateProfile?idUsuario=${profile.id}`;
 
     console.log(profile.id);
+    console.log(userType);
     await api.put(url, {
       cep: cep,
       logradouro: endereco,
@@ -110,7 +112,7 @@ export default function Profile({ navigation }) {
     })
       .then(() => {
         alert('Dados salvos com sucesso');
-        navigation.replace("Home");
+        navigation.replace("Main");
       })
       .catch((error) => {
         alert(`Erro ao fazer alteração dos dados: ${error}`);
@@ -204,7 +206,8 @@ export default function Profile({ navigation }) {
 
               <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
                 <TextLabel>RG</TextLabel>
-                <InputGray
+
+                <MaskInputGray
                   placeholder="xx.xxx.xxx-x"
                   inputMode="decimal"
                   value={rg}
@@ -212,11 +215,13 @@ export default function Profile({ navigation }) {
                   onChangeText={(text) => {
                     setRg(text);
                   }}
+                  mask={[/\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/]}
                 />
+                
               </ContainerMargin>
               <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
                 <TextLabel>CPF</TextLabel>
-                <InputGray
+                <MaskInputGray
                   placeholder="xxx.xxx.xxx-xx"
                   inputMode="decimal"
                   value={cpf}
@@ -224,6 +229,7 @@ export default function Profile({ navigation }) {
                   onChangeText={(text) => {
                     setCpf(text);
                   }}
+                  mask={[/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/]}
                 />
               </ContainerMargin>
             </>
@@ -247,7 +253,7 @@ export default function Profile({ navigation }) {
         <ContainerMargin $fd="row" $gap={32}>
           <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20} style={{ flex: 1 }}>
             <TextLabel>Cep</TextLabel>
-            <InputGray
+            <MaskInputGray
               placeholder="XXXXX-XXX"
               inputMode="decimal"
               autoComplete="postal-code"
@@ -257,6 +263,7 @@ export default function Profile({ navigation }) {
               onChangeText={(text) => {
                 setCep(text);
               }}
+              mask={Masks.ZIP_CODE}
             />
           </ContainerMargin>
 
@@ -300,7 +307,7 @@ export default function Profile({ navigation }) {
 
         </ContainerMargin>
       </ContainerScrollView>
-      <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibrary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
     </Container>
     
   );

@@ -82,7 +82,7 @@ export const ButtonGreenCam = ({
   onPress
 }) => {
   return (
-    <ButtonGreenStyle onPress={onPress}>
+    <ButtonGreenStyle onPress={onPress} style={{width:"100%"}}>
       <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />
       <TextWhiteMontBold>Enviar</TextWhiteMontBold>
     </ButtonGreenStyle>

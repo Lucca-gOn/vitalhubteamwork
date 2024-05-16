@@ -232,8 +232,8 @@ export const ModalScheduleAppointment = ({
   const [buttonDisable, setButtonDisable] = useState(false);
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
-    { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Exame' },
-    { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Urgência' },
+    { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Exame' },
+    { id: '0A34AA07-5AC4-400E-8AE5-1A831C22F869', tipo: 'Urgência' },
   ];
 
   function handleContinue() {
@@ -666,7 +666,7 @@ export const ModalCamera = ({
         alert('Sorry, we need camera permissions to make this work');
       }
 
-      if (!MediaLibrary.PermissionStatus.GRANTED) {
+      if (MediaLibrary.PermissionStatus.DENIED) {
         await requestMediaPermission()
       }
       // await MediaLibrary.requestPermissionsAsync();
@@ -688,30 +688,29 @@ export const ModalCamera = ({
       setShowModalCamera(false)
     }
   }
-  useEffect(() => {
-    (async () => {
+  // useEffect(() => {
+  //   (async () => {
       
-      if (permission && !permission.granted) {
-        alert('Sorry, we need camera permissions to make this work');
-      }
+  //     if (permission && !permission.granted) {
+  //       alert('Sorry, we need camera permissions to make this work');
+  //     }
 
-      if(!MediaLibrary.PermissionStatus.GRANTED){
-        await requestMediaPermission()
-      }
-      // await MediaLibrary.requestPermissionsAsync();
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    })();
-  }, []);
-
-
-
-
+  //     if(!MediaLibrary.PermissionStatus.GRANTED){
+  //       await requestMediaPermission()
+  //     }
+  //     // await MediaLibrary.requestPermissionsAsync();
+  //     await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   })();
+  // }, []);
 
   async function getLastPhoto() {
     const { assets } = await MediaLibrary.getAssetsAsync({ sortBy: [[MediaLibrary.SortBy.creationTime, false]], first: 1 })
-    //console.log(assets);
+    console.log(assets);
     if (assets.length > 0) {
-      setLatestPhoto(assets[0].uri)
+      //setLatestPhoto(assets[0].uri)
+      const infoAssets = await MediaLibrary.getAssetInfoAsync(assets[0].id)
+      console.log(infoAssets)
+      setLatestPhoto(infoAssets.localUri)
     }
   }
 
@@ -735,7 +734,7 @@ export const ModalCamera = ({
       >
         <ContainerMargin
           $height="90%"
-          $width="90%"
+          $width="100%"
           $borderRadius={10}
           $bgColor="#FFF"
         >
@@ -743,7 +742,7 @@ export const ModalCamera = ({
           <CameraView
             ref={cameraRef}
             ratio={'16:9'}
-            type={tipoCamera}
+            facing={tipoCamera}
             style={stylesCamera.camera}
             flashMode={'auto'}
             autoFocus={'on'}
@@ -810,9 +809,7 @@ const stylesCamera = StyleSheet.create({
   camera: {
     // flex: 1,
     height: '70%',
-    width: '100%',
-
-
+    width: '90%',
   },
   viewFlip: {
     flex: 1,

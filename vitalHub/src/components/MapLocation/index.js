@@ -22,41 +22,47 @@ export const MapLocation = ({
   longitudeClinica,
   nomeClinica
 }) => {
-  const clinica = [{ latitude: latitudeClinica, longitude: longitudeClinica, clinica: nomeClinica }]
-  
+
+  // console.log(`
+  //   Valor de latitude de clinica no mapa: ${latitudeClinica}
+  //   Valor de longitude de clinica no mapa: ${longitudeClinica}
+  //   Valor de nome de clinica no mapa: ${nomeClinica}
+  // `)
+
   const [initialPosition, setInitialPosition] = useState(null); //Hook par armezar a posição atual do dispositivo
+  
   const [endPosition, setEndPosition] = useState({ //Hook para armazenar a posição da clinica
-    latitude: clinica[0].latitude,
-    longitude: clinica[0].longitude
+    latitude: null,
+    longitude: null
   }) 
+
   const mapReference = useRef(null);
   
-  const [mapRendered, setMapRendered] = useState(false);
-
   // Função para capturar a localização atual.
   async function CurrentLocation() {
     const { granted } = await requestForegroundPermissionsAsync(); // Solicita ao usuário que conceda permissões de localização enquanto o aplicativo estiver em primeiro plano.
     if (granted) { // Se a permissão for concedida faza
       const captureLocation = await getCurrentPositionAsync(); // Obtem a latitude e longitude do dispositivo
       setInitialPosition(captureLocation);// Seta a posição inicial com a localização obtida
+      // setEndPosition({
+      //   latitude: latitudeClinica,
+      //   longitude: longitudeClinica
+      // })
       //console.log('posicao inicial : ',initialPosition)
     }
   }
 
-  async function reloadPreviewMap() {
-    if (mapReference.current && initialPosition) {
-      await mapReference.current.fitToCoordinates(
-        [
-          {
-            latitude: initialPosition.coords.latitude,
-            longitude: initialPosition.coords.longitude
-          }
-        ,
+  function reloadPreviewMap() {
+      if (mapReference.current && initialPosition.coords) {
+
+      const coordinates = [
+        { latitude: initialPosition.coords?.latitude, longitude: initialPosition.coords?.longitude },
+        { latitude: latitudeClinica, longitude: longitudeClinica }
+      ]
+
+      mapReference.current.fitToCoordinates(
+        coordinates, 
         {
-          latitude: endPosition.latitude,
-          longitude: endPosition.longitude
-        }
-      ], {
           edgePadding: { top: 60, right: 60, bottom: 60, left: 60 },     
           animated: true,
         }
@@ -64,32 +70,24 @@ export const MapLocation = ({
     }
   }
 
-
-
   useEffect(() => {
     CurrentLocation();
     //Monitora a posição em tempo real
-    watchPositionAsync(
-      {
-        accuracy: LocationAccuracy.Highest,
-        timeInterval: 1000,
-        distanceInterval: 1,
-      }, async (response) => {
-        setInitialPosition(response)
+    // watchPositionAsync(
+    //   {
+    //     accuracy: LocationAccuracy.Highest,
+    //     timeInterval: 1000,
+    //     distanceInterval: 1,
+    //   }, async (response) => {
+    //     setInitialPosition(response)
 
-        // mapReference.current?.animateCamera({
-        //   pitch: 60,
-        //   center: response.coords
-        // })
-      }
-    )
-  }, [1000])
-
-  useEffect(() => {
-    reloadPreviewMap()
-  }, [initialPosition,mapRendered])
-  
-console.log(clinica)
+    //     // mapReference.current?.animateCamera({
+    //     //   pitch: 60,
+    //     //   center: response.coords
+    //     // })
+    //   }
+    // )
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -99,8 +97,8 @@ console.log(clinica)
             <MapView
               ref={mapReference}
               initialRegion={{
-                latitude: initialPosition.coords.latitude,
-                longitude: initialPosition.coords.longitude,
+                latitude: initialPosition.coords?.latitude,
+                longitude: initialPosition.coords?.longitude,
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.005
               }}
@@ -113,12 +111,12 @@ console.log(clinica)
                 width: '100%',
               }}
               //Espera carregar o mapa para depois ajustar
-              onLayout={()=> {setMapRendered(true)}}
+              onLayout={()=> {reloadPreviewMap()}}
             >
               <Marker
                 coordinate={{
-                  latitude: initialPosition.coords.latitude,
-                  longitude: initialPosition.coords.longitude,
+                  latitude: initialPosition.coords?.latitude,
+                  longitude: initialPosition.coords?.longitude,
                 }}
                 title="Você está aqui"
                 description="Posição inicial"
@@ -127,8 +125,8 @@ console.log(clinica)
               <MapViewDirections
                 origin={initialPosition.coords}
                 destination={{
-                  latitude: clinica[0].latitude,
-                  longitude: clinica[0].longitude,
+                  latitude: latitudeClinica,
+                  longitude: longitudeClinica,
                   latitudeDelta: 0.005,
                   longitudeDelta: 0.005,
                 }}
@@ -139,12 +137,12 @@ console.log(clinica)
 
               <Marker
                 coordinate={{
-                  latitude: clinica[0].latitude,
-                  longitude: clinica[0].longitude,
+                  latitude: latitudeClinica,
+                  longitude: longitudeClinica,
                   latitudeDelta: 0.005,
                   longitudeDelta: 0.005,
                 }}
-                title={clinica[0].clinica}
+                title={nomeClinica}
                 pinColor="blue"
               />
 

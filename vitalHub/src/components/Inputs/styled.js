@@ -1,5 +1,71 @@
 import { css } from "styled-components";
 import styled from "styled-components/native";
+import MaskInput from 'react-native-mask-input';
+
+export const MaskInputGreen = styled(MaskInput).attrs((props) => ({
+  placeholderTextColor: '#34898F',
+  autoCapitalize: props.autoCapitalize !== undefined ? props.autoCapitalize : "none",
+  autoCorrect: false,
+  clearButtonMode: "while-editing",
+  cursorColor: '#34898F',
+  enablesReturnKeyAutomatically: true,
+}))`
+${(props) => {
+    if (!props.disabledInput) {
+      return css`
+        color: #34898F;
+        border: 2px solid #49B3BA;
+      `
+    } else {
+      return css`
+        background-color: #F5F3F3;
+        border-color: #F5F3F3;
+        color: #4E4B59;
+      `
+    }
+  }
+  } 
+  padding:16px;
+  width:100%;
+  border-radius: 5px;
+  
+  font-size: 14px;
+  font-family: 'MontserratAlternates_600SemiBold';  
+`
+
+
+
+
+export const MaskInputGray = styled(MaskInputGreen).attrs({
+  placeholderTextColor: '#ACACAC',
+  cursorColor: '#000',
+})`
+  ${(props) => {
+    if (props.disabledInput) {
+      return css`
+        color: #34898F;        
+        background-color:transparent;
+        border: 2px solid #34898F;
+      `
+    } else {
+      return css`
+        background-color: #F5F3F3;                
+        color: #000;
+        border:none;
+        `
+    }
+  }
+}    
+  
+  font-family: 'MontserratAlternates_500Medium';  
+`
+
+
+
+
+
+
+
 
 
 export const InputGreen = styled.TextInput.attrs((props) => ({
@@ -25,13 +91,9 @@ export const InputGreen = styled.TextInput.attrs((props) => ({
     }
   }
   }
-
   padding:16px;
   width:100%;
-  
-  
   border-radius: 5px;
-
   font-family: 'MontserratAlternates_600SemiBold';
   font-size: 14px;
 `
@@ -55,13 +117,13 @@ ${(props) => {
       `
     }
   }
-  }
-    
+  }    
   font-family: 'MontserratAlternates_500Medium';  
 `
 
 
-export const InputGreenMultiLine = styled.Text.attrs({
+
+export const InputGreenMultiLine = styled(InputGreen).attrs({
   multiline: true,
   textAlignVertical: "top"
 })`
@@ -69,7 +131,7 @@ export const InputGreenMultiLine = styled.Text.attrs({
     if (!props.disabledInput) {
       return css`
         color: #34898F;
-        border-color: #34898F;
+        border: 2px solid #49B3BA;
       `;
     } else {
       return css`
@@ -79,9 +141,10 @@ export const InputGreenMultiLine = styled.Text.attrs({
       `;
     }
   }}
+  
   width: 100%;
-  max-height: 300px;
-  flex:1;
+  height: 110px;
+  /* flex:1; */
 `;
 
 export const InputGreenCode = styled.TextInput.attrs({

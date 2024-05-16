@@ -72,6 +72,19 @@ namespace WebAPI.Repositories
             }
         }
 
+        public bool VerificaEmail(string email)
+        {
+            try
+            {
+                var emailEncontrado = ctx.Usuarios.FirstOrDefault (ctx => ctx.Email == email);
+                return emailEncontrado != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public Paciente BuscarPorId(Guid Id)
         {
             try
@@ -98,6 +111,32 @@ namespace WebAPI.Repositories
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public bool VerificaCpf(string cpf)
+        {
+            try
+            {
+                var cpflEncontrado = ctx.Pacientes.FirstOrDefault(ctx => ctx.Cpf == cpf);
+                return cpflEncontrado != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool VerificaRg(string rg)
+        {
+            try
+            {
+                var rgEncontrado = ctx.Pacientes.FirstOrDefault(ctx => ctx.Rg == rg);
+                return rgEncontrado != null;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

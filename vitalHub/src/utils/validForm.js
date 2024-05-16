@@ -8,6 +8,24 @@ export const validEmail = (email) => {
   }
 }
 
+export const validRG = (rg) => {
+   // Verifica se o RG possui 9 dígitos
+  if (rg.length !== 9) {
+    console.log(rg.length)
+    console.log('erro 9 dig')
+      return false;
+  }
+
+  // Verifica se os 8 primeiros dígitos são números
+  if (!/^\d{8}$/.test(rg.substring(0, 8))) {
+    console.log('erro 8 dig')
+      return false;
+  } 
+  // RG válido
+  return true;
+};
+
+
 export const validName = (nome) => {
   const nameRegex = /^[a-zA-ZÀ-ÿ]{3,}(?: [a-zA-ZÀ-ÿ]+)*$/;
   if(nome != '' && nome != null){
@@ -32,11 +50,16 @@ export const validDataNasciemnto = (dataString) =>{
   console.log(data.getDate() === Number(dia) &&
     data.getMonth() + 1 === Number(mes) &&
     data.getFullYear() === Number(ano));
-  return (
-    data.getDate() === Number(dia) &&
-    data.getMonth() + 1 === Number(mes) &&
-    data.getFullYear() === Number(ano)
-  );
+    
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zerar horas, minutos, segundos e milissegundos para comparar apenas a data
+  
+    return (
+      data.getDate() === Number(dia) &&
+      data.getMonth() + 1 === Number(mes) &&
+      data.getFullYear() === Number(ano) &&
+      data <= hoje
+    );
 }
 
 export const validNewPassWord = (newPassWord) => {
@@ -120,7 +143,3 @@ export const formatarDataNascimento = (data) => {
   return data;
 };
 
-export const validarRG = (rg) => {
-
-  return true;
-};

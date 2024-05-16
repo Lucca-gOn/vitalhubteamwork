@@ -37,7 +37,7 @@ export default function Home(
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   const { name,  role } = profile;
     
-  console.log(profile)
+  //console.log(profile)
   // Função para obter os dados descriptografados do token
   async function profileLoad() {    
     const token = await userDecodeToken();
@@ -67,7 +67,6 @@ export default function Home(
   }
 
   async function buscarUsuarioId() {
-    console.log(profile.id)
     await api.get(`/Usuario/BuscarPorId?id=${profile.id}`)
     .then(
       response =>{
@@ -87,18 +86,20 @@ export default function Home(
   }, [])
 
   useEffect(() => {
-    buscarUsuarioId()
+    if(profile.id !== undefined){
+      buscarUsuarioId()
+    }
     if (dateConsult !== '') {
       ListarConsultas();
     }
-  }, [dateConsult, useIsFocused(), renderizaDados])
+  }, [dateConsult, useIsFocused(), renderizaDados,select])
 
   return (
     <Container $bgColor="#fbfbfb">
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header navigation={navigation} name={name} foto={foto} />
+      <Header navigation={navigation} name={name} foto={foto} role={profile.role}/>
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek dateConsult={dateConsult} setDateConsult={setDateConsult} />
