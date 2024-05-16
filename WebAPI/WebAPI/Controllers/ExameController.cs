@@ -4,6 +4,7 @@ using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Utils.OCR;
 using WebAPI.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebAPI.Controllers
 {
@@ -47,20 +48,28 @@ namespace WebAPI.Controllers
                     // Chama o método RecognizeTextAsync do serviço OCR para reconhecer o texto na imagem
                     var result = await _ocrService.RecognizeTextAsync(stream);
 
-                    // Atualiza a descrição do exame no modelo com o texto reconhecido
-                    exameViewModel.Descricao = result;
+                    if(result != "Erro ao reconhcer o texto") { 
 
-                    // Cria um novo objeto Exame com a descrição e o ID da consulta
-                    Exame novoExame = new Exame();
+                        // Atualiza a descrição do exame no modelo com o texto reconhecido
+                        exameViewModel.Descricao = result;
 
-                    novoExame.Descricao = exameViewModel.Descricao;
-                    novoExame.ConsultaId = exameViewModel.ConsultaId;
+                        // Cria um novo objeto Exame com a descrição e o ID da consulta
+                        Exame novoExame = new Exame();
 
-                    // Chama o método Cadastrar do repositório de exame para salvar o novo exame
-                    _exameRepository.Cadastrar(novoExame);
+                        novoExame.Descricao = exameViewModel.Descricao;
+                        novoExame.ConsultaId = exameViewModel.ConsultaId;
 
-                    // Retorna uma resposta de sucesso (código 200 OK) com o novo exame cadastrado
-                    return Ok(novoExame);
+                        // Chama o método Cadastrar do repositório de exame para salvar o novo exame
+                        _exameRepository.Cadastrar(novoExame);
+
+                        // Retorna uma resposta de sucesso (código 200 OK) com o novo exame cadastrado
+                        return Ok(novoExame);
+
+                    }
+                    else
+                    {
+                        return BadRequest("Não foi possivel reconhecer o texto.");      
+                    }
                 }
 
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 const portaApi = '4466';
 
 //Declara o ip da maquina
-const ip = '192.168.21.50';
+const ip = '192.168.199.120';
 
 //Allan Casa -> 192.168.15.7
 //Allan Escola -> 192.168.21.50

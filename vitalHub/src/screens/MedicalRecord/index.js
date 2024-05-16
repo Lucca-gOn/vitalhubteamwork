@@ -25,6 +25,9 @@ export default function MedicalRecord({
   const [showModalCamera, setShowModalCamera] = useState(false);
   const [disabledInput, setDisableInput] = useState(false);
   const [uriFotoCam, setUriFotoCam] = useState(null);
+  const [erroGeral, setErroGeral] = useState('');
+  const [statusResponseExame, setStatusResponseExame] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(false);
 
   const nome = route.params?.dadosConsulta?.paciente?.idNavigation?.nome || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.nome;
   const email = route.params?.dadosConsulta?.paciente?.idNavigation?.email || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.email;
@@ -116,10 +119,16 @@ export default function MedicalRecord({
     }).then(
       response => {
         setDescricaoExame(descricaoExame + "\n" + response.data.descricao)
+        setStatusResponseExame(false)
+        setButtonDisable(false)
+        setErroGeral('')
       }
     ).catch(
       error => {
-        console.log('Erro ao fazer salvar exame, erro : ', error)
+        console.log('Erro ao fazer salvar exame, erro : ', error.response)
+        setErroGeral(error.response.data)
+        setStatusResponseExame(false)
+        setButtonDisable(false)
       }
     )
   }
@@ -241,10 +250,20 @@ export default function MedicalRecord({
 
               <ContainerMargin $fd="row" $justContent="space-between" $mt={10}>
 
-                <ButtonGreenCam onPress={() => { setShowModalCamera(true) }} />
+                <ButtonGreenCam statusResponseExame={statusResponseExame} disabled={buttonDisable} 
+                onPress={() => {
+                  setShowModalCamera(true)
+                  setButtonDisable(true)
+                  setStatusResponseExame(true)
+                   }} />
+
 
                 {/* <TextCancelAppointment style={{ width: '25%', paddingTop: 10, paddingBottom: 10 }}>Cancelar</TextCancelAppointment> */}
 
+              </ContainerMargin>
+
+              <ContainerMargin $mt={10}>
+              {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
               </ContainerMargin>
 
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
@@ -261,6 +280,9 @@ export default function MedicalRecord({
 
 
               {/* editable={!disabledInput} */}
+
+              
+
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
                 <LinkUnderlineDefault onPress={() => navigation.goBack()}>
                   Voltar

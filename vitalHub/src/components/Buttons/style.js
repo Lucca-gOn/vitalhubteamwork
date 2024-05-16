@@ -106,12 +106,22 @@ export const ButtonClinic = styled(ButtonBlueStyle)`
 
 
 export const ButtonGreenStyle = styled.TouchableOpacity`
+${(props) => {
+    if(!props.disabledInput){
+      return css`
+        background-color: #49B3BA;
+      `
+    }else{
+      return css`
+        background-color: #ACABB7;
+      `
+    }
+  }}
   flex-direction: row;
   justify-content:center;
   align-items: center;
   gap:10px;
   width:55%;
   border-radius:5px;
-  background: #49B3BA;
   padding:10px;
 `

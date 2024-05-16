@@ -79,12 +79,21 @@ export const ButtonSelectGreen = ({
 }
 
 export const ButtonGreenCam = ({
+  statusResponseExame,
+  disabled,
   onPress
 }) => {
   return (
-    <ButtonGreenStyle onPress={onPress} style={{width:"100%"}}>
-      <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />
-      <TextWhiteMontBold>Enviar</TextWhiteMontBold>
+    <ButtonGreenStyle onPress={onPress} disabled={disabled} disabledInput={disabled} style={{ width: "100%" }}>
+      {
+        statusResponseExame ?
+          <ActivityIndicator /> :
+          (
+            <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />,
+            <TextWhiteMontBold>Enviar</TextWhiteMontBold>
+          )
+      }
+
     </ButtonGreenStyle>
   )
 }
