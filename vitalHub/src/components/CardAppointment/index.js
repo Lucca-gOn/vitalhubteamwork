@@ -18,7 +18,8 @@ export default CardAppointment = (
     setDadosCard,
     data,
     setShowModalShowLocalConsult,
-    role
+    role,
+    setSelect
   }
 ) => {
   const [idade, setIdade] = useState();
@@ -43,6 +44,7 @@ export default CardAppointment = (
     calculateAge();
   }, [])
 
+  
   return (
     <ContainerMargin $pd="11px 10px" $mb={20} $fd="row" $bgColor="#FFF" $width="100%" $gap={10} $borderRadius={5} style={{ elevation: 5 }}>
       <TouchableOpacity
@@ -69,7 +71,7 @@ export default CardAppointment = (
         <ImageUser $width="77px" $height="80px" source={foto !== undefined && foto !== 'string' ? { uri: foto } : require('../../assets/images/NotImage.svg')} />
 
         <ContainerMargin $width='none' $alingItens="flex-start" style={{ flex: 1 }} >
-          <TextNameUserBlack>{roles.idNavigation.nome}</TextNameUserBlack>
+          <TextNameUserBlack>{role == 'Paciente'? 'Dr(ª) ' + roles.idNavigation.nome: roles.idNavigation.nome}</TextNameUserBlack>
           <ContainerMargin $fd="row" $gap={7} $mt={5} $mb={11} $justContent="flex-start" $width="content">
             <TextQuickSandRegular>
               {
@@ -89,7 +91,8 @@ export default CardAppointment = (
               selectStatus === 'Agendadas' ?
                 <TextCancelAppointment onPress={() => {
                   setShowModalCancel(true)
-                  setConsultSelect(data.id)
+                  setConsultSelect(data)
+                  setSelect('Canceladas')
                 }}>
                   Cancelar
                 </TextCancelAppointment>

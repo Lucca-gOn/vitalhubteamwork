@@ -15,6 +15,7 @@ export default function SelectMedic({ navigation, route }) {
   const [select, setSelect] = useState(null);
   const [medicosLista, setMedicosLista] = useState([]);
   const [medico, setMedico] = useState(null);
+  const [buttonDisable,setButtonDisable] = useState(true);
 
   async function ListarMedicos() {
     //Instanciar a chamada da api
@@ -62,6 +63,7 @@ export default function SelectMedic({ navigation, route }) {
           <MedicCardData
             data={item}
             onPress={() => {
+              setButtonDisable(false)
               setSelect(item.id);
               setMedico({
                 ...medico,
@@ -85,7 +87,10 @@ export default function SelectMedic({ navigation, route }) {
             if(select !== null){
               handleContinue()
             }
-          }} />
+          }}
+          disabledInput={buttonDisable}
+          disabled={buttonDisable}
+           />
         <LinkUnderlineDefault
           onPress={() => {
             navigation.reset({

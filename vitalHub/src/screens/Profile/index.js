@@ -79,7 +79,7 @@ export default function Profile({ navigation }) {
   };
 
   async function alterarFotoPerfil() {
-    alert('Chamou a função alterarFotoPerfil')
+    // alert('Chamou a função alterarFotoPerfil')
     const formData = new FormData();
 
     formData.append("Arquivo", {
@@ -111,7 +111,7 @@ export default function Profile({ navigation }) {
       cidade: cidade,
     })
       .then(() => {
-        alert('Dados salvos com sucesso');
+        // alert('Dados salvos com sucesso');
         navigation.replace("Main");
       })
       .catch((error) => {

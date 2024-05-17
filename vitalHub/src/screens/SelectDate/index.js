@@ -29,6 +29,7 @@ export default function SelectDate({
   const [agendamento, setAgendamento] = useState({
     dataConsulta: null
   });
+  const [buttonDisable,setButtonDisable] = useState(true)
 
   const [arrayOptions, setArrayOptions] = useState(
     null
@@ -119,7 +120,14 @@ export default function SelectDate({
             <RNPickerSelect
               useNativeAndroidPickerStyle={false}
               fixAndroidTouchableBug={true}
-              onValueChange={(value) => setHoraSelecionada(value)}
+              onValueChange={(value) => {
+                setHoraSelecionada(value)
+                if(value !== null){
+                  setButtonDisable(false)
+                }else{
+                  setButtonDisable(true)
+                }}
+              }
               items={arrayOptions}
               placeholder={{ label: 'Seleciona Horário', value: null }}
               Icon={() => {
@@ -176,7 +184,10 @@ export default function SelectDate({
             if (dataSelecionada !== null && horaSelecionada !== null) {
               handlecontinue()
             }
-          }} />
+          }} 
+          disabled={buttonDisable}
+          disabledInput={buttonDisable}
+          />
 
         <LinkUnderlineDefault
           onPress={() => {

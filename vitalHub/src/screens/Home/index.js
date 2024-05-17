@@ -1,4 +1,4 @@
-import { FlatList, StatusBar } from "react-native";
+import { FlatList, StatusBar, Text, View } from "react-native";
 import { Container, ContainerMargin } from "../../components/Conatainer";
 import { Header } from "../../components/Header";
 import { CalendarListWeek } from "../../components/Calendars";
@@ -18,65 +18,67 @@ export default function Home(
     route
   }
 ) {
-  
+
   const [showModalCancel, setShowModalCancel] = useState(false);
   const [showModalMedicalRecord, setShowModalMedicalRecord] = useState(false);
   const [showModalScheduleAppointment, setShowModalScheduleAppointment] = useState(false);
-  const [showModalShowLocalConsult,setShowModalShowLocalConsult]= useState(false);
+  const [showModalShowLocalConsult, setShowModalShowLocalConsult] = useState(false);
   const [consultSelect, setConsultSelect] = useState({});
-  const [dadosCard,setDadosCard] = useState({});
+  const [dadosCard, setDadosCard] = useState({});
   const [consultas, setConsultas] = useState({});
   const [dadosSituacoes, setDadosSituacoes] = useState({});
-  const [dateConsult, setDateConsult] = useState('');  
+  const [dateConsult, setDateConsult] = useState('');
   const [profile, setProfile] = useState({});
-  const [renderizaDados, setRenderizaDados]= useState(false);
-  const [foto,setFoto] = useState('')
-  const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada :'Agendadas');
+  const [renderizaDados, setRenderizaDados] = useState(false);
+  const [foto, setFoto] = useState('')
+  const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada : 'Agendadas');
   const [situacao, setSituacao] = useState("");
+  const [filteredConsultas, setFilteredConsultas] = useState([]) 
   
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
-  const { name,  role } = profile;
-    
+  const { name, role } = profile;
+
   //console.log(profile)
   // Função para obter os dados descriptografados do token
-  async function profileLoad() {    
+  async function profileLoad() {
     const token = await userDecodeToken();
     setProfile(token);
     setDateConsult(route.params && route.params.dateConsulta ? route.params.dateConsulta : moment().format('YYYY-MM-DD'))
   }
-  
+
   async function ListaSituacoes() {
     await api.get('/Situacao/ListarTodas')
-    .then(response => {
-      setDadosSituacoes(response.data)
-    })
-    .catch(error => {
-      console.log('Erro ao listar dados de Situações : ,', error)
-    })
+      .then(response => {
+        setDadosSituacoes(response.data)
+      })
+      .catch(error => {
+        console.log('Erro ao listar dados de Situações : ,', error)
+      })
   }
-  
-  async function ListarConsultas() {    
-    const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')    
+
+  async function ListarConsultas() {
+    const url = (profile.role == 'Medico' ? 'Medicos' : 'Pacientes')
     await api.get(`/${url}/BuscarPorData?data=${dateConsult}&id=${profile.id}`)
-    .then(response => {
-      setConsultas(response.data);
-      // console.log('Trouxe dados com sucesso Api buscar por data',response.data)
-    }).catch(error => {
-      console.log('Erro ao listar Consultas: ', error);
-    })    
+      .then(response => {
+        setConsultas(response.data);
+        console.log('Response data: ', response.data)
+        setFilteredConsultas(response.data.filter(item => item.situacao && item.situacao.situacao && item.situacao.situacao === select ))             
+      }).catch(error => {
+        console.log('Erro ao listar Consultas: ', error);
+      })
   }
 
   async function buscarUsuarioId() {
     await api.get(`/Usuario/BuscarPorId?id=${profile.id}`)
-    .then(
-      response =>{
-        setFoto(response.data.foto)
-      }
-    ).catch(
-      error => {
-        console.log(`Erro ao buscar por id : ${error}`)
-      }
-    )
+      .then(
+        response => {
+          setFoto(response.data.foto)
+        }
+      ).catch(
+        error => {
+          console.log(`Erro ao buscar por id : ${error}`)
+        }
+      )
   }
 
   //Executando a função ProfileLoad
@@ -86,20 +88,20 @@ export default function Home(
   }, [])
 
   useEffect(() => {
-    if(profile.id !== undefined){
+    if (profile.id !== undefined) {
       buscarUsuarioId()
     }
     if (dateConsult !== '') {
       ListarConsultas();
-    }
-  }, [dateConsult, useIsFocused(), renderizaDados,select])
+    } 
+  }, [dateConsult, useIsFocused(), renderizaDados, select])
 
   return (
     <Container $bgColor="#fbfbfb">
 
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={'transparent'} />
 
-      <Header navigation={navigation} name={name} foto={foto} />
+      <Header navigation={navigation} name={name} role={role} foto={foto} />
 
       <ContainerMargin $mt={20}>
         <CalendarListWeek dateConsult={dateConsult} setDateConsult={setDateConsult} />
@@ -113,9 +115,10 @@ export default function Home(
 
       <Container style={{ width: '90%', marginTop: 30 }}>
         <FlatList
-          data={consultas}
+          data={filteredConsultas}
           renderItem={({ item }) =>
-            select == item.situacao.situacao && (
+            
+              select == item.situacao.situacao && ( 
               <CardAppointment
                 setSituacao={item.situacao.situacao}
                 data={item}
@@ -126,15 +129,20 @@ export default function Home(
                 setShowModalMedicalRecord={setShowModalMedicalRecord}
                 setShowModalShowLocalConsult={setShowModalShowLocalConsult}
                 setConsultSelect={setConsultSelect}
-                setDadosCard={setDadosCard}                
-              />
-            )
+                setSelect={setSelect}
+                setDadosCard={setDadosCard}
+
+              />)
+                      
           }
           keyExtractor={item => item.id}
           style={{
             width: '100%',
           }}
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return <Text>Não há consulta disponível para o dia selecionado, para agendar uma consulta click no botão verde no canto inferior direito.</Text>
+          }}
         />
       </Container>
 
@@ -156,8 +164,8 @@ export default function Home(
       />
       <ModalMedicalRecord
         navigation={navigation}
-        consultSelect={consultSelect}     
-        profile={profile}   
+        consultSelect={consultSelect}
+        profile={profile}
         dadosSituacoes={dadosSituacoes}
         setShowModalMedicalRecord={setShowModalMedicalRecord}
         showModalMedicalRecord={showModalMedicalRecord}
@@ -171,7 +179,7 @@ export default function Home(
         navigation={navigation}
       />
 
-      <ModalShowLocalConsult 
+      <ModalShowLocalConsult
         consultSelect={consultSelect}
         navigation={navigation}
         showModalShowLocalConsult={showModalShowLocalConsult}

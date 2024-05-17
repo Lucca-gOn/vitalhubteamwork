@@ -42,7 +42,7 @@ export const ModalCancel = ({
   renderizaDados,
   setShowModalCancel
 }) => {
-
+  console.log('valor de consulta selecionada em modal cancel: ', consultSelect.medicoClinica?.medico?.idNavigation?.nome)
   const dadosSituações = dadosSituacoes;
 
   function encontraIdConsultaCancelada() {
@@ -57,7 +57,7 @@ export const ModalCancel = ({
     let idSituacaoCancelada = encontraIdConsultaCancelada();
 
     try {
-      await api.put(`/Consultas/Status?idConsulta=${consultSelect}&status=${idSituacaoCancelada}`)
+      await api.put(`/Consultas/Status?idConsulta=${consultSelect.id}&status=${idSituacaoCancelada}`)
       handleCallNotifications();
       if (renderizaDados) {
         setRenderizaDados(false)
@@ -83,7 +83,7 @@ export const ModalCancel = ({
     await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Consulta cancelada',
-        body: 'Consulta com o Dr. Allan foi cancelada, favor reagendar.'
+        body: `Consulta com o Dr(a) ${consultSelect.medicoClinica?.medico?.idNavigation?.nome} foi cancelada, favor reagendar.`
       },
       trigger: null
     })
@@ -229,7 +229,8 @@ export const ModalScheduleAppointment = ({
   const [tipoConsulta, setTipoConsulta] = useState("Rotina")
   const [clinicas, setClinicas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(true);
+  const [localSelecionado, setLocalSelecionado] = useState(false);
   const niveisConsulta = [
     { id: '989B4408-D25C-471F-B5C3-06BEAF08D8DA', tipo: 'Rotina' },
     { id: '894ADE0F-F58E-49DB-B605-37207732B7C8', tipo: 'Exame' },
@@ -258,7 +259,11 @@ export const ModalScheduleAppointment = ({
     }
   };
 
-
+  useEffect(() => {
+    if(localSelecionado){
+      setButtonDisable(false)
+    }
+  }, [localSelecionado])
 
   useEffect(() => {
     buscarClinicas();
@@ -339,12 +344,20 @@ export const ModalScheduleAppointment = ({
                 {loading ? (
                   <ActivityIndicator />
                 ) : (
-                  <RNPickerSelect
-
+                  <RNPickerSelect                    
                     useNativeAndroidPickerStyle={false}
                     fixAndroidTouchableBug={true}
-                    onValueChange={(value) => setAgendamento({ ...agendamento, localizacao: value })}
-                    items={clinicas.map((clinica) => ({ label: clinica.endereco.cidade, value: clinica.endereco.cidade }))}
+                    onValueChange={(value) => {
+                      setAgendamento({ ...agendamento, localizacao: value })
+                      if (value !== null) { setLocalSelecionado(true) }
+                      else {
+                        setLocalSelecionado(false)
+                        setButtonDisable(true)
+                      }
+                    }
+                    }
+                    value={agendamento.localizacao}
+                    items={clinicas.map((clinica) => ({ label: clinica.endereco.cidade, value: clinica.endereco.cidade}))}
                     placeholder={{ label: 'Selecione a cidade', value: null }}
                     Icon={() => (
                       <TouchableOpacity>
@@ -409,13 +422,17 @@ export const ModalScheduleAppointment = ({
 
             <ContainerMargin $mt={143} $mb={35} $gap={30} $width="80%">
               <ButtonDefault
+
                 textButton="Continuar"
                 onPress={() => {
                   console.log('agendamento: ', agendamento)
-                  if (agendamento !== null && agendamento.localizacao !== null && agendamento.prioridadeLabel !== null) {
-                    handleContinue()
-                  }
-                }} />
+                  handleContinue()
+                  setButtonDisable(true)
+                  setLocalSelecionado(false)
+                }}
+                disabled={buttonDisable}
+                disabledInput={buttonDisable}
+              />
 
               <LinkUnderlineDefault
                 onPress={() => setShowModalScheduleAppointment(false)}
@@ -609,6 +626,7 @@ export const ModalCamera = ({
   setShowModalCamera,
   navigation,
   setUriFotoCam,
+  setStatusResponseExame,
   getMediaLibrary = false
 }) => {
 
@@ -690,7 +708,7 @@ export const ModalCamera = ({
   }
   // useEffect(() => {
   //   (async () => {
-      
+
   //     if (permission && !permission.granted) {
   //       alert('Sorry, we need camera permissions to make this work');
   //     }
@@ -726,7 +744,10 @@ export const ModalCamera = ({
       transparent={true}
       visible={showModalCamera}
       statusBarTranslucent={true}
-      onRequestClose={() => { setShowModalCamera(false) }}
+      onRequestClose={() => { 
+        setShowModalCamera(false)
+        setStatusResponseExame(false)
+      }}
     >
       <Container
         $justContent="center"

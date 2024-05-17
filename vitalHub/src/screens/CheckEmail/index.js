@@ -21,7 +21,7 @@ export default function CheckEmail({
   const [erroGeral, setErroGeral] = useState('');
   const [erroReenvioCodigo, setErroReenvioCodigo] = useState('');
   const [statusResponseCodigo, setStatusResponseCodigo] = useState(false);
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(true);
 
   const inputs = [
     useRef(null), useRef(null), useRef(null), useRef(null)
@@ -129,6 +129,8 @@ export default function CheckEmail({
                   if (text == '') {
                     focusPrevInput(index)
                   } else {
+                    setButtonDisable(false)
+                    setErroGeral('')
                     // Separa os valore em arrays
                     const novoCodigo = [...codigo]
                     // corrige o valo de acrodo com a posicao

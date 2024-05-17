@@ -16,6 +16,7 @@ export default function SelectClinic({
   const [select, setSelect] = useState(null)
   const [clinicList, setClinicList] = useState([]);
   const [clinica, setClinica] = useState(null)
+  const [buttonDisable,setButtonDisable] = useState(true)
 
   async function ListarClinicas() {
     try {
@@ -57,6 +58,7 @@ export default function SelectClinic({
             data={item}
             onPress={() => {
               setSelect(item.id)
+              setButtonDisable(false)
               setClinica({
                 ...clinica,
                 clinicaId: item.id,
@@ -84,8 +86,10 @@ export default function SelectClinic({
             if(select !== null){
               handleContinue()
             }
+          }          
           }
-          }
+          disabled={buttonDisable}
+          disabledInput={buttonDisable}
         />
 
         <LinkUnderlineDefault onPress={() => {

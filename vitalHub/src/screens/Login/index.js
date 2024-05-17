@@ -120,6 +120,10 @@ export default function Login({
             value={email}
             onChangeText={(txt) => {
               setEmail(txt)
+              if (erroEmail !== null || erroGeral !== null) {
+                setErroEmail('')
+                setErroGeral('')
+              }
             }}
             onEndEditing={() => {
               if (!validEmail(email)) {
@@ -140,7 +144,13 @@ export default function Login({
               maxLength={50}
               secureTextEntry={!showConfirPassword}
               value={senha}
-              onChangeText={(txt) => setSenha(txt)}
+              onChangeText={(txt) => {
+                setSenha(txt)
+                if (erroGeral !== '') {
+                  setErroGeral('')
+                }
+              }
+              }
 
             />
 

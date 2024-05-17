@@ -18,7 +18,7 @@ export default function RecoveryPassWord({
   const [email, setEmail] = useState('');
   const [erroEmail, setErroEmail] = useState('');
   const [statusResponseEmail, setStatusResponseEmail] = useState(false);
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(true);
 
   async function enviarEmail() {
     await api.post(`/RecuperarSenha?email=${email}`)
@@ -66,12 +66,19 @@ export default function RecoveryPassWord({
             enterKeyHint="next"
             keyboardType="email-address"
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => 
+            {
+              setEmail(text)
+              setErroEmail('')
+              }
+            }
             maxLength={50}
             onEndEditing={() => {
               if (!validEmail(email)) {
                 setErroEmail('Email inválido, ex: teste@teste.com')
+                setButtonDisable(true)
               } else {
+                setButtonDisable(false)
                 setErroEmail('');
               }
             }}

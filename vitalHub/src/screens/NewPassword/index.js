@@ -28,7 +28,7 @@ export default function NewPassword({
   const [erroGeral, setErroGeral] = useState('');
 
   const [statusResponseNewPassword,setStatusResponseNewPassword] = useState(false)
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(true);
 
   async function updatePassword() {
     if (newPassword === confirmPassword) {
@@ -117,6 +117,7 @@ export default function NewPassword({
                   setErroSenha('A senha deve conter 8 catacteres e incluir no minimo uma letra minuscula, uma maisucula um numero e um caracter especial. ')
                 } else {
                   setErroSenha('');
+                  
                 }
               }}
             />
@@ -143,8 +144,10 @@ export default function NewPassword({
               onEndEditing={() => {
                 if (!(newPassword === confirmPassword)) {
                   setErroConfirmarSenha('Senhas não são iguais')
+                  setButtonDisable(true)
                 } else {
                   setErroConfirmarSenha('');
+                  setButtonDisable(false)
                 }
               }}
             />

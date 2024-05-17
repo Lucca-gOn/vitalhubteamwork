@@ -5,7 +5,7 @@ import { Description, TextLabel, Title } from "../../components/Texts/style";
 import { InputGreen, MaskInputGreen } from "../../components/Inputs/styled";
 import { ButtonDefault } from "../../components/Buttons";
 import { LinkUnderlineDefault } from "../../components/Links";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validarCPF, formatarDataNascimento } from "../../utils/validForm/";
 import api from '../../service/Service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,7 +39,7 @@ export default function CreateAccount({
 
   const [erroGeral, setErroGeral] = useState('');
 
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(true);
   const [statusResponseCadastro, setStatusResponseCadastro] = useState(false);
   // Handlers
   const handleCPFChange = (text) => {
@@ -125,6 +125,11 @@ export default function CreateAccount({
     }
   }
 
+  useEffect(()=>{
+    if(validName(nome) && validRG(rg) && validarCPF(cpf) && validDataNasciemnto(dataNascimento) && validEmail(email) && validNewPassWord(senha) && (senha === confirmarSenha)){
+      setButtonDisable(false)
+    }else{setButtonDisable(true)}
+  },[nome, rg,cpf, dataNascimento, email,senha,confirmarSenha])
   return (
     <ContainerMarginStatusBar>
 
@@ -149,7 +154,10 @@ export default function CreateAccount({
           <InputGreen
             placeholder="Nome"
             value={nome}
-            onChangeText={handleNomeChange}
+            onChangeText={(text)=>{
+              handleNomeChange(text)
+              setErroNome('')
+            }}
             keyboardType="default"
             maxLength={50}
             autoCapitalize={"words"}
@@ -157,9 +165,10 @@ export default function CreateAccount({
             onEndEditing={() => {
               setNome(nome.trim())
               if (!validName(nome.trim())) {
-                setErroNome('O campo deve ter no mínimo três caracteres!')
+           
+                 setErroNome('O campo deve ter no mínimo três caracteres!')
               } else {
-                setErroNome('');
+                 setErroNome('');
               }
             }}
           />
@@ -169,7 +178,10 @@ export default function CreateAccount({
           <MaskInputGreen
             placeholder="RG"
             value={rg}
-            onChangeText={(masked, unmasked) => { handleRgChange(unmasked) }}
+            onChangeText={(masked, unmasked) => {
+              handleRgChange(unmasked) 
+              setErroRg('')
+              }}
             keyboardType="default"
             maxLength={12}
             onEndEditing={() => {
@@ -189,7 +201,10 @@ export default function CreateAccount({
           <MaskInputGreen
             placeholder="CPF"
             value={cpf}
-            onChangeText={(masked, unmasked) => { handleCPFChange(unmasked) }}
+            onChangeText={(masked, unmasked) => { 
+              handleCPFChange(unmasked) 
+              setErroCpf('')
+              }}
             keyboardType="numeric"
             maxLength={14}
             onEndEditing={() => {
@@ -207,7 +222,10 @@ export default function CreateAccount({
           <InputGreen
             placeholder="Data nascimento"
             value={dataNascimento}
-            onChangeText={handleDataNascimentoChange}
+            onChangeText={(text) => {
+              handleDataNascimentoChange(text)
+              setErroDataNacimento('')
+              }}
             keyboardType="numeric"
             maxLength={10}
             enterKeyHint="next"
@@ -225,12 +243,15 @@ export default function CreateAccount({
           <InputGreen
             placeholder="Email"
             value={email}
-            onChangeText={handleEmailChange}
+            onChangeText={ (text) => {
+              handleEmailChange(text)
+              setErroEmail('')
+              }}
             keyboardType="email-address"
             maxLength={50}
             onEndEditing={() => {
               setEmail(email.trim())
-              if (!validEmail(email)) {
+              if (!validEmail(email.trim())) {
                 setErroEmail('Email inválido, ex: teste@teste.com')
               } else {
                 setErroEmail('');
@@ -245,13 +266,17 @@ export default function CreateAccount({
             <InputGreen
               placeholder="Senha"
               value={senha}
-              onChangeText={handleSenhaChange}
+              onChangeText={(text) => {
+                handleSenhaChange(text)
+                setErroSenha('')
+              }}
               keyboardType="default"
               maxLength={50}
               secureTextEntry={!showPassword}
               enterKeyHint="next"
               onEndEditing={() => {
-                if (!validNewPassWord(senha)) {
+                setSenha(senha.trim())
+                if (!validNewPassWord(senha.trim())) {
                   setErroSenha('A senha deve conter 8 catacteres e incluir no minimo uma letra minuscula, uma maisucula um numero e um caracter especial. ')
                 } else {
                   setErroSenha('');
@@ -276,13 +301,17 @@ export default function CreateAccount({
             <InputGreen
               placeholder="Confirmar senha"
               value={confirmarSenha}
-              onChangeText={handleConfirmarSenhaChange}
+              onChangeText={(text)=> {
+                handleConfirmarSenhaChange(text)
+                setErroConfirmarSenha('')
+                }}
               keyboardType="default"
               maxLength={50}
               secureTextEntry={!showConfirPassword}
               enterKeyHint="enter"
               onEndEditing={() => {
-                if (!(senha === confirmarSenha)) {
+                setConfirmarSenha(confirmarSenha.trim())
+                if (!(senha === confirmarSenha.trim())) {
                   setErroConfirmarSenha('Senhas não são iguais')
                 } else {
                   setErroConfirmarSenha('');

@@ -55,6 +55,13 @@ export const MapLocation = ({
   function reloadPreviewMap() {
       if (mapReference.current && initialPosition.coords) {
 
+        console.log(`
+        initialPosition.coords?.latitude: ${initialPosition.coords?.latitude}
+        initialPosition.coords?.longitude: ${initialPosition.coords?.longitude}
+        latitudeClinica: ${latitudeClinica}
+        longitudeClinica: ${longitudeClinica}
+        `)
+
       const coordinates = [
         { latitude: initialPosition.coords?.latitude, longitude: initialPosition.coords?.longitude },
         { latitude: latitudeClinica, longitude: longitudeClinica }
@@ -69,6 +76,8 @@ export const MapLocation = ({
       )
     }
   }
+
+ 
 
   useEffect(() => {
     CurrentLocation();
@@ -111,7 +120,7 @@ export const MapLocation = ({
                 width: '100%',
               }}
               //Espera carregar o mapa para depois ajustar
-              onLayout={()=> {reloadPreviewMap()}}
+              onMapReady={()=> {reloadPreviewMap()}}
             >
               <Marker
                 coordinate={{

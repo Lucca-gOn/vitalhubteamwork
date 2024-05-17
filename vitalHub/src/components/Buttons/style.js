@@ -77,13 +77,15 @@ export const ButtonStethoscope = styled.TouchableOpacity`
   bottom: ${`${56+15}px`};
   right: 21px; 
   background-color: #49B3BA;
-  width: 60px;
-  height: 60px;
+  /* width: 60px;
+  height: 60px; */
   align-items:center;
   justify-content:center;
   border-radius: 7px;
+  padding: 10px 15px 10px 15px;
   
-`
+  flex-direction:row;
+  `
 
 export const ButtonClinic = styled(ButtonBlueStyle)`
 	flex-direction: column;

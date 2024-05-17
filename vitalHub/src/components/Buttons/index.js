@@ -90,7 +90,7 @@ export const ButtonGreenCam = ({
           <ActivityIndicator /> :
           (
             <MaterialCommunityIcons name="camera-plus-outline" size={24} color="white" />,
-            <TextWhiteMontBold>Enviar</TextWhiteMontBold>
+            <TextWhiteMontBold>Enviar Exame</TextWhiteMontBold>
           )
       }
 

@@ -19,15 +19,20 @@ export default function MedicalRecord({
   route
 }) {
   const [descricaoConsulta, setDescricaoConsulta] = useState(route.params?.dadosConsulta?.descricao ? route.params.dadosConsulta.descricao : '');
+  const [erroDescricao, setErroDescricao] = useState('')
   const [diagnosticoPaciente, setDiagnosticoPaciente] = useState(route.params?.dadosConsulta?.diagnostico ? route.params.dadosConsulta.diagnostico : '');
-  const [prescricaoMedica, setPrescricaoMedica] = useState(route.params?.dadosConsulta?.receita ? route.params.dadosConsulta.receita.medicamento : '');
+  const [erroDiagnosticoPaciente, setErroDiagnosticoPaciente] = useState('')
+  const [prescricaoMedica, setPrescricaoMedica] = useState(route.params?.dadosConsulta?.receita?.medicamento ? route.params.dadosConsulta.receita.medicamento : '');
+  const [erroPrescricaoMedica, setErroPrescricaoMedica] = useState('')
   const [descricaoExame, setDescricaoExame] = useState('');
   const [showModalCamera, setShowModalCamera] = useState(false);
-  const [disabledInput, setDisableInput] = useState(false);
+  const [disabledInput, setDisableInput] = useState(true);
   const [uriFotoCam, setUriFotoCam] = useState(null);
   const [erroGeral, setErroGeral] = useState('');
   const [statusResponseExame, setStatusResponseExame] = useState(false);
-  const [buttonDisable, setButtonDisable] = useState(false);
+  const [buttonDisable, setButtonDisable] = useState(route.params?.role == 'Medico' ? false : true);
+  const [buttonDisableEditar, setButtonDisableEditar] = useState(false)
+  const [buttonDisableExame, setButtonDisableExame] = useState(false)
 
   const nome = route.params?.dadosConsulta?.paciente?.idNavigation?.nome || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.nome;
   const email = route.params?.dadosConsulta?.paciente?.idNavigation?.email || route.params?.dadosConsulta.medicoClinica?.medico?.idNavigation?.email;
@@ -72,7 +77,9 @@ export default function MedicalRecord({
         descricao: descricaoConsulta,
         diagnostico: diagnosticoPaciente,
       })
-      alterarStatusConsulta()
+      if (dadosSituações == 'Agendadas') {
+        alterarStatusConsulta()
+      }
       setDisableInput(true);
       console.log('Relizado alteracao')
     } catch (error) {
@@ -119,16 +126,16 @@ export default function MedicalRecord({
     }).then(
       response => {
         setDescricaoExame(descricaoExame + "\n" + response.data.descricao)
+        setButtonDisableExame(false)
         setStatusResponseExame(false)
-        setButtonDisable(false)
         setErroGeral('')
       }
     ).catch(
       error => {
         console.log('Erro ao fazer salvar exame, erro : ', error.response)
         setErroGeral(error.response.data)
+        setButtonDisableExame(false)
         setStatusResponseExame(false)
-        setButtonDisable(false)
       }
     )
   }
@@ -161,6 +168,15 @@ export default function MedicalRecord({
     }
   }, [uriFotoCam])
 
+  useEffect(() => {
+    if ((descricaoConsulta.length >= 3) && (diagnosticoPaciente.length >= 3) && (prescricaoMedica.length >= 3)) {
+      console.log('top')
+      setDisableInput(false)
+    } else {
+      setDisableInput(true)
+    }
+  }, [descricaoConsulta, diagnosticoPaciente, prescricaoMedica])
+
   return (
 
     <Container>
@@ -176,7 +192,7 @@ export default function MedicalRecord({
         <ContainerMargin $mt={20} $width="100%">
 
           <Title>
-            {nome}
+            {role == 'Paciente' ? 'Dr(ª) ' + nome : nome}
           </Title>
 
         </ContainerMargin>
@@ -201,19 +217,47 @@ export default function MedicalRecord({
 
           <InputGreenMultiLine
             placeholder="Inserir descrição"
-            editable={!disabledInput}
-            disabledInput={disabledInput}
+            editable={!buttonDisable}
+            disabledInput={buttonDisable}
             value={descricaoConsulta}
-            onChangeText={(txt) => { setDescricaoConsulta(txt) }}
+            onChangeText={(txt) => {
+              setDescricaoConsulta(txt)
+              setErroDescricao('')
+            }}
+            onEndEditing={() => {
+              if (descricaoConsulta !== '' && descricaoConsulta.length >= 3) {
+                setErroDescricao('')
+              } else {
+                setErroDescricao('Nesessário preencher o campo de descrição.')
+              }
+            }}
           />
-
+          {erroDescricao !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroDescricao}</Text> : <></>}
         </ContainerMargin>
 
         <ContainerMargin $alingItens="flex-start" $gap={10} $mt={20}>
 
           <TextLabel>Diagnóstico do paciente</TextLabel>
 
-          <InputGreen placeholder="Inserir diagnóstico" editable={!disabledInput} disabledInput={disabledInput} value={diagnosticoPaciente} onChangeText={(txt) => { setDiagnosticoPaciente(txt) }} />
+          <InputGreen
+            placeholder="Inserir diagnóstico"
+            editable={!buttonDisable}
+            disabledInput={buttonDisable}
+            value={diagnosticoPaciente}
+            onChangeText={(txt) => {
+              setDiagnosticoPaciente(txt)
+              setErroDiagnosticoPaciente('')
+            }}
+            onEndEditing={() => {
+              if (diagnosticoPaciente !== '' && diagnosticoPaciente.length >= 3) {
+                setErroDiagnosticoPaciente('')
+              } else {
+                setErroDiagnosticoPaciente('Nesessário preencher o campo de diagnóstico.')
+              }
+            }}
+          />
+
+          {erroDiagnosticoPaciente !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroDiagnosticoPaciente}</Text> : <></>}
 
         </ContainerMargin>
 
@@ -221,7 +265,26 @@ export default function MedicalRecord({
 
           <TextLabel>Prescrição médica</TextLabel>
 
-          <InputGreenMultiLine editable={!disabledInput} placeholder="Inserir prescrição medica" disabledInput={disabledInput} value={prescricaoMedica} onChangeText={(txt) => { setPrescricaoMedica(txt) }} />
+          <InputGreenMultiLine
+            editable={!buttonDisable}
+            placeholder="Inserir prescrição medica"
+            disabledInput={buttonDisable}
+            value={prescricaoMedica}
+            onChangeText={(txt) => {
+              setPrescricaoMedica(txt)
+              setErroPrescricaoMedica('')
+            }}
+            onEndEditing={() => {
+              if (prescricaoMedica !== '' && prescricaoMedica.length >= 3) {
+                setErroPrescricaoMedica('')
+              } else {
+                setErroPrescricaoMedica('Nesessário preencher o campo de prescrição médica.')
+              }
+            }}
+          />
+
+          {erroPrescricaoMedica !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroPrescricaoMedica}</Text> : <></>}
+
 
         </ContainerMargin>
 
@@ -240,7 +303,7 @@ export default function MedicalRecord({
                     :
                     <>
                       <Image source={require('../../assets/images/ImageExclamation.svg')} style={{ width: 16, height: 18 }} />
-                      <TextInformation>Nenhuma foto informada</TextInformation>
+                      <TextInformation>Nenhuma foto de exame informada</TextInformation>
                     </>
 
                   }
@@ -250,12 +313,12 @@ export default function MedicalRecord({
 
               <ContainerMargin $fd="row" $justContent="space-between" $mt={10}>
 
-                <ButtonGreenCam statusResponseExame={statusResponseExame} disabled={buttonDisable} 
-                onPress={() => {
-                  setShowModalCamera(true)
-                  setButtonDisable(true)
-                  setStatusResponseExame(true)
-                   }} />
+                <ButtonGreenCam statusResponseExame={statusResponseExame} disabled={buttonDisableExame}
+                  onPress={() => {
+                    setShowModalCamera(true)
+                    setButtonDisableExame(true)
+                    setStatusResponseExame(true)
+                  }} />
 
 
                 {/* <TextCancelAppointment style={{ width: '25%', paddingTop: 10, paddingBottom: 10 }}>Cancelar</TextCancelAppointment> */}
@@ -263,7 +326,7 @@ export default function MedicalRecord({
               </ContainerMargin>
 
               <ContainerMargin $mt={10}>
-              {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
+                {erroGeral !== '' ? <Text style={{ color: 'red', fontWeight: "500", textAlign: "left", width: '100%' }}>{erroGeral}</Text> : <></>}
               </ContainerMargin>
 
               <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 30, marginBottom: 40, width: '90%' }} />
@@ -281,7 +344,7 @@ export default function MedicalRecord({
 
               {/* editable={!disabledInput} */}
 
-              
+
 
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
                 <LinkUnderlineDefault onPress={() => navigation.goBack()}>
@@ -292,16 +355,21 @@ export default function MedicalRecord({
           ) :
             (
               <ContainerMargin $mt={30} $gap={30} $mb={30}>
+                {
+                  descricaoExame !== '' && (
+                    <>
+                      <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 5, marginBottom: 5, width: '100%' }} />
 
-                <View style={{ borderWidth: 1, borderStyle: "solid", borderColor: '#8C8A97', borderRadius: 5, marginTop: 5, marginBottom: 5, width: '100%' }} />
 
-
-                <ScrollView nestedScrollEnabled style={{ width: "100%", backgroundColor: "#F5F3F3", color: "#4E4B59", height: 110, padding: 16, borderRadius: 5 }}>
-                  <Text style={{
-                    fontFamily: 'MontserratAlternates_600SemiBold',
-                    fontSize: 14
-                  }}>{descricaoExame ? descricaoExame : 'Resultado do Exame'}</Text>
-                </ScrollView>
+                      <ScrollView nestedScrollEnabled style={{ width: "100%", backgroundColor: "#F5F3F3", color: "#4E4B59", height: 110, padding: 16, borderRadius: 5 }}>
+                        <Text style={{
+                          fontFamily: 'MontserratAlternates_600SemiBold',
+                          fontSize: 14
+                        }}>{descricaoExame ? descricaoExame : 'Resultado do Exame'}</Text>
+                      </ScrollView>
+                    </>
+                  )
+                }
 
                 <ButtonDefault
                   textButton="Salvar"
@@ -309,11 +377,21 @@ export default function MedicalRecord({
                   disabledInput={disabledInput}
                   onPress={() => {
                     alterarDadosConsulta();
+                    setButtonDisable(true)
+                    setButtonDisableEditar(true)
 
                   }} />
 
 
-                <ButtonDefault textButton="Editar" disabled={!disabledInput} disabledInput={!disabledInput} onPress={() => setDisableInput(false)} />
+                <ButtonDefault
+                  textButton="Editar"
+                  disabled={!buttonDisableEditar}
+                  disabledInput={!buttonDisableEditar}
+                  onPress={() => {
+                    setDisableInput(false)
+                    setButtonDisable(false)
+                    setButtonDisableEditar(false)
+                  }} />
 
                 <LinkUnderlineDefault
                   onPress={() => {
@@ -325,7 +403,7 @@ export default function MedicalRecord({
         }
       </ContainerScrollView>
 
-      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} getMediaLibrary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} showModalCamera={showModalCamera} setStatusResponseExame={setStatusResponseExame} getMediaLibrary={true} setShowModalCamera={setShowModalCamera} navigation={navigation} />
 
     </Container>
   )
