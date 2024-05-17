@@ -70,6 +70,8 @@ export default function MedicalRecord({
     descricao: ${descricaoConsulta},
     diagnostico: ${diagnosticoPaciente},
     `)
+
+    console.log('Situação consulta: ',situacaoConsulta)
     try {
       await api.put('/Consultas/Prontuario', {
         consultaId: idConsulta,
@@ -77,7 +79,7 @@ export default function MedicalRecord({
         descricao: descricaoConsulta,
         diagnostico: diagnosticoPaciente,
       })
-      if (dadosSituações == 'Agendadas') {
+      if (situacaoConsulta == 'Agendadas') {
         alterarStatusConsulta()
       }
       setDisableInput(true);

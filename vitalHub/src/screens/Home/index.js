@@ -33,8 +33,8 @@ export default function Home(
   const [foto, setFoto] = useState('')
   const [select, setSelect] = useState(route.params && route.params.situacaoSelecionada ? route.params.situacaoSelecionada : 'Agendadas');
   const [situacao, setSituacao] = useState("");
-  const [filteredConsultas, setFilteredConsultas] = useState([]) 
-  
+  const [filteredConsultas, setFilteredConsultas] = useState([])
+
   const statusConsult = ['Agendadas', 'Realizadas', 'Canceladas'];
   const { name, role } = profile;
 
@@ -62,7 +62,7 @@ export default function Home(
       .then(response => {
         setConsultas(response.data);
         console.log('Response data: ', response.data)
-        setFilteredConsultas(response.data.filter(item => item.situacao && item.situacao.situacao && item.situacao.situacao === select ))             
+        setFilteredConsultas(response.data.filter(item => item.situacao && item.situacao.situacao && item.situacao.situacao === select))
       }).catch(error => {
         console.log('Erro ao listar Consultas: ', error);
       })
@@ -93,7 +93,7 @@ export default function Home(
     }
     if (dateConsult !== '') {
       ListarConsultas();
-    } 
+    }
   }, [dateConsult, useIsFocused(), renderizaDados, select])
 
   return (
@@ -117,8 +117,8 @@ export default function Home(
         <FlatList
           data={filteredConsultas}
           renderItem={({ item }) =>
-            
-              select == item.situacao.situacao && ( 
+
+            select == item.situacao.situacao && (
               <CardAppointment
                 setSituacao={item.situacao.situacao}
                 data={item}
@@ -133,7 +133,7 @@ export default function Home(
                 setDadosCard={setDadosCard}
 
               />)
-                      
+
           }
           keyExtractor={item => item.id}
           style={{
@@ -141,7 +141,24 @@ export default function Home(
           }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => {
-            return <Text>Não há consulta disponível para o dia selecionado, para agendar uma consulta click no botão verde no canto inferior direito.</Text>
+            if (role == 'Medico' && select == 'Agendadas') {
+             return <Text>Não há nenhum atendimento para o dia. </Text>
+            }
+            if(role == 'Medico' && select == 'Realizadas'){
+             return <Text>Não há nenhum consulta realizada.</Text>
+            }
+            if(select == 'Canceladas'){
+             return <Text>Nenhum consulta foi cancelada.</Text>
+            }
+
+            if (role == 'Paciente' && select == 'Agendadas') {
+             return <Text>Não há nenhuma consulta agendada, caso queria realizar uma consulta, clique no botão verde no canto inferiror direito da tela. </Text>
+            }
+            if(role == 'Paciente' && select == 'Realizadas'){
+             return <Text>Nenhum consulta foi realizada.</Text>
+            }
+
+            
           }}
         />
       </Container>
