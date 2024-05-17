@@ -30,7 +30,7 @@ export default function Profile({ navigation }) {
   const [uriFotoCam, setUriFotoCam] = useState(null);
   const [buttonDisable, setButtonDisable] = useState(false);
   const [statusResponseSalvar,setStatusResponseSalvar] = useState(false);
-
+  const [statusResponseExame,setStatusResponseExame] = useState(true)
 
 
   const { role } = profile
@@ -307,7 +307,7 @@ export default function Profile({ navigation }) {
 
         </ContainerMargin>
       </ContainerScrollView>
-      <ModalCamera setUriFotoCam={setUriFotoCam} getMediaLibrary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
+      <ModalCamera setUriFotoCam={setUriFotoCam} setStatusResponseExame={setStatusResponseExame} getMediaLibrary={true} showModalCamera={showModalCamera} setShowModalCamera={setShowModalCamera} navigation={navigation} />
     </Container>
     
   );

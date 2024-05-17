@@ -746,7 +746,10 @@ export const ModalCamera = ({
       statusBarTranslucent={true}
       onRequestClose={() => { 
         setShowModalCamera(false)
-        setStatusResponseExame(false)
+       
+
+         setStatusResponseExame(false)
+        
       }}
     >
       <Container
